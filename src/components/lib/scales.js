@@ -3,7 +3,7 @@ import { FRET_COUNT } from "./fretboard";
 
 // Convert guitar string number (1=high E, 6=low E) to stringIndex (0=high E, 5=low E)
 function toStringIndex(guitarString) {
-  return 6 - guitarString;
+  return guitarString - 1;
 }
 
 // Build notes array from compact form: array of [guitarString, [offset, degree] pairs...]
