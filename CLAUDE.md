@@ -6,7 +6,7 @@ A guitar fretboard note memorization trainer. Users learn diatonic scale note po
 
 **Learn modes:**
 - **Explore** — View all notes in a key, toggle naturals/sharps/scale degrees, click to reveal/hide individual notes, use "Hide All" to self-test
-- **Scale Positions** — Navigate the 5 major scale positions (CAGED-derived) with fingering numbers, step through positions
+- **Scale Positions** — Navigate 9 scale positions using the String(Finger) system (e.g. 6(4) = root on string 6, finger 4). Positions are derived algorithmically from major scale intervals within a 4-fret span
 - **CAGED** — See how 5 open chord shapes tile across the fretboard, with chord tone vs scale tone distinction
 - **Intervals** — View notes as interval labels (R, 2, 3...) with filtering, includes interval quiz sub-mode
 
@@ -49,7 +49,7 @@ src/
     │   ├── RegionSelector.jsx   # Dropdown: fret region filter
     │   ├── ExploreToggles.jsx   # Naturals, Sharps, Degrees, Root Highlight, Hide All
     │   ├── StringToggles.jsx    # Per-string circular toggle buttons
-    │   ├── ScalePositionControls.jsx  # Position picker (1-5), prev/next, fingering toggle
+    │   ├── ScalePositionControls.jsx  # 9 String(Finger) position buttons grouped by root string, prev/next, fingering toggle
     │   ├── CAGEDControls.jsx    # Shape picker (C/A/G/E/D + All), scale tones toggle
     │   └── IntervalControls.jsx # Interval/note toggle, degree filter, quiz toggle
     ├── fretboard/
@@ -76,9 +76,9 @@ src/
         │                        # MODES (6 modes), FRET_REGIONS — zero React dependencies
         ├── colors.js            # getNoteColor(), CAGED_SHAPE_COLORS, getScalePositionColor(),
         │                        # getCAGEDColor() — degree color map, quiz/root overrides
-        ├── scales.js            # MAJOR_SCALE_POSITIONS (5 positions), POSITION_OFFSETS,
-        │                        # getPositionAnchorFret(), getScalePositionNotes(),
-        │                        # isInScalePosition() — zero React dependencies
+        ├── scales.js            # POSITIONS (9 String(Finger) positions), getPositionLabel(),
+        │                        # getPositionFret(), getScalePositionNotes(),
+        │                        # isInScalePosition() — algorithmic, zero React dependencies
         ├── caged.js             # CAGED_SHAPES, CAGED_ORDER, CAGED_OFFSETS,
         │                        # getCAGEDShapes(), getCAGEDInfo() — zero React dependencies
         └── intervals.js         # INTERVAL_LABELS, INTERVAL_NAMES, getIntervalLabel(),
@@ -117,4 +117,4 @@ npm run start  # Serve production build
 - **localStorage persistence:** Swap `useState` with a `useLocalStorage` hook
 - **Additional scales:** Extend `DIATONIC_KEYS` in `lib/music.js`
 - **Mobile layout:** Tailwind responsive utilities on existing components
-- **Minor/pentatonic positions:** Add new position data to `lib/scales.js`
+- **Other scales/modes:** The String(Finger) algorithm in `lib/scales.js` derives positions from `keyNotes`, so it works with any scale — just pass different note sets
