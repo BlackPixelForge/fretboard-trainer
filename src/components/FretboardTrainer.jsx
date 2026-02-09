@@ -3,17 +3,24 @@
 import { useState, useCallback, useEffect } from "react";
 import {
   NOTES, NATURAL_NOTES, SHARP_NOTES, DIATONIC_KEYS,
-  getNoteAt, getNoteName, isInKey, getStringLabel,
+  getNoteAt, getNoteName, isInKey, getStringLabel, getScaleDegree,
 } from "./lib/music";
 import { MODES, FRET_REGIONS } from "./lib/fretboard";
+import { getIntervalLabel, getIntervalDegree, generateIntervalQuiz, INTERVAL_LABELS } from "./lib/intervals";
+import { isInScalePosition, POSITION_CAGED_MAP } from "./lib/scales";
+import { getCAGEDInfo } from "./lib/caged";
 import ModeSelector from "./controls/ModeSelector";
 import KeySelector from "./controls/KeySelector";
 import RegionSelector from "./controls/RegionSelector";
 import ExploreToggles from "./controls/ExploreToggles";
 import StringToggles from "./controls/StringToggles";
+import IntervalControls from "./controls/IntervalControls";
+import ScalePositionControls from "./controls/ScalePositionControls";
+import CAGEDControls from "./controls/CAGEDControls";
 import QuizPrompt from "./quiz/QuizPrompt";
 import QuizFeedback from "./quiz/QuizFeedback";
 import AnswerBubbles from "./quiz/AnswerBubbles";
+import IntervalQuizPrompt from "./quiz/IntervalQuizPrompt";
 import ScoreBar from "./quiz/ScoreBar";
 import Fretboard from "./fretboard/Fretboard";
 import Legend from "./Legend";
@@ -39,11 +46,89 @@ export default function FretboardTrainer() {
   const [bestStreak, setBestStreak] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState("all");
 
+  // New mode states
+  const [scalePositionState, setScalePositionState] = useState({
+    positionIndex: 0,
+    showFingering: false,
+  });
+
+  const [cagedState, setCagedState] = useState({
+    selectedShape: "all",
+    showScaleTones: true,
+  });
+
+  const [intervalState, setIntervalState] = useState({
+    showIntervals: true,
+    intervalFilter: new Set([1, 2, 3, 4, 5, 6, 7]),
+    quizMode: false,
+    quizNote: null,
+    quizFeedback: null,
+    selectedAnswer: null,
+    correctInterval: null,
+  });
+
   const keyNotes = DIATONIC_KEYS[selectedKey];
   const rootNote = keyNotes[0];
   const region = FRET_REGIONS[selectedRegion];
 
   const getNoteId = (s, f) => `${s}-${f}`;
+
+  // Updater helpers for new modes
+  const updateScalePosition = (updates) => {
+    setScalePositionState(prev => ({ ...prev, ...updates }));
+  };
+
+  const updateCAGED = (updates) => {
+    setCagedState(prev => ({ ...prev, ...updates }));
+  };
+
+  const updateInterval = (updates) => {
+    setIntervalState(prev => ({ ...prev, ...updates }));
+  };
+
+  // --- getNoteDisplayData: returns mode-specific rendering metadata ---
+  const getNoteDisplayData = (s, f) => {
+    const noteIndex = getNoteAt(s, f);
+
+    if (mode === MODES.SCALE_POSITIONS) {
+      const match = isInScalePosition(s, f, rootNote, scalePositionState.positionIndex);
+      if (!match) return null;
+      return {
+        type: "scalePosition",
+        degree: match.degree,
+        finger: match.finger,
+        isRoot: match.degree === 1,
+        showFingering: scalePositionState.showFingering,
+      };
+    }
+
+    if (mode === MODES.CAGED) {
+      const info = getCAGEDInfo(s, f, rootNote, cagedState.selectedShape);
+      if (!info) return null;
+      return {
+        type: "caged",
+        letter: info.letter,
+        isChordTone: info.isChordTone,
+        chordType: info.type,
+        degree: info.degree,
+      };
+    }
+
+    if (mode === MODES.INTERVALS) {
+      if (!isInKey(noteIndex, keyNotes)) return null;
+      const degree = getIntervalDegree(noteIndex, keyNotes);
+      if (!degree || !intervalState.intervalFilter.has(degree)) return null;
+      const label = intervalState.showIntervals ? INTERVAL_LABELS[degree] : getNoteName(noteIndex);
+      return {
+        type: "interval",
+        intervalLabel: label,
+        degree,
+        isRoot: degree === 1,
+      };
+    }
+
+    return null;
+  };
 
   const toggleReveal = (s, f) => {
     if (mode === MODES.QUIZ_IDENTIFY) {
@@ -66,6 +151,7 @@ export default function FretboardTrainer() {
       return;
     }
     if (mode === MODES.QUIZ_FIND) return;
+    if (mode === MODES.SCALE_POSITIONS || mode === MODES.CAGED || mode === MODES.INTERVALS) return;
 
     // Explore mode
     const id = getNoteId(s, f);
@@ -133,10 +219,60 @@ export default function FretboardTrainer() {
     }
   };
 
+  // --- Interval quiz ---
+  const generateIntervalQuizNote = useCallback(() => {
+    const result = generateIntervalQuiz(keyNotes, selectedStrings, region);
+    if (result) {
+      updateInterval({
+        quizNote: { string: result.stringIndex, fret: result.fret },
+        correctInterval: result.correctInterval,
+        selectedAnswer: null,
+        quizFeedback: null,
+      });
+    }
+  }, [keyNotes, selectedStrings, region]);
+
+  const handleIntervalAnswer = (chosenDegree) => {
+    if (intervalState.selectedAnswer !== null) return;
+    const correct = chosenDegree === intervalState.correctInterval;
+    const label = INTERVAL_LABELS[intervalState.correctInterval];
+    if (correct) {
+      updateInterval({
+        selectedAnswer: chosenDegree,
+        quizFeedback: { correct: true, message: `\u2713 Correct! That's the ${label}` },
+      });
+      setScore(p => ({ correct: p.correct + 1, total: p.total + 1 }));
+      setStreak(p => {
+        const next = p + 1;
+        setBestStreak(b => Math.max(b, next));
+        return next;
+      });
+      setTimeout(() => generateIntervalQuizNote(), 1000);
+    } else {
+      updateInterval({
+        selectedAnswer: chosenDegree,
+        quizFeedback: { correct: false, message: `\u2717 That's the ${label}, not ${INTERVAL_LABELS[chosenDegree]}` },
+      });
+      setScore(p => ({ ...p, total: p.total + 1 }));
+      setStreak(0);
+      setTimeout(() => generateIntervalQuizNote(), 1500);
+    }
+  };
+
   useEffect(() => {
     if (mode === MODES.QUIZ_IDENTIFY) generateIdentifyQuiz();
     else if (mode === MODES.QUIZ_FIND) generateFindQuiz();
   }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Interval quiz mode effect
+  useEffect(() => {
+    if (mode === MODES.INTERVALS && intervalState.quizMode) {
+      generateIntervalQuizNote();
+      resetScore();
+    } else {
+      updateInterval({ quizNote: null, selectedAnswer: null, quizFeedback: null, correctInterval: null });
+    }
+  }, [intervalState.quizMode, mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetScore = () => {
     setScore({ correct: 0, total: 0 });
@@ -145,6 +281,42 @@ export default function FretboardTrainer() {
   };
 
   const isNoteVisible = (s, f) => {
+    // New modes define their own note sets
+    if (mode === MODES.SCALE_POSITIONS) {
+      if (!selectedStrings.has(s)) return false;
+      const match = isInScalePosition(s, f, rootNote, scalePositionState.positionIndex);
+      return match !== null;
+    }
+
+    if (mode === MODES.CAGED) {
+      if (!selectedStrings.has(s)) return false;
+      const info = getCAGEDInfo(s, f, rootNote, cagedState.selectedShape);
+      if (!info) return false;
+      if (!info.isChordTone && !cagedState.showScaleTones) return false;
+      return true;
+    }
+
+    if (mode === MODES.INTERVALS) {
+      if (!selectedStrings.has(s)) return false;
+      const noteIndex = getNoteAt(s, f);
+      if (!isInKey(noteIndex, keyNotes)) return false;
+      if (selectedRegion !== "all") {
+        if (f < region.start || f > region.end) return false;
+      }
+      const degree = getIntervalDegree(noteIndex, keyNotes);
+      if (!degree || !intervalState.intervalFilter.has(degree)) return false;
+      // In quiz mode, only show the quiz target
+      if (intervalState.quizMode) {
+        if (intervalState.selectedAnswer !== null && intervalState.quizNote &&
+            s === intervalState.quizNote.string && f === intervalState.quizNote.fret) {
+          return true;
+        }
+        return false;
+      }
+      return true;
+    }
+
+    // Original logic for explore/quiz modes
     const noteIndex = getNoteAt(s, f);
     if (!isInKey(noteIndex, keyNotes)) return false;
     if (!selectedStrings.has(s)) return false;
@@ -169,6 +341,10 @@ export default function FretboardTrainer() {
   const handleModeChange = (newMode) => {
     setMode(newMode);
     resetScore();
+    // Reset interval quiz when switching away
+    if (newMode !== MODES.INTERVALS) {
+      updateInterval({ quizMode: false, quizNote: null, selectedAnswer: null, quizFeedback: null });
+    }
   };
 
   const handleKeyChange = (key) => {
@@ -183,6 +359,9 @@ export default function FretboardTrainer() {
       return next;
     });
   };
+
+  const isQuizActive = mode === MODES.QUIZ_IDENTIFY || mode === MODES.QUIZ_FIND ||
+    (mode === MODES.INTERVALS && intervalState.quizMode);
 
   return (
     <div style={{
@@ -231,7 +410,9 @@ export default function FretboardTrainer() {
         }}>
           <ModeSelector mode={mode} onModeChange={handleModeChange} />
           <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
-          <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
+          {(mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND || mode === MODES.QUIZ_IDENTIFY || mode === MODES.INTERVALS) && (
+            <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
+          )}
         </div>
 
         {/* Sub Controls */}
@@ -252,11 +433,20 @@ export default function FretboardTrainer() {
               onResetRevealed={() => setRevealedNotes(new Set())}
             />
           )}
+          {mode === MODES.INTERVALS && (
+            <IntervalControls intervalState={intervalState} updateInterval={updateInterval} />
+          )}
+          {mode === MODES.SCALE_POSITIONS && (
+            <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} />
+          )}
+          {mode === MODES.CAGED && (
+            <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} />
+          )}
           <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
         </div>
 
-        {/* Quiz Prompt & Score */}
-        {mode !== MODES.EXPLORE && (
+        {/* Quiz Prompt & Score — original quiz modes */}
+        {(mode === MODES.QUIZ_IDENTIFY || mode === MODES.QUIZ_FIND) && (
           <div style={{
             display: "flex",
             flexWrap: "wrap",
@@ -279,6 +469,40 @@ export default function FretboardTrainer() {
           </div>
         )}
 
+        {/* Interval Quiz Prompt */}
+        {mode === MODES.INTERVALS && intervalState.quizMode && (
+          <div style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "16px",
+            marginBottom: "16px",
+            alignItems: "center",
+            animation: "slideDown 0.3s ease",
+          }}>
+            <div style={{
+              padding: "10px 20px",
+              background: "linear-gradient(135deg, rgba(255,200,50,0.08), rgba(255,200,50,0.02))",
+              border: "1px solid rgba(255,200,50,0.2)",
+              borderRadius: 10,
+              fontFamily: "'Outfit', sans-serif",
+            }}>
+              {intervalState.quizNote && (
+                <span style={{ fontSize: "0.85rem", color: "#ffc832" }}>
+                  What interval is on the <strong>{getStringLabel(intervalState.quizNote.string)}</strong> string, <strong>fret {intervalState.quizNote.fret}</strong>?
+                </span>
+              )}
+            </div>
+            <QuizFeedback feedback={intervalState.quizFeedback} />
+            <IntervalQuizPrompt
+              quizNote={intervalState.quizNote}
+              onAnswer={handleIntervalAnswer}
+              selectedAnswer={intervalState.selectedAnswer}
+              correctInterval={intervalState.correctInterval}
+            />
+            <ScoreBar score={score} streak={streak} bestStreak={bestStreak} />
+          </div>
+        )}
+
         {/* Fretboard */}
         <Fretboard
           keyNotes={keyNotes}
@@ -289,11 +513,15 @@ export default function FretboardTrainer() {
           region={region}
           highlightRoot={highlightRoot}
           showDegrees={showDegrees}
-          quizNote={quizNote}
-          selectedAnswer={selectedAnswer}
+          quizNote={mode === MODES.INTERVALS ? intervalState.quizNote : quizNote}
+          selectedAnswer={mode === MODES.INTERVALS ? intervalState.selectedAnswer : selectedAnswer}
           isNoteVisible={isNoteVisible}
           onToggleReveal={toggleReveal}
           hideAll={hideAll}
+          getNoteDisplayData={getNoteDisplayData}
+          scalePositionState={scalePositionState}
+          cagedState={cagedState}
+          intervalState={intervalState}
         />
 
         {/* Legend */}
@@ -303,6 +531,9 @@ export default function FretboardTrainer() {
           highlightRoot={highlightRoot}
           mode={mode}
           quizNote={quizNote}
+          scalePositionState={scalePositionState}
+          cagedState={cagedState}
+          intervalState={intervalState}
         />
 
         {/* Tips */}

@@ -3,10 +3,13 @@ import { getNoteAt, getNoteName, isInKey, getScaleDegree } from "../lib/music";
 import { getNoteColor } from "../lib/colors";
 import NoteDot from "./NoteDot";
 import QuizTarget from "./QuizTarget";
+import ScalePositionDot from "./ScalePositionDot";
+import CAGEDDot from "./CAGEDDot";
 
 export default function FretCell({
   si, f, keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
   highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
+  getNoteDisplayData, scalePositionState, cagedState, intervalState,
 }) {
   const noteIndex = getNoteAt(si, f);
   const noteName = getNoteName(noteIndex);
@@ -41,8 +44,84 @@ export default function FretCell({
         opacity: 0.6,
       }} />
 
-      {/* Note rendering */}
-      {inKey && isInRegion && (() => {
+      {/* New mode rendering: Scale Positions */}
+      {mode === MODES.SCALE_POSITIONS && visible && (() => {
+        const data = getNoteDisplayData(si, f);
+        if (!data) return null;
+        return (
+          <ScalePositionDot
+            degree={data.degree}
+            finger={data.finger}
+            showFingering={data.showFingering}
+            isRoot={data.isRoot}
+          />
+        );
+      })()}
+
+      {/* New mode rendering: CAGED */}
+      {mode === MODES.CAGED && visible && (() => {
+        const data = getNoteDisplayData(si, f);
+        if (!data) return null;
+        return (
+          <CAGEDDot
+            letter={data.letter}
+            isChordTone={data.isChordTone}
+            type={data.chordType}
+            degree={data.degree}
+          />
+        );
+      })()}
+
+      {/* New mode rendering: Intervals */}
+      {mode === MODES.INTERVALS && (() => {
+        // In quiz mode, show quiz target dot
+        if (intervalState?.quizMode) {
+          const isTarget = intervalState.quizNote &&
+            intervalState.quizNote.string === si && intervalState.quizNote.fret === f;
+          if (!isTarget) return null;
+          const answered = intervalState.selectedAnswer !== null;
+          if (!answered) {
+            return <QuizTarget answered={false} noteName="?" selectedAnswer={null} />;
+          }
+          // After answering, show the interval label
+          const data = getNoteDisplayData(si, f);
+          const label = data ? data.intervalLabel : noteName;
+          return (
+            <NoteDot
+              visible={true}
+              isRoot={data?.isRoot}
+              colors={colors}
+              noteName={label}
+              degree={degree}
+              showDegrees={false}
+              canClick={false}
+              onClick={() => {}}
+              hideAll={false}
+            />
+          );
+        }
+        // Non-quiz interval mode
+        if (!visible) return null;
+        const data = getNoteDisplayData(si, f);
+        if (!data) return null;
+        return (
+          <NoteDot
+            visible={true}
+            isRoot={data.isRoot}
+            colors={colors}
+            noteName={data.intervalLabel}
+            degree={degree}
+            showDegrees={false}
+            canClick={false}
+            onClick={() => {}}
+            hideAll={false}
+          />
+        );
+      })()}
+
+      {/* Original mode rendering: Explore + Quiz modes */}
+      {(mode === MODES.EXPLORE || mode === MODES.QUIZ_IDENTIFY || mode === MODES.QUIZ_FIND) &&
+        inKey && isInRegion && (() => {
         const isFindTarget = mode === MODES.QUIZ_FIND && quizNote && quizNote.string === si && quizNote.fret === f;
         const answered = mode === MODES.QUIZ_FIND && selectedAnswer !== null;
 

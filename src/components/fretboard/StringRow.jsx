@@ -4,6 +4,7 @@ import FretCell from "./FretCell";
 export default function StringRow({
   string, si, keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
   highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
+  getNoteDisplayData, scalePositionState, cagedState, intervalState,
 }) {
   return (
     <div style={{
@@ -46,6 +47,10 @@ export default function StringRow({
           isNoteVisible={isNoteVisible}
           onToggleReveal={onToggleReveal}
           hideAll={hideAll}
+          getNoteDisplayData={getNoteDisplayData}
+          scalePositionState={scalePositionState}
+          cagedState={cagedState}
+          intervalState={intervalState}
         />
       ))}
     </div>

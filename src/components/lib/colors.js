@@ -12,6 +12,31 @@ const DEGREE_COLORS = {
 
 const DEFAULT_COLOR = { bg: "rgba(180,180,180,0.1)", border: "#888", text: "#aaa" };
 
+export const CAGED_SHAPE_COLORS = {
+  C: { bg: "rgba(232,78,60,0.15)", border: "#e84e3c", text: "#e84e3c" },
+  A: { bg: "rgba(230,160,60,0.15)", border: "#e6a03c", text: "#e6a03c" },
+  G: { bg: "rgba(80,190,80,0.15)", border: "#50be50", text: "#50be50" },
+  E: { bg: "rgba(60,160,220,0.15)", border: "#3ca0dc", text: "#3ca0dc" },
+  D: { bg: "rgba(140,100,220,0.15)", border: "#8c64dc", text: "#8c64dc" },
+};
+
+export function getScalePositionColor(degree, isRoot) {
+  if (isRoot) {
+    return { bg: "rgba(232,78,60,0.25)", border: "#e84e3c", text: "#e84e3c" };
+  }
+  return DEGREE_COLORS[String(degree)] || DEFAULT_COLOR;
+}
+
+export function getCAGEDColor(shapeLetter, isChordTone) {
+  const base = CAGED_SHAPE_COLORS[shapeLetter] || DEFAULT_COLOR;
+  if (isChordTone) return base;
+  return {
+    bg: "rgba(180,180,180,0.04)",
+    border: base.border + "66",
+    text: base.text + "88",
+  };
+}
+
 export function getNoteColor(noteIndex, keyNotes, rootNote, highlightRoot, mode, quizNote, s, f) {
   if (mode === "quiz_find" && quizNote && s === quizNote.string && f === quizNote.fret) {
     return { bg: "rgba(255,200,50,0.15)", border: "#ffc832", text: "#ffc832", glow: "0 0 12px rgba(255,200,50,0.4)" };

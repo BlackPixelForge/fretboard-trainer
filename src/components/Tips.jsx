@@ -21,6 +21,21 @@ export default function Tips({ mode }) {
             <strong style={{ color: "#3ca0dc" }}>Explore Mode:</strong> Click any note dot to reveal/hide it. Use <em>Hide All</em> to blank the fretboard and test yourself by clicking to reveal. Toggle <em>Scale Degrees</em> to see interval numbers. Focus on one string or region at a time for deeper learning.
           </>
         )}
+        {mode === MODES.SCALE_POSITIONS && (
+          <>
+            <strong style={{ color: "#e84e3c" }}>Scale Positions:</strong> Navigate the 5 major scale positions (CAGED shapes) across the fretboard. Each position covers a 4-5 fret span. Toggle <em>Fingering</em> to see recommended finger numbers (1=Index, 2=Middle, 3=Ring, 4=Pinky). Use the arrow buttons to step through positions and see how they connect.
+          </>
+        )}
+        {mode === MODES.CAGED && (
+          <>
+            <strong style={{ color: "#3ca0dc" }}>CAGED System:</strong> See how the 5 open chord shapes (C, A, G, E, D) tile across the entire fretboard. Filled dots are chord tones (R=Root, 3=Third, 5=Fifth). Toggle <em>Scale Tones</em> to see the surrounding scale notes. Select individual shapes to focus on one at a time.
+          </>
+        )}
+        {mode === MODES.INTERVALS && (
+          <>
+            <strong style={{ color: "#50be50" }}>Interval Trainer:</strong> See notes as interval labels (R, 2, 3...) instead of note names. Filter specific intervals to focus on finding them across the fretboard. Enable <em>Quiz</em> mode to test your interval recognition — identify the interval at a highlighted position.
+          </>
+        )}
         {mode === MODES.QUIZ_IDENTIFY && (
           <>
             <strong style={{ color: "#ffc832" }}>Name the Note Quiz:</strong> You{"'"}re given a note name — find and click every occurrence on the fretboard. Use the string and region filters to focus your practice on specific areas. Build your streak!

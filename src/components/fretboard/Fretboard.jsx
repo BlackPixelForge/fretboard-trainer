@@ -6,6 +6,7 @@ import StringRow from "./StringRow";
 export default function Fretboard({
   keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
   highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
+  getNoteDisplayData, scalePositionState, cagedState, intervalState,
 }) {
   return (
     <div style={{
@@ -37,6 +38,10 @@ export default function Fretboard({
           isNoteVisible={isNoteVisible}
           onToggleReveal={onToggleReveal}
           hideAll={hideAll}
+          getNoteDisplayData={getNoteDisplayData}
+          scalePositionState={scalePositionState}
+          cagedState={cagedState}
+          intervalState={intervalState}
         />
       ))}
 

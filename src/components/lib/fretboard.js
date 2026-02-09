@@ -4,6 +4,9 @@ export const DOUBLE_MARKERS = [12];
 
 export const MODES = {
   EXPLORE: "explore",
+  SCALE_POSITIONS: "scale_positions",
+  CAGED: "caged",
+  INTERVALS: "intervals",
   QUIZ_IDENTIFY: "quiz_identify",
   QUIZ_FIND: "quiz_find",
 };
