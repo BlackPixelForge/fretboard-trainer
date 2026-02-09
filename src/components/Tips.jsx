@@ -23,7 +23,7 @@ export default function Tips({ mode }) {
         )}
         {mode === MODES.SCALE_POSITIONS && (
           <>
-            <strong style={{ color: "#e84e3c" }}>Scale Positions:</strong> Navigate the 5 major scale positions (CAGED shapes) across the fretboard. Each position covers a 4-5 fret span. Toggle <em>Fingering</em> to see recommended finger numbers (1=Index, 2=Middle, 3=Ring, 4=Pinky). Use the arrow buttons to step through positions and see how they connect.
+            <strong style={{ color: "#e84e3c" }}>Scale Positions:</strong> Navigate 9 scale positions by root string and finger — e.g. 6(4) means root on string 6 with finger 4. Each position covers a 4-fret span. Toggle <em>Fingering</em> to see finger numbers (1=Index, 2=Middle, 3=Ring, 4=Pinky). Use the arrow buttons to step through positions.
           </>
         )}
         {mode === MODES.CAGED && (

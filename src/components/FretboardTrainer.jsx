@@ -7,7 +7,7 @@ import {
 } from "./lib/music";
 import { MODES, FRET_REGIONS } from "./lib/fretboard";
 import { getIntervalLabel, getIntervalDegree, generateIntervalQuiz, INTERVAL_LABELS } from "./lib/intervals";
-import { isInScalePosition, POSITION_CAGED_MAP } from "./lib/scales";
+import { isInScalePosition } from "./lib/scales";
 import { getCAGEDInfo } from "./lib/caged";
 import ModeSelector from "./controls/ModeSelector";
 import KeySelector from "./controls/KeySelector";
@@ -91,7 +91,7 @@ export default function FretboardTrainer() {
     const noteIndex = getNoteAt(s, f);
 
     if (mode === MODES.SCALE_POSITIONS) {
-      const match = isInScalePosition(s, f, rootNote, scalePositionState.positionIndex);
+      const match = isInScalePosition(s, f, rootNote, keyNotes, scalePositionState.positionIndex);
       if (!match) return null;
       return {
         type: "scalePosition",
@@ -284,7 +284,7 @@ export default function FretboardTrainer() {
     // New modes define their own note sets
     if (mode === MODES.SCALE_POSITIONS) {
       if (!selectedStrings.has(s)) return false;
-      const match = isInScalePosition(s, f, rootNote, scalePositionState.positionIndex);
+      const match = isInScalePosition(s, f, rootNote, keyNotes, scalePositionState.positionIndex);
       return match !== null;
     }
 

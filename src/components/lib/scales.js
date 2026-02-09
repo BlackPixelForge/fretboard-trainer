@@ -1,111 +1,74 @@
-// Major scale positions (5 CAGED-derived positions)
-// Each position maps to a CAGED letter: E, D, C, A, G
-// rel = fret offset from anchor, finger = 1-4 (index-pinky), degree = scale degree 1-7
+import { STRING_TUNING } from "./music";
+import { FRET_COUNT } from "./fretboard";
 
-// String indices: 0=high E, 1=B, 2=G, 3=D, 4=A, 5=low E
-// The B string (index 1) has a 4-semitone interval from G, vs 5 for all others
-
-export const POSITION_CAGED_MAP = ["E", "D", "C", "A", "G"];
-
-export const POSITION_OFFSETS = [0, 3, 5, 7, 10];
-
-// Position 1 (E shape) - starts from root on low E string
-export const MAJOR_SCALE_POSITIONS = [
-  {
-    // Position 1 — E shape
-    strings: [
-      [{ rel: 0, finger: 1, degree: 1 }, { rel: 2, finger: 3, degree: 2 }, { rel: 4, finger: 4, degree: 3 }], // high E (si=0)
-      [{ rel: 0, finger: 1, degree: 5 }, { rel: 2, finger: 3, degree: 6 }, { rel: 4, finger: 4, degree: 7 }], // B (si=1) — shifted +1 vs standard due to B string offset
-      [{ rel: -1, finger: 1, degree: 2 }, { rel: 1, finger: 2, degree: 3 }, { rel: 2, finger: 3, degree: 4 }], // G (si=2)
-      [{ rel: -1, finger: 1, degree: 6 }, { rel: 1, finger: 3, degree: 7 }, { rel: 2, finger: 4, degree: 1 }], // D (si=3)
-      [{ rel: -1, finger: 1, degree: 3 }, { rel: 1, finger: 3, degree: 4 }, { rel: 2, finger: 4, degree: 5 }], // A (si=4)
-      [{ rel: 0, finger: 1, degree: 1 }, { rel: 2, finger: 3, degree: 2 }, { rel: 4, finger: 4, degree: 3 }], // low E (si=5)
-    ],
-  },
-  {
-    // Position 2 — D shape
-    strings: [
-      [{ rel: 0, finger: 1, degree: 3 }, { rel: 2, finger: 3, degree: 4 }, { rel: 3, finger: 4, degree: 5 }], // high E
-      [{ rel: 0, finger: 1, degree: 7 }, { rel: 1, finger: 2, degree: 1 }, { rel: 3, finger: 4, degree: 2 }], // B
-      [{ rel: 0, finger: 1, degree: 4 }, { rel: 2, finger: 3, degree: 5 }, { rel: 4, finger: 4, degree: 6 }], // G
-      [{ rel: 0, finger: 1, degree: 1 }, { rel: 2, finger: 3, degree: 2 }, { rel: 4, finger: 4, degree: 3 }], // D
-      [{ rel: 0, finger: 1, degree: 5 }, { rel: 2, finger: 3, degree: 6 }, { rel: 3, finger: 4, degree: 7 }], // A
-      [{ rel: 0, finger: 1, degree: 3 }, { rel: 2, finger: 3, degree: 4 }, { rel: 3, finger: 4, degree: 5 }], // low E
-    ],
-  },
-  {
-    // Position 3 — C shape
-    strings: [
-      [{ rel: 0, finger: 1, degree: 5 }, { rel: 2, finger: 3, degree: 6 }, { rel: 3, finger: 4, degree: 7 }], // high E
-      [{ rel: 0, finger: 1, degree: 2 }, { rel: 1, finger: 2, degree: 3 }, { rel: 3, finger: 4, degree: 4 }], // B
-      [{ rel: 0, finger: 1, degree: 6 }, { rel: 2, finger: 3, degree: 7 }, { rel: 3, finger: 4, degree: 1 }], // G
-      [{ rel: 0, finger: 1, degree: 3 }, { rel: 2, finger: 3, degree: 4 }, { rel: 4, finger: 4, degree: 5 }], // D
-      [{ rel: 0, finger: 1, degree: 7 }, { rel: 1, finger: 2, degree: 1 }, { rel: 3, finger: 4, degree: 2 }], // A
-      [{ rel: 0, finger: 1, degree: 5 }, { rel: 2, finger: 3, degree: 6 }, { rel: 3, finger: 4, degree: 7 }], // low E
-    ],
-  },
-  {
-    // Position 4 — A shape
-    strings: [
-      [{ rel: 0, finger: 1, degree: 7 }, { rel: 1, finger: 2, degree: 1 }, { rel: 3, finger: 4, degree: 2 }], // high E
-      [{ rel: 0, finger: 1, degree: 4 }, { rel: 1, finger: 2, degree: 5 }],                                     // B
-      [{ rel: -1, finger: 1, degree: 1 }, { rel: 1, finger: 2, degree: 2 }, { rel: 2, finger: 3, degree: 3 }], // G
-      [{ rel: 0, finger: 1, degree: 5 }, { rel: 2, finger: 3, degree: 6 }, { rel: 4, finger: 4, degree: 7 }], // D
-      [{ rel: 0, finger: 1, degree: 2 }, { rel: 1, finger: 2, degree: 3 }, { rel: 3, finger: 4, degree: 4 }], // A — note: could also be mapped differently
-      [{ rel: 0, finger: 1, degree: 7 }, { rel: 1, finger: 2, degree: 1 }, { rel: 3, finger: 4, degree: 2 }], // low E
-    ],
-  },
-  {
-    // Position 5 — G shape
-    strings: [
-      [{ rel: 0, finger: 1, degree: 2 }, { rel: 2, finger: 3, degree: 3 }],                                     // high E
-      [{ rel: -1, finger: 1, degree: 5 }, { rel: 1, finger: 2, degree: 6 }, { rel: 2, finger: 3, degree: 7 }], // B
-      [{ rel: 0, finger: 1, degree: 3 }, { rel: 2, finger: 3, degree: 4 }],                                     // G
-      [{ rel: 0, finger: 1, degree: 7 }, { rel: 1, finger: 2, degree: 1 }, { rel: 3, finger: 4, degree: 2 }], // D
-      [{ rel: -1, finger: 1, degree: 4 }, { rel: 1, finger: 2, degree: 5 }, { rel: 2, finger: 3, degree: 6 }], // A
-      [{ rel: 0, finger: 1, degree: 2 }, { rel: 2, finger: 3, degree: 3 }],                                     // low E
-    ],
-  },
+// String(Finger) position system: 9 positions
+// 3 root strings (6=low E, 5=A, 4=D) × 3 root fingers (1=index, 2=middle, 4=pinky)
+export const POSITIONS = [
+  { rootString: 5, rootFinger: 1 },  // 6(1)
+  { rootString: 5, rootFinger: 2 },  // 6(2)
+  { rootString: 5, rootFinger: 4 },  // 6(4)
+  { rootString: 4, rootFinger: 1 },  // 5(1)
+  { rootString: 4, rootFinger: 2 },  // 5(2)
+  { rootString: 4, rootFinger: 4 },  // 5(4)
+  { rootString: 3, rootFinger: 1 },  // 4(1)
+  { rootString: 3, rootFinger: 2 },  // 4(2)
+  { rootString: 3, rootFinger: 4 },  // 4(4)
 ];
 
-/**
- * Get the anchor fret for a position in a given key.
- * rootNoteIndex: 0-11 (C=0), positionIndex: 0-4
- * The anchor fret is where the position's "1" finger falls on the low E string.
- */
-export function getPositionAnchorFret(rootNoteIndex, positionIndex) {
-  // Low E string open note is E = 4
-  const lowEOpen = 4;
-  // Base fret where root falls on low E
-  let baseFret = (rootNoteIndex - lowEOpen + 12) % 12;
-  // Apply position offset
-  let anchor = baseFret + POSITION_OFFSETS[positionIndex];
-  // Keep in playable range
-  if (anchor > 12) anchor -= 12;
-  return anchor;
+// Guitar string numbers: stringIndex 0=high E=1, 1=B=2, 2=G=3, 3=D=4, 4=A=5, 5=low E=6
+function guitarStringNumber(stringIndex) {
+  return 6 - stringIndex;
 }
+
+/**
+ * Get display label for a position, e.g. "6(4)"
+ */
+export function getPositionLabel(positionIndex) {
+  const pos = POSITIONS[positionIndex];
+  return `${guitarStringNumber(pos.rootString)}(${pos.rootFinger})`;
+}
+
+/**
+ * Get the fret where finger 1 sits for a position in a given key.
+ * positionFret = rootFret - (rootFinger - 1)
+ */
+export function getPositionFret(rootNoteIndex, positionIndex) {
+  const pos = POSITIONS[positionIndex];
+  const openNote = STRING_TUNING[pos.rootString].note;
+  // Find the lowest fret on the root string where the root note occurs
+  let rootFret = (rootNoteIndex - openNote + 12) % 12;
+  if (rootFret === 0) rootFret = 12; // use fret 12 instead of open string for position calculation
+  let positionFret = rootFret - (pos.rootFinger - 1);
+  if (positionFret < 0) positionFret += 12;
+  return positionFret;
+}
+
+// Major scale intervals in semitones from root: W W H W W W H
+const MAJOR_SCALE_SEMITONES = [0, 2, 4, 5, 7, 9, 11];
 
 /**
  * Get all notes for a scale position in a given key.
  * Returns array of { stringIndex, fret, finger, degree }
  */
-export function getScalePositionNotes(rootNoteIndex, positionIndex) {
-  const anchor = getPositionAnchorFret(rootNoteIndex, positionIndex);
-  const position = MAJOR_SCALE_POSITIONS[positionIndex];
+export function getScalePositionNotes(rootNoteIndex, keyNotes, positionIndex) {
+  const positionFret = getPositionFret(rootNoteIndex, positionIndex);
   const notes = [];
 
   for (let si = 0; si < 6; si++) {
-    const stringNotes = position.strings[si];
-    for (const note of stringNotes) {
-      const fret = anchor + note.rel;
-      if (fret >= 0 && fret <= 15) {
-        notes.push({
-          stringIndex: si,
-          fret,
-          finger: note.finger,
-          degree: note.degree,
-        });
-      }
+    const openNote = STRING_TUNING[si].note;
+    for (let fret = positionFret; fret <= positionFret + 3; fret++) {
+      const actualFret = fret > FRET_COUNT ? fret - 12 : fret;
+      if (actualFret < 0 || actualFret > FRET_COUNT) continue;
+      const noteIndex = (openNote + actualFret) % 12;
+      const degreeIndex = keyNotes.indexOf(noteIndex);
+      if (degreeIndex === -1) continue;
+      const finger = fret - positionFret + 1;
+      notes.push({
+        stringIndex: si,
+        fret: actualFret,
+        finger,
+        degree: degreeIndex + 1,
+      });
     }
   }
 
@@ -116,17 +79,25 @@ export function getScalePositionNotes(rootNoteIndex, positionIndex) {
  * Check if a fret position is in a given scale position.
  * Returns { finger, degree } or null.
  */
-export function isInScalePosition(stringIndex, fret, rootNoteIndex, positionIndex) {
-  const anchor = getPositionAnchorFret(rootNoteIndex, positionIndex);
-  const position = MAJOR_SCALE_POSITIONS[positionIndex];
-  const stringNotes = position.strings[stringIndex];
+export function isInScalePosition(stringIndex, fret, rootNoteIndex, keyNotes, positionIndex) {
+  const positionFret = getPositionFret(rootNoteIndex, positionIndex);
+  const openNote = STRING_TUNING[stringIndex].note;
+  const noteIndex = (openNote + fret) % 12;
 
-  for (const note of stringNotes) {
-    const noteFret = anchor + note.rel;
-    if (noteFret === fret) {
-      return { finger: note.finger, degree: note.degree };
-    }
-  }
+  // Check if this note is in the key
+  const degreeIndex = keyNotes.indexOf(noteIndex);
+  if (degreeIndex === -1) return null;
 
-  return null;
+  // Check if this fret falls within the 4-fret position window
+  // Need to handle wrap-around for high frets
+  let offset = fret - positionFret;
+  if (offset < -6) offset += 12; // handle wrap from high frets back
+  if (offset > 6) offset -= 12;
+
+  if (offset < 0 || offset > 3) return null;
+
+  return {
+    finger: offset + 1,
+    degree: degreeIndex + 1,
+  };
 }

@@ -2,7 +2,7 @@ import { MODES } from "./lib/fretboard";
 import { SCALE_DEGREES, getNoteName } from "./lib/music";
 import { getNoteColor, CAGED_SHAPE_COLORS, getScalePositionColor } from "./lib/colors";
 import { CAGED_ORDER } from "./lib/caged";
-import { POSITION_CAGED_MAP } from "./lib/scales";
+import { getPositionLabel } from "./lib/scales";
 import { INTERVAL_LABELS, INTERVAL_NAMES } from "./lib/intervals";
 
 export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNote, scalePositionState, cagedState, intervalState }) {
@@ -46,7 +46,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
       {mode === MODES.SCALE_POSITIONS && scalePositionState && (
         <>
           <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#444", marginRight: 4 }}>
-            Position {scalePositionState.positionIndex + 1} of 5
+            Position {getPositionLabel(scalePositionState.positionIndex)}
           </span>
           <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
           <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.62rem", color: "#555" }}>Fingering:</span>
@@ -69,10 +69,6 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
               <span style={{ color: "#555" }}>{label}</span>
             </span>
           ))}
-          <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
-          <span style={{ fontSize: "0.62rem", color: "#555", fontFamily: "'Outfit', sans-serif" }}>
-            {POSITION_CAGED_MAP[scalePositionState.positionIndex]} shape
-          </span>
         </>
       )}
 
