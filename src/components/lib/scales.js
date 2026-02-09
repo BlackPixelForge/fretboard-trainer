@@ -1,78 +1,143 @@
 import { STRING_TUNING } from "./music";
 import { FRET_COUNT } from "./fretboard";
 
-// String(Finger) position system: 9 positions
-// 3 root strings (6=low E, 5=A, 4=D) × 3 root fingers (1=index, 2=middle, 4=pinky)
-export const POSITIONS = [
-  { rootString: 5, rootFinger: 1 },  // 6(1)
-  { rootString: 5, rootFinger: 2 },  // 6(2)
-  { rootString: 5, rootFinger: 4 },  // 6(4)
-  { rootString: 4, rootFinger: 1 },  // 5(1)
-  { rootString: 4, rootFinger: 2 },  // 5(2)
-  { rootString: 4, rootFinger: 4 },  // 5(4)
-  { rootString: 3, rootFinger: 1 },  // 4(1)
-  { rootString: 3, rootFinger: 2 },  // 4(2)
-  { rootString: 3, rootFinger: 4 },  // 4(4)
+// Convert guitar string number (1=high E, 6=low E) to stringIndex (0=high E, 5=low E)
+function toStringIndex(guitarString) {
+  return 6 - guitarString;
+}
+
+// Build notes array from compact form: array of [guitarString, [offset, degree] pairs...]
+function buildNotes(formDef) {
+  const notes = [];
+  for (const [gs, ...pairs] of formDef) {
+    const si = toStringIndex(gs);
+    for (const [offset, degree] of pairs) {
+      notes.push({ stringIndex: si, offset, degree });
+    }
+  }
+  return notes;
+}
+
+// 5 correct major scale form patterns
+// Each form: { name, rootStringIndex, rootFinger, notes[] }
+// notes[]: { stringIndex, offset, degree } where actualFret = rootFret + offset
+export const FORMS = [
+  {
+    name: "6(1)",
+    rootStringIndex: toStringIndex(6), // stringIndex 5
+    rootFinger: 1,
+    notes: buildNotes([
+      [6, [0,1], [2,2], [4,3]],
+      [5, [0,4], [2,5], [4,6]],
+      [4, [1,7], [2,1], [4,2]],
+      [3, [1,3], [2,4], [4,5]],
+      [2, [2,6], [4,7]],
+      [1, [0,1]],
+    ]),
+  },
+  {
+    name: "6(4)",
+    rootStringIndex: toStringIndex(6), // stringIndex 5
+    rootFinger: 4,
+    notes: buildNotes([
+      [6, [-3,6], [-1,7], [0,1]],
+      [5, [-3,2], [-1,3], [0,4]],
+      [4, [-3,5], [-1,6]],
+      [3, [-4,7], [-3,1], [-1,2]],
+      [2, [-3,3], [-2,4], [0,5]],
+      [1, [-3,6], [-1,7], [0,1]],
+    ]),
+  },
+  {
+    name: "5(1)",
+    rootStringIndex: toStringIndex(5), // stringIndex 4
+    rootFinger: 1,
+    notes: buildNotes([
+      [6, [0,5], [2,6], [4,7]],
+      [5, [0,1], [2,2], [4,3]],
+      [4, [0,4], [2,5], [4,6]],
+      [3, [1,7], [2,1], [4,2]],
+      [2, [2,3], [3,4], [5,5]],
+      [1, [2,6], [4,7], [5,1]],
+    ]),
+  },
+  {
+    name: "5(4)",
+    rootStringIndex: toStringIndex(5), // stringIndex 4
+    rootFinger: 4,
+    notes: buildNotes([
+      [6, [-3,3], [-2,4], [0,5]],
+      [5, [-3,6], [-1,7], [0,1]],
+      [4, [-3,2], [-1,3], [0,4]],
+      [3, [-3,5], [-1,6]],
+      [2, [-3,7], [-2,1], [0,2]],
+      [1, [-3,3], [-2,4], [0,5], [2,6], [4,7], [5,1]],
+    ]),
+  },
+  {
+    name: "4(1)",
+    rootStringIndex: toStringIndex(4), // stringIndex 3
+    rootFinger: 1,
+    notes: buildNotes([
+      [6, [0,2], [2,3], [3,4]],
+      [5, [0,5], [2,6], [4,7]],
+      [4, [0,1], [2,2], [4,3]],
+      [3, [0,4], [2,5], [4,6]],
+      [2, [2,7], [3,1], [5,2]],
+      [1, [2,3], [3,4], [5,5], [7,6], [9,7], [10,1]],
+    ]),
+  },
 ];
 
-// Guitar string numbers: stringIndex 0=high E=1, 1=B=2, 2=G=3, 3=D=4, 4=A=5, 5=low E=6
-function guitarStringNumber(stringIndex) {
-  return 6 - stringIndex;
+/**
+ * Get display label for a position, e.g. "6(1)"
+ */
+export function getPositionLabel(positionIndex) {
+  return FORMS[positionIndex].name;
 }
 
 /**
- * Get display label for a position, e.g. "6(4)"
+ * Compute the root fret for a form in a given key.
+ * rootFret is where the root note sits on the form's root string.
  */
-export function getPositionLabel(positionIndex) {
-  const pos = POSITIONS[positionIndex];
-  return `${guitarStringNumber(pos.rootString)}(${pos.rootFinger})`;
+function getRootFret(rootNoteIndex, form) {
+  const openNote = STRING_TUNING[form.rootStringIndex].note;
+  let rootFret = (rootNoteIndex - openNote + 12) % 12;
+  if (rootFret === 0) rootFret = 12; // avoid open string
+  return rootFret;
 }
 
 /**
  * Get the fret where finger 1 sits for a position in a given key.
- * positionFret = rootFret - (rootFinger - 1)
  */
 export function getPositionFret(rootNoteIndex, positionIndex) {
-  const pos = POSITIONS[positionIndex];
-  const openNote = STRING_TUNING[pos.rootString].note;
-  // Find the lowest fret on the root string where the root note occurs
-  let rootFret = (rootNoteIndex - openNote + 12) % 12;
-  if (rootFret === 0) rootFret = 12; // use fret 12 instead of open string for position calculation
-  let positionFret = rootFret - (pos.rootFinger - 1);
-  if (positionFret < 0) positionFret += 12;
-  return positionFret;
+  const form = FORMS[positionIndex];
+  const rootFret = getRootFret(rootNoteIndex, form);
+  return rootFret - (form.rootFinger - 1);
 }
-
-// Major scale intervals in semitones from root: W W H W W W H
-const MAJOR_SCALE_SEMITONES = [0, 2, 4, 5, 7, 9, 11];
 
 /**
  * Get all notes for a scale position in a given key.
  * Returns array of { stringIndex, fret, finger, degree }
  */
 export function getScalePositionNotes(rootNoteIndex, keyNotes, positionIndex) {
-  const positionFret = getPositionFret(rootNoteIndex, positionIndex);
-  const notes = [];
+  const form = FORMS[positionIndex];
+  const rootFret = getRootFret(rootNoteIndex, form);
+  const results = [];
 
-  for (let si = 0; si < 6; si++) {
-    const openNote = STRING_TUNING[si].note;
-    for (let fret = positionFret; fret <= positionFret + 3; fret++) {
-      const actualFret = fret > FRET_COUNT ? fret - 12 : fret;
-      if (actualFret < 0 || actualFret > FRET_COUNT) continue;
-      const noteIndex = (openNote + actualFret) % 12;
-      const degreeIndex = keyNotes.indexOf(noteIndex);
-      if (degreeIndex === -1) continue;
-      const finger = fret - positionFret + 1;
-      notes.push({
-        stringIndex: si,
-        fret: actualFret,
-        finger,
-        degree: degreeIndex + 1,
-      });
-    }
+  for (const note of form.notes) {
+    const actualFret = rootFret + note.offset;
+    if (actualFret < 0 || actualFret > FRET_COUNT) continue;
+    const finger = Math.max(1, Math.min(4, note.offset + form.rootFinger));
+    results.push({
+      stringIndex: note.stringIndex,
+      fret: actualFret,
+      finger,
+      degree: note.degree,
+    });
   }
 
-  return notes;
+  return results;
 }
 
 /**
@@ -80,24 +145,20 @@ export function getScalePositionNotes(rootNoteIndex, keyNotes, positionIndex) {
  * Returns { finger, degree } or null.
  */
 export function isInScalePosition(stringIndex, fret, rootNoteIndex, keyNotes, positionIndex) {
-  const positionFret = getPositionFret(rootNoteIndex, positionIndex);
-  const openNote = STRING_TUNING[stringIndex].note;
-  const noteIndex = (openNote + fret) % 12;
+  const form = FORMS[positionIndex];
+  const rootFret = getRootFret(rootNoteIndex, form);
 
-  // Check if this note is in the key
-  const degreeIndex = keyNotes.indexOf(noteIndex);
-  if (degreeIndex === -1) return null;
+  for (const note of form.notes) {
+    const actualFret = rootFret + note.offset;
+    if (actualFret < 0 || actualFret > FRET_COUNT) continue;
+    if (note.stringIndex === stringIndex && actualFret === fret) {
+      const finger = Math.max(1, Math.min(4, note.offset + form.rootFinger));
+      return {
+        finger,
+        degree: note.degree,
+      };
+    }
+  }
 
-  // Check if this fret falls within the 4-fret position window
-  // Need to handle wrap-around for high frets
-  let offset = fret - positionFret;
-  if (offset < -6) offset += 12; // handle wrap from high frets back
-  if (offset > 6) offset -= 12;
-
-  if (offset < 0 || offset > 3) return null;
-
-  return {
-    finger: offset + 1,
-    degree: degreeIndex + 1,
-  };
+  return null;
 }
