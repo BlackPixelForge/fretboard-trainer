@@ -1,0 +1,53 @@
+import { FRET_COUNT } from "../lib/fretboard";
+import FretCell from "./FretCell";
+
+export default function StringRow({
+  string, si, keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
+  highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
+}) {
+  return (
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      height: 36,
+      position: "relative",
+      opacity: selectedStrings.has(si) ? 1 : 0.25,
+      transition: "opacity 0.3s",
+    }}>
+      {/* String label */}
+      <div style={{
+        width: 48,
+        flexShrink: 0,
+        textAlign: "center",
+        fontSize: "0.7rem",
+        fontWeight: 600,
+        color: "#5a5040",
+        fontFamily: "'JetBrains Mono', monospace",
+      }}>
+        {string.name}{si === 0 ? "\u00B9" : si === 5 ? "\u2076" : ""}
+      </div>
+
+      {/* Frets */}
+      {Array.from({ length: FRET_COUNT + 1 }, (_, f) => (
+        <FretCell
+          key={f}
+          si={si}
+          f={f}
+          keyNotes={keyNotes}
+          rootNote={rootNote}
+          mode={mode}
+          selectedStrings={selectedStrings}
+          selectedRegion={selectedRegion}
+          region={region}
+          highlightRoot={highlightRoot}
+          showDegrees={showDegrees}
+          quizNote={quizNote}
+          selectedAnswer={selectedAnswer}
+          isNoteVisible={isNoteVisible}
+          onToggleReveal={onToggleReveal}
+          hideAll={hideAll}
+        />
+      ))}
+    </div>
+  );
+}
