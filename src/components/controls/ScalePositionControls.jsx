@@ -1,7 +1,7 @@
 import { FORMS, getPositionLabel } from "../lib/scales";
 
 export default function ScalePositionControls({ scalePositionState, updateScalePosition }) {
-  const { positionIndex, showFingering } = scalePositionState;
+  const { positionIndex, showFingering, showNoteNames } = scalePositionState;
   const total = FORMS.length;
 
   return (
@@ -84,7 +84,24 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
       <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
 
       <button
-        onClick={() => updateScalePosition({ showFingering: !showFingering })}
+        onClick={() => updateScalePosition({ showNoteNames: !showNoteNames, showFingering: false })}
+        style={{
+          padding: "5px 10px",
+          borderRadius: 6,
+          border: `1px solid ${showNoteNames ? "#3ca0dc44" : "#1e1e2e"}`,
+          background: showNoteNames ? "rgba(60,160,220,0.1)" : "#0e0e16",
+          color: showNoteNames ? "#3ca0dc" : "#555",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "0.68rem",
+          fontWeight: 500,
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
+      >
+        Notes
+      </button>
+      <button
+        onClick={() => updateScalePosition({ showFingering: !showFingering, showNoteNames: false })}
         style={{
           padding: "5px 10px",
           borderRadius: 6,

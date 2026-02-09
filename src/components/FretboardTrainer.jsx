@@ -50,6 +50,7 @@ export default function FretboardTrainer() {
   const [scalePositionState, setScalePositionState] = useState({
     positionIndex: 0,
     showFingering: false,
+    showNoteNames: false,
   });
 
   const [cagedState, setCagedState] = useState({
@@ -99,6 +100,8 @@ export default function FretboardTrainer() {
         finger: match.finger,
         isRoot: match.degree === 1,
         showFingering: scalePositionState.showFingering,
+        showNoteNames: scalePositionState.showNoteNames,
+        noteName: getNoteName(noteIndex),
       };
     }
 

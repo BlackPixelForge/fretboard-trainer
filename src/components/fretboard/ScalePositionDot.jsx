@@ -1,8 +1,8 @@
 import { getScalePositionColor } from "../lib/colors";
 
-export default function ScalePositionDot({ degree, finger, showFingering, isRoot }) {
+export default function ScalePositionDot({ degree, finger, showFingering, showNoteNames, noteName, isRoot }) {
   const colors = getScalePositionColor(degree, isRoot);
-  const label = showFingering ? String(finger) : String(degree);
+  const label = showFingering ? String(finger) : showNoteNames ? noteName : String(degree);
 
   return (
     <div style={{

@@ -53,6 +53,8 @@ export default function FretCell({
             degree={data.degree}
             finger={data.finger}
             showFingering={data.showFingering}
+            showNoteNames={data.showNoteNames}
+            noteName={data.noteName}
             isRoot={data.isRoot}
           />
         );
