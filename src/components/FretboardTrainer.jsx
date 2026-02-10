@@ -5,7 +5,7 @@ import {
   NOTES, NATURAL_NOTES, SHARP_NOTES, DIATONIC_KEYS,
   getNoteAt, getNoteName, isInKey, getStringLabel, getScaleDegree,
 } from "./lib/music";
-import { MODES, FRET_REGIONS } from "./lib/fretboard";
+import { MODES, FRET_REGIONS, FRET_COUNT } from "./lib/fretboard";
 import { getIntervalLabel, getIntervalDegree, generateIntervalQuiz, INTERVAL_LABELS } from "./lib/intervals";
 import { isInScalePosition, FORMS, getRootNoteForPosition, computeKeyNotes } from "./lib/scales";
 import { getCAGEDInfo } from "./lib/caged";
@@ -75,6 +75,12 @@ export default function FretboardTrainer() {
     showFingering: false,
     showNoteNames: false,
     showChordTones: false,
+  });
+
+  const [identifyState, setIdentifyState] = useState({
+    phase: "selecting",
+    selections: new Set(),
+    results: null,
   });
 
   // Base key from dropdown
@@ -197,22 +203,18 @@ export default function FretboardTrainer() {
 
   const toggleReveal = (s, f) => {
     if (mode === MODES.QUIZ_IDENTIFY) {
+      if (identifyState.phase !== "selecting") return;
       const noteIndex = getNoteAt(s, f);
-      const noteName = getNoteName(noteIndex);
-      if (noteName === quizTarget?.name) {
-        setQuizFeedback({ correct: true, message: `\u2713 Correct! That's ${noteName}` });
-        setScore(p => ({ correct: p.correct + 1, total: p.total + 1 }));
-        setStreak(p => {
-          const next = p + 1;
-          setBestStreak(b => Math.max(b, next));
-          return next;
-        });
-        setTimeout(() => generateIdentifyQuiz(), 800);
-      } else {
-        setQuizFeedback({ correct: false, message: `\u2717 That's ${noteName}, not ${quizTarget?.name}` });
-        setScore(p => ({ ...p, total: p.total + 1 }));
-        setStreak(0);
-      }
+      if (!isInKey(noteIndex, keyNotes)) return;
+      if (!selectedStrings.has(s)) return;
+      if (selectedRegion !== "all" && (f < region.start || f > region.end)) return;
+      const id = getNoteId(s, f);
+      setIdentifyState(prev => {
+        const next = new Set(prev.selections);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return { ...prev, selections: next };
+      });
       return;
     }
     if (mode === MODES.QUIZ_FIND) return;
@@ -233,6 +235,7 @@ export default function FretboardTrainer() {
     const name = naturals[Math.floor(Math.random() * naturals.length)];
     setQuizTarget({ name });
     setQuizFeedback(null);
+    setIdentifyState({ phase: "selecting", selections: new Set(), results: null });
   }, [keyNotes]);
 
   const generateFindQuiz = useCallback(() => {
@@ -324,10 +327,51 @@ export default function FretboardTrainer() {
     }
   };
 
+  const handleFinishIdentify = () => {
+    const positionMap = new Map();
+    let correct = 0, incorrect = 0, missed = 0;
+    const fretStart = selectedRegion === "all" ? 0 : region.start;
+    const fretEnd = selectedRegion === "all" ? FRET_COUNT : region.end;
+    for (let s = 0; s <= 5; s++) {
+      if (!selectedStrings.has(s)) continue;
+      for (let f = fretStart; f <= fretEnd; f++) {
+        const noteIndex = getNoteAt(s, f);
+        if (!isInKey(noteIndex, keyNotes)) continue;
+        const isTarget = getNoteName(noteIndex) === quizTarget.name;
+        const isSelected = identifyState.selections.has(`${s}-${f}`);
+        if (isTarget && isSelected) {
+          correct++;
+          positionMap.set(`${s}-${f}`, "correct");
+        } else if (!isTarget && isSelected) {
+          incorrect++;
+          positionMap.set(`${s}-${f}`, "incorrect");
+        } else if (isTarget && !isSelected) {
+          missed++;
+          positionMap.set(`${s}-${f}`, "missed");
+        }
+      }
+    }
+    const percentage = (correct + incorrect) > 0 ? Math.round(correct / (correct + incorrect) * 100) : 0;
+    setIdentifyState({
+      phase: "results",
+      selections: identifyState.selections,
+      results: { correct, incorrect, missed, total: correct + incorrect + missed, percentage, positionMap },
+    });
+  };
+
+  const handleNewIdentifyRound = () => {
+    generateIdentifyQuiz();
+  };
+
   useEffect(() => {
     if (mode === MODES.QUIZ_IDENTIFY) generateIdentifyQuiz();
     else if (mode === MODES.QUIZ_FIND) generateFindQuiz();
   }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reset identify quiz when key changes
+  useEffect(() => {
+    if (mode === MODES.QUIZ_IDENTIFY) generateIdentifyQuiz();
+  }, [selectedKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Interval quiz mode effect
   useEffect(() => {
@@ -408,6 +452,14 @@ export default function FretboardTrainer() {
         return false;
       }
       return true;
+    }
+
+    // Batch identify mode: show dots at all in-key positions in active region
+    if (mode === MODES.QUIZ_IDENTIFY) {
+      if (!selectedStrings.has(s)) return false;
+      if (selectedRegion !== "all" && (f < region.start || f > region.end)) return false;
+      const noteIndex = getNoteAt(s, f);
+      return isInKey(noteIndex, keyNotes);
     }
 
     // Original logic for explore/quiz modes
@@ -562,8 +614,8 @@ export default function FretboardTrainer() {
           <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
         </div>
 
-        {/* Quiz Prompt & Score — original quiz modes */}
-        {(mode === MODES.QUIZ_IDENTIFY || mode === MODES.QUIZ_FIND) && (
+        {/* Quiz Prompt — Name Note batch mode */}
+        {mode === MODES.QUIZ_IDENTIFY && (
           <div style={{
             display: "flex",
             flexWrap: "wrap",
@@ -572,16 +624,34 @@ export default function FretboardTrainer() {
             alignItems: "center",
             animation: "slideDown 0.3s ease",
           }}>
-            <QuizPrompt mode={mode} quizTarget={quizTarget} quizNote={quizNote} />
+            <QuizPrompt
+              mode={mode}
+              quizTarget={quizTarget}
+              identifyState={identifyState}
+              onFinish={handleFinishIdentify}
+              onNewRound={handleNewIdentifyRound}
+            />
+          </div>
+        )}
+
+        {/* Quiz Prompt & Score — Find Note mode */}
+        {mode === MODES.QUIZ_FIND && (
+          <div style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "16px",
+            marginBottom: "16px",
+            alignItems: "center",
+            animation: "slideDown 0.3s ease",
+          }}>
+            <QuizPrompt mode={mode} quizNote={quizNote} />
             <QuizFeedback feedback={quizFeedback} />
-            {mode === MODES.QUIZ_FIND && (
-              <AnswerBubbles
-                quizNote={quizNote}
-                findChoices={findChoices}
-                selectedAnswer={selectedAnswer}
-                onAnswer={handleFindAnswer}
-              />
-            )}
+            <AnswerBubbles
+              quizNote={quizNote}
+              findChoices={findChoices}
+              selectedAnswer={selectedAnswer}
+              onAnswer={handleFindAnswer}
+            />
             <ScoreBar score={score} streak={streak} bestStreak={bestStreak} />
           </div>
         )}
@@ -639,6 +709,7 @@ export default function FretboardTrainer() {
           scalePositionState={scalePositionState}
           cagedState={cagedState}
           intervalState={intervalState}
+          identifyState={identifyState}
         />
 
         {/* Legend */}

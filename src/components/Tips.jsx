@@ -43,7 +43,7 @@ export default function Tips({ mode }) {
         )}
         {mode === MODES.QUIZ_IDENTIFY && (
           <>
-            <strong style={{ color: "#ffc832" }}>Name the Note Quiz:</strong> You{"'"}re given a note name — find and click every occurrence on the fretboard. Use the string and region filters to focus your practice on specific areas. Build your streak!
+            <strong style={{ color: "#ffc832" }}>Name the Note Quiz:</strong> You{"'"}re given a note name — click every fret position where you think that note lives. Selected positions show a gold <strong>?</strong> marker (click again to deselect). When ready, hit <em>Finish Selections</em> to reveal results: green = correct, red = wrong, amber pulsing = missed. Use string and region filters to narrow your focus.
           </>
         )}
         {mode === MODES.QUIZ_FIND && (

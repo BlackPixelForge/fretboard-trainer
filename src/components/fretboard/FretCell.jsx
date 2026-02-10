@@ -9,7 +9,7 @@ import CAGEDDot from "./CAGEDDot";
 export default function FretCell({
   si, f, keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
   highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
-  getNoteDisplayData, scalePositionState, cagedState, intervalState,
+  getNoteDisplayData, scalePositionState, cagedState, intervalState, identifyState,
 }) {
   const noteIndex = getNoteAt(si, f);
   const noteName = getNoteName(noteIndex);
@@ -122,8 +122,81 @@ export default function FretCell({
         );
       })()}
 
-      {/* Original mode rendering: Explore + Quiz modes */}
-      {(mode === MODES.EXPLORE || mode === MODES.QUIZ_IDENTIFY || mode === MODES.QUIZ_FIND) &&
+      {/* Batch identify mode rendering */}
+      {mode === MODES.QUIZ_IDENTIFY && inKey && isInRegion && selectedStrings.has(si) && (() => {
+        if (identifyState?.phase === "selecting") {
+          const id = `${si}-${f}`;
+          const isSelected = identifyState.selections.has(id);
+          if (isSelected) {
+            return (
+              <div
+                onClick={() => onToggleReveal(si, f)}
+                style={{
+                  width: 28, height: 28, borderRadius: "50%",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  position: "relative", zIndex: 2, cursor: "pointer",
+                  background: "rgba(255,200,50,0.3)",
+                  border: "2px solid #ffc832",
+                  boxShadow: "0 0 8px rgba(255,200,50,0.4)",
+                  animation: "fadeIn 0.15s ease",
+                  fontSize: "0.7rem", fontWeight: 700, color: "#ffe080",
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}
+              >?</div>
+            );
+          }
+          return (
+            <div
+              onClick={() => onToggleReveal(si, f)}
+              style={{
+                width: 28, height: 28, borderRadius: "50%",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                position: "relative", zIndex: 2, cursor: "pointer",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px dashed #333",
+                transition: "all 0.25s ease",
+              }}
+            />
+          );
+        }
+        if (identifyState?.phase === "results") {
+          const id = `${si}-${f}`;
+          const result = identifyState.results?.positionMap?.get(id);
+          let bg, border, text, shadow, anim;
+          if (result === "correct") {
+            bg = "rgba(80,200,80,0.35)"; border = "#50c850"; text = "#80f080";
+            shadow = "0 0 6px rgba(80,200,80,0.4)"; anim = "fadeIn 0.2s ease";
+          } else if (result === "incorrect") {
+            bg = "rgba(220,60,60,0.35)"; border = "#dc3c3c"; text = "#f08080";
+            shadow = "0 0 6px rgba(220,60,60,0.4)"; anim = "fadeIn 0.2s ease";
+          } else if (result === "missed") {
+            bg = "rgba(255,200,50,0.25)"; border = "#ffc832"; text = "#ffe080";
+            shadow = "0 0 8px rgba(255,200,50,0.4)"; anim = "rootPulse 2s infinite ease-in-out";
+          } else {
+            bg = "rgba(255,255,255,0.06)"; border = "#333"; text = "#555";
+            shadow = "none"; anim = "none";
+          }
+          return (
+            <div style={{
+              width: 28, height: 28, borderRadius: "50%",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              position: "relative", zIndex: 2,
+              background: bg,
+              border: result ? `2px solid ${border}` : `1px solid ${border}`,
+              boxShadow: shadow,
+              animation: anim,
+              fontSize: "0.6rem", fontWeight: 700, color: text,
+              fontFamily: "'JetBrains Mono', monospace",
+            }}>
+              {noteName}
+            </div>
+          );
+        }
+        return null;
+      })()}
+
+      {/* Original mode rendering: Explore + Find Quiz modes */}
+      {(mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND) &&
         inKey && isInRegion && (() => {
         const isFindTarget = mode === MODES.QUIZ_FIND && quizNote && quizNote.string === si && quizNote.fret === f;
         const answered = mode === MODES.QUIZ_FIND && selectedAnswer !== null;
