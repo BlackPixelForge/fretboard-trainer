@@ -83,10 +83,14 @@ export default function FretboardTrainer() {
   // Compute key override for One Fret Rule mode
   const oneFretRuleInfo = FORMS.map((form, i) => {
     const rootNoteIdx = getRootNoteForPosition(oneFretRuleState.positionFret, i);
+    const rootFret = oneFretRuleState.positionFret + (form.rootFinger - 1);
+    const rootGuitarString = form.rootStringIndex + 1; // stringIndex 0=high E(str 1), 5=low E(str 6)
     return {
       formName: form.name,
       rootNote: rootNoteIdx,
       rootNoteName: getNoteName(rootNoteIdx),
+      rootFret,
+      rootGuitarString,
     };
   });
 
@@ -321,6 +325,29 @@ export default function FretboardTrainer() {
       updateInterval({ quizNote: null, selectedAnswer: null, quizFeedback: null, correctInterval: null });
     }
   }, [intervalState.quizMode, mode]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Arrow key navigation for One Fret Rule form stepping
+  useEffect(() => {
+    if (mode !== MODES.ONE_FRET_RULE) return;
+    const total = FORMS.length;
+    const handler = (e) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setOneFretRuleState(prev => ({
+          ...prev,
+          selectedFormIndex: prev.selectedFormIndex < total - 1 ? prev.selectedFormIndex + 1 : 0,
+        }));
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setOneFretRuleState(prev => ({
+          ...prev,
+          selectedFormIndex: prev.selectedFormIndex > 0 ? prev.selectedFormIndex - 1 : total - 1,
+        }));
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [mode]);
 
   const resetScore = () => {
     setScore({ correct: 0, total: 0 });

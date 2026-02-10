@@ -2,6 +2,8 @@ import { FORMS } from "../lib/scales";
 
 export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo }) {
   const { positionFret, selectedFormIndex, showFingering, showNoteNames } = oneFretRuleState;
+  const total = FORMS.length;
+  const currentInfo = oneFretRuleInfo[selectedFormIndex];
 
   return (
     <>
@@ -49,7 +51,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
             <button
               key={i}
               onClick={() => updateOneFretRule({ selectedFormIndex: i })}
-              title={`${info.formName} — ${info.rootNoteName} Major`}
+              title={`${info.formName} — ${info.rootNoteName} Major — root on string ${info.rootGuitarString}, fret ${info.rootFret}`}
               style={{
                 minWidth: 60,
                 height: 28,
@@ -74,6 +76,63 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
             </button>
           );
         })}
+      </span>
+
+      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+
+      {/* Prev/Next step buttons */}
+      <button
+        onClick={() => {
+          const prev = selectedFormIndex > 0 ? selectedFormIndex - 1 : total - 1;
+          updateOneFretRule({ selectedFormIndex: prev });
+        }}
+        title="Previous form (← arrow key)"
+        style={{
+          padding: "5px 8px",
+          borderRadius: 6,
+          border: "1px solid #1e1e2e",
+          background: "#0e0e16",
+          color: "#888",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "0.75rem",
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
+      >
+        {"<"}
+      </button>
+      <button
+        onClick={() => {
+          const next = selectedFormIndex < total - 1 ? selectedFormIndex + 1 : 0;
+          updateOneFretRule({ selectedFormIndex: next });
+        }}
+        title="Next form (→ arrow key)"
+        style={{
+          padding: "5px 8px",
+          borderRadius: 6,
+          border: "1px solid #1e1e2e",
+          background: "#0e0e16",
+          color: "#888",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "0.75rem",
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
+      >
+        {">"}
+      </button>
+
+      {/* Root fret info */}
+      <span style={{
+        fontSize: "0.6rem",
+        color: "#999",
+        fontFamily: "'Outfit', sans-serif",
+        padding: "4px 8px",
+        background: "rgba(232,78,60,0.08)",
+        border: "1px solid rgba(232,78,60,0.15)",
+        borderRadius: 6,
+      }}>
+        Root: str {currentInfo.rootGuitarString}, fret {currentInfo.rootFret}
       </span>
 
       <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />

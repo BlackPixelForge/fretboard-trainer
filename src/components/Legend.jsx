@@ -77,6 +77,9 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
         <>
           <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
             Form {oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.formName} &mdash; {getNoteName(oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.rootNote)} Major
+            <span style={{ color: "#666", marginLeft: 6, fontSize: "0.6rem" }}>
+              (root: string {oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.rootGuitarString}, fret {oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.rootFret})
+            </span>
           </span>
           <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
           <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
