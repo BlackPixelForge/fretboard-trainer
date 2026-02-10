@@ -13,11 +13,11 @@ const DEGREE_COLORS = {
 const DEFAULT_COLOR = { bg: "rgba(180,180,180,0.2)", border: "#999", text: "#ccc" };
 
 export const CAGED_SHAPE_COLORS = {
-  C: { bg: "rgba(232,78,60,0.30)", border: "#e84e3c", text: "#ffa09a" },
+  C: { bg: "rgba(140,100,220,0.30)", border: "#8c64dc", text: "#b098e8" },
   A: { bg: "rgba(230,160,60,0.30)", border: "#e6a03c", text: "#f0c878" },
-  G: { bg: "rgba(80,190,80,0.30)", border: "#50be50", text: "#80e080" },
-  E: { bg: "rgba(60,160,220,0.30)", border: "#3ca0dc", text: "#78c8f0" },
-  D: { bg: "rgba(140,100,220,0.30)", border: "#8c64dc", text: "#b098e8" },
+  G: { bg: "rgba(60,160,220,0.30)", border: "#3ca0dc", text: "#78c8f0" },
+  E: { bg: "rgba(232,78,60,0.30)", border: "#e84e3c", text: "#ffa09a" },
+  D: { bg: "rgba(80,190,80,0.30)", border: "#50be50", text: "#80e080" },
 };
 
 export function getScalePositionColor(degree, isRoot) {

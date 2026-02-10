@@ -1,101 +1,116 @@
 // CAGED system shapes
-// Each shape has chord tones (R, 3, 5) and surrounding scale tones
-// si = string index (0=high E, 5=low E), rel = fret offset from shape anchor
+// Each shape defined relative to root fret on its anchor string
+// si = string index (0=high E, 5=low E), rel = fret offset from root fret
+
+import { STRING_TUNING } from "./music";
 
 export const CAGED_ORDER = ["C", "A", "G", "E", "D"];
 
-export const CAGED_OFFSETS = { C: 0, A: 3, G: 5, E: 7, D: 10 };
-
-export const CAGED_SHAPES = {
-  C: {
-    letter: "C",
+const SHAPES = {
+  E: {
+    rootString: 5,
     chordTones: [
-      { si: 0, rel: 0, type: "R" },
-      { si: 1, rel: 1, type: "3" },
-      { si: 2, rel: 0, type: "5" },
+      { si: 5, rel: 0, type: "R" },
+      { si: 4, rel: 2, type: "5" },
       { si: 3, rel: 2, type: "R" },
-      { si: 4, rel: 3, type: "3" },
+      { si: 2, rel: 1, type: "3" },
+      { si: 1, rel: 0, type: "5" },
+      { si: 0, rel: 0, type: "R" },
     ],
     scaleTones: [
-      { si: 0, rel: 2, degree: 2 }, { si: 0, rel: 3, degree: 3 },
-      { si: 1, rel: 3, degree: 4 },
-      { si: 2, rel: 2, degree: 6 }, { si: 2, rel: 3, degree: 7 },
-      { si: 3, rel: 0, degree: 6 }, { si: 3, rel: 4, degree: 2 },
-      { si: 4, rel: 1, degree: 2 },
-      { si: 5, rel: 0, degree: 5 }, { si: 5, rel: 2, degree: 6 }, { si: 5, rel: 3, degree: 7 },
+      { si: 5, rel: 2, degree: 2 },
+      { si: 4, rel: 0, degree: 4 },
+      { si: 3, rel: 1, degree: 7 },
+      { si: 2, rel: 2, degree: 4 },
+      { si: 1, rel: 2, degree: 6 },
+      { si: 0, rel: 2, degree: 2 },
     ],
   },
   A: {
-    letter: "A",
+    rootString: 4,
     chordTones: [
-      { si: 0, rel: 0, type: "R" },
-      { si: 1, rel: 2, type: "5" },
-      { si: 2, rel: 2, type: "R" },
-      { si: 3, rel: 2, type: "5" },
       { si: 4, rel: 0, type: "R" },
+      { si: 3, rel: 2, type: "5" },
+      { si: 2, rel: 2, type: "R" },
+      { si: 1, rel: 2, type: "3" },
+      { si: 0, rel: 0, type: "5" },
     ],
     scaleTones: [
-      { si: 0, rel: 2, degree: 2 }, { si: 0, rel: 3, degree: 3 },
-      { si: 1, rel: 0, degree: 4 }, { si: 1, rel: 3, degree: 6 },
-      { si: 2, rel: -1, degree: 6 }, { si: 2, rel: 1, degree: 7 },
-      { si: 3, rel: 0, degree: 4 }, { si: 3, rel: 4, degree: 7 },
-      { si: 4, rel: 2, degree: 2 }, { si: 4, rel: 3, degree: 3 },
-      { si: 5, rel: 0, degree: 5 }, { si: 5, rel: 2, degree: 6 }, { si: 5, rel: 3, degree: 7 },
+      { si: 5, rel: 0, degree: 5 },
+      { si: 5, rel: 2, degree: 6 },
+      { si: 5, rel: 4, degree: 7 },
+      { si: 4, rel: 2, degree: 2 },
+      { si: 4, rel: 4, degree: 3 },
+      { si: 3, rel: 4, degree: 6 },
+      { si: 2, rel: 1, degree: 7 },
+      { si: 1, rel: 0, degree: 2 },
+      { si: 1, rel: 3, degree: 4 },
+      { si: 0, rel: 2, degree: 6 },
+      { si: 0, rel: 4, degree: 7 },
     ],
   },
   G: {
-    letter: "G",
+    rootString: 5,
     chordTones: [
-      { si: 0, rel: 3, type: "R" },
-      { si: 1, rel: 0, type: "5" },
-      { si: 2, rel: 0, type: "R" },
-      { si: 3, rel: 0, type: "5" },
-      { si: 4, rel: 2, type: "R" },
-      { si: 5, rel: 3, type: "R" },
+      { si: 5, rel: 0, type: "R" },
+      { si: 4, rel: -1, type: "3" },
+      { si: 3, rel: -3, type: "5" },
+      { si: 2, rel: -3, type: "R" },
+      { si: 1, rel: -3, type: "3" },
+      { si: 0, rel: 0, type: "R" },
     ],
     scaleTones: [
-      { si: 0, rel: 0, degree: 6 }, { si: 0, rel: 1, degree: 7 },
-      { si: 1, rel: 2, degree: 6 }, { si: 1, rel: 3, degree: 7 },
-      { si: 2, rel: 2, degree: 2 },
-      { si: 3, rel: 2, degree: 6 }, { si: 3, rel: 3, degree: 7 },
-      { si: 4, rel: 0, degree: 7 },
-      { si: 5, rel: 0, degree: 6 }, { si: 5, rel: 1, degree: 7 },
+      { si: 5, rel: -3, degree: 6 },
+      { si: 5, rel: -1, degree: 7 },
+      { si: 4, rel: -3, degree: 2 },
+      { si: 3, rel: -1, degree: 6 },
+      { si: 2, rel: -1, degree: 2 },
+      { si: 1, rel: 0, degree: 5 },
+      { si: 0, rel: -3, degree: 6 },
+      { si: 0, rel: -1, degree: 7 },
     ],
   },
-  E: {
-    letter: "E",
+  C: {
+    rootString: 4,
     chordTones: [
-      { si: 0, rel: 0, type: "R" },
-      { si: 1, rel: 0, type: "5" },
-      { si: 2, rel: 1, type: "3" },
-      { si: 3, rel: 2, type: "R" },
-      { si: 4, rel: 2, type: "5" },
-      { si: 5, rel: 0, type: "R" },
+      { si: 4, rel: 0, type: "R" },
+      { si: 3, rel: -1, type: "3" },
+      { si: 2, rel: -3, type: "5" },
+      { si: 1, rel: -2, type: "R" },
+      { si: 0, rel: -3, type: "3" },
     ],
     scaleTones: [
-      { si: 0, rel: 2, degree: 2 }, { si: 0, rel: 4, degree: 3 },
-      { si: 1, rel: 2, degree: 6 }, { si: 1, rel: 4, degree: 7 },
-      { si: 2, rel: -1, degree: 2 }, { si: 2, rel: 2, degree: 4 },
-      { si: 3, rel: -1, degree: 6 }, { si: 3, rel: 1, degree: 7 },
-      { si: 4, rel: -1, degree: 3 }, { si: 4, rel: 1, degree: 4 },
-      { si: 5, rel: 2, degree: 2 }, { si: 5, rel: 4, degree: 3 },
+      { si: 5, rel: -3, degree: 3 },
+      { si: 5, rel: -2, degree: 4 },
+      { si: 5, rel: 0, degree: 5 },
+      { si: 4, rel: -3, degree: 6 },
+      { si: 4, rel: -1, degree: 7 },
+      { si: 3, rel: -3, degree: 2 },
+      { si: 2, rel: -1, degree: 6 },
+      { si: 1, rel: -3, degree: 7 },
+      { si: 1, rel: 0, degree: 2 },
+      { si: 0, rel: 0, degree: 5 },
     ],
   },
   D: {
-    letter: "D",
+    rootString: 3,
     chordTones: [
-      { si: 0, rel: 3, type: "5" },
-      { si: 1, rel: 3, type: "R" },
-      { si: 2, rel: 2, type: "5" },
       { si: 3, rel: 0, type: "R" },
+      { si: 2, rel: 2, type: "5" },
+      { si: 1, rel: 3, type: "R" },
+      { si: 0, rel: 2, type: "3" },
     ],
     scaleTones: [
-      { si: 0, rel: 0, degree: 3 }, { si: 0, rel: 2, degree: 4 },
-      { si: 1, rel: 0, degree: 6 }, { si: 1, rel: 1, degree: 7 },
-      { si: 2, rel: 0, degree: 4 }, { si: 2, rel: 4, degree: 7 },
-      { si: 3, rel: 2, degree: 2 }, { si: 3, rel: 4, degree: 3 },
-      { si: 4, rel: 0, degree: 5 }, { si: 4, rel: 2, degree: 6 }, { si: 4, rel: 3, degree: 7 },
-      { si: 5, rel: 0, degree: 3 }, { si: 5, rel: 2, degree: 4 }, { si: 5, rel: 3, degree: 5 },
+      { si: 5, rel: 0, degree: 2 },
+      { si: 5, rel: 2, degree: 3 },
+      { si: 5, rel: 3, degree: 4 },
+      { si: 4, rel: 0, degree: 5 },
+      { si: 4, rel: 2, degree: 6 },
+      { si: 4, rel: 3, degree: 7 },
+      { si: 3, rel: 2, degree: 2 },
+      { si: 2, rel: 0, degree: 4 },
+      { si: 1, rel: 0, degree: 6 },
+      { si: 0, rel: 0, degree: 2 },
     ],
   },
 };
@@ -103,25 +118,34 @@ export const CAGED_SHAPES = {
 /**
  * Get all 5 CAGED shapes tiled across the fretboard for a given root.
  * rootNoteIndex: 0-11 (C=0)
- * Returns array of { letter, anchor, chordTones: [{si, fret, type}], scaleTones: [{si, fret, degree}] }
+ * Returns array of { letter, chordTones: [{si, fret, type}], scaleTones: [{si, fret, degree}] }
  */
 export function getCAGEDShapes(rootNoteIndex) {
-  const lowEOpen = 4;
-  const baseFret = (rootNoteIndex - lowEOpen + 12) % 12;
-
   return CAGED_ORDER.map((letter) => {
-    const shape = CAGED_SHAPES[letter];
-    const anchor = baseFret + CAGED_OFFSETS[letter];
+    const shape = SHAPES[letter];
+    const openNote = STRING_TUNING[shape.rootString].note;
+    const rootFret = (rootNoteIndex - openNote + 12) % 12;
 
-    const chordTones = shape.chordTones
-      .map((t) => ({ si: t.si, fret: anchor + t.rel, type: t.type }))
-      .filter((t) => t.fret >= 0 && t.fret <= 15);
+    const chordTones = [];
+    const scaleTones = [];
 
-    const scaleTones = shape.scaleTones
-      .map((t) => ({ si: t.si, fret: anchor + t.rel, degree: t.degree }))
-      .filter((t) => t.fret >= 0 && t.fret <= 15);
+    // Generate at base octave and +12 to tile across frets 0-15
+    for (const base of [rootFret, rootFret + 12]) {
+      for (const t of shape.chordTones) {
+        const fret = base + t.rel;
+        if (fret >= 0 && fret <= 15) {
+          chordTones.push({ si: t.si, fret, type: t.type });
+        }
+      }
+      for (const t of shape.scaleTones) {
+        const fret = base + t.rel;
+        if (fret >= 0 && fret <= 15) {
+          scaleTones.push({ si: t.si, fret, degree: t.degree });
+        }
+      }
+    }
 
-    return { letter, anchor, chordTones, scaleTones };
+    return { letter, chordTones, scaleTones };
   });
 }
 
