@@ -7,7 +7,7 @@ A guitar fretboard note memorization trainer. Users learn diatonic scale note po
 **Learn modes:**
 - **Explore** — View all notes in a key, toggle naturals/sharps/scale degrees, click to reveal/hide individual notes, use "Hide All" to self-test
 - **Scale Positions** — Navigate 5 major scale form patterns: 6(1), 6(4), 5(1), 5(4), 4(1) (e.g. 6(4) = root on string 6, finger 4). Forms are hardcoded note-for-note from standard guitar pedagogy. Dots show scale degrees by default; toggles switch to note names or fingering
-- **CAGED** — See how 5 open chord shapes tile across the fretboard, with chord tone vs scale tone distinction
+- **CAGED** — See how 5 open chord shapes (C, A, G, E, D) tile across the fretboard, with chord tone (R, 3, 5) vs scale tone distinction. Each shape is anchored to a root string with fret offsets relative to the root note, and maps to a scale position: C→5(4), A→5(1), G→6(4), E→6(1), D→4(1). Colors: C=purple, A=orange, G=blue, E=red, D=green
 - **Intervals** — View notes as interval labels (R, 2, 3...) with filtering, includes interval quiz sub-mode
 
 **Quiz modes:**
@@ -50,7 +50,7 @@ src/
     │   ├── ExploreToggles.jsx   # Naturals, Sharps, Degrees, Root Highlight, Hide All
     │   ├── StringToggles.jsx    # Per-string circular toggle buttons
     │   ├── ScalePositionControls.jsx  # 5 form buttons (6(1)..4(1)), prev/next, notes/fingering toggles
-    │   ├── CAGEDControls.jsx    # Shape picker (C/A/G/E/D + All), scale tones toggle
+    │   ├── CAGEDControls.jsx    # Shape picker (C/A/G/E/D + All) with position labels, scale tones toggle
     │   └── IntervalControls.jsx # Interval/note toggle, degree filter, quiz toggle
     ├── fretboard/
     │   ├── Fretboard.jsx        # Board container (wood background, shadow)
@@ -79,8 +79,9 @@ src/
         ├── scales.js            # FORMS (5 hardcoded major scale form patterns), getPositionLabel(),
         │                        # getPositionFret(), getScalePositionNotes(),
         │                        # isInScalePosition() — lookup-based, zero React dependencies
-        ├── caged.js             # CAGED_SHAPES, CAGED_ORDER, CAGED_OFFSETS,
-        │                        # getCAGEDShapes(), getCAGEDInfo() — zero React dependencies
+        ├── caged.js             # CAGED_ORDER, getCAGEDShapes(), getCAGEDInfo()
+        │                        # Shapes use rootString anchoring + root-relative offsets
+        │                        # Imports STRING_TUNING from music.js
         └── intervals.js         # INTERVAL_LABELS, INTERVAL_NAMES, getIntervalLabel(),
                                  # getIntervalDegree(), generateIntervalQuiz()
 ```

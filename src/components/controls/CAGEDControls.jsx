@@ -1,6 +1,8 @@
 import { CAGED_ORDER } from "../lib/caged";
 import { CAGED_SHAPE_COLORS } from "../lib/colors";
 
+const CAGED_POSITIONS = { C: "5(4)", A: "5(1)", G: "6(4)", E: "6(1)", D: "4(1)" };
+
 export default function CAGEDControls({ cagedState, updateCAGED }) {
   const { selectedShape, showScaleTones } = cagedState;
 
@@ -30,29 +32,39 @@ export default function CAGEDControls({ cagedState, updateCAGED }) {
         const active = selectedShape === letter;
         const color = CAGED_SHAPE_COLORS[letter];
         return (
-          <button
-            key={letter}
-            onClick={() => updateCAGED({ selectedShape: letter })}
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 6,
-              border: `1.5px solid ${active ? color.border : "#1e1e2e"}`,
-              background: active ? color.bg : "#0e0e16",
-              color: active ? color.text : "#777",
+          <div key={letter} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+            <button
+              onClick={() => updateCAGED({ selectedShape: letter })}
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                border: `1.5px solid ${active ? color.border : "#1e1e2e"}`,
+                background: active ? color.bg : "#0e0e16",
+                color: active ? color.text : "#777",
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.7rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 0,
+                transition: "all 0.2s",
+              }}
+            >
+              {letter}
+            </button>
+            <span style={{
+              fontSize: "0.5rem",
+              color: active ? color.text : "#555",
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: "0.7rem",
-              fontWeight: 700,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 0,
+              lineHeight: 1,
               transition: "all 0.2s",
-            }}
-          >
-            {letter}
-          </button>
+            }}>
+              {CAGED_POSITIONS[letter]}
+            </span>
+          </div>
         );
       })}
 
