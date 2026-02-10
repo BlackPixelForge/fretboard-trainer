@@ -1,7 +1,7 @@
 import { FORMS } from "../lib/scales";
 
 export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo }) {
-  const { positionFret, selectedFormIndex, showFingering, showNoteNames } = oneFretRuleState;
+  const { positionFret, selectedFormIndex, showFingering, showNoteNames, showChordTones } = oneFretRuleState;
   const total = FORMS.length;
   const currentInfo = oneFretRuleInfo[selectedFormIndex];
 
@@ -137,6 +137,23 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
 
       <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
 
+      <button
+        onClick={() => updateOneFretRule({ showChordTones: !showChordTones })}
+        style={{
+          padding: "5px 10px",
+          borderRadius: 6,
+          border: `1px solid ${showChordTones ? "#f0c83266" : "#1e1e2e"}`,
+          background: showChordTones ? "rgba(240,200,50,0.18)" : "#0e0e16",
+          color: showChordTones ? "#f0d060" : "#777",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "0.68rem",
+          fontWeight: 500,
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
+      >
+        Chord
+      </button>
       <button
         onClick={() => updateOneFretRule({ showNoteNames: !showNoteNames, showFingering: false })}
         style={{

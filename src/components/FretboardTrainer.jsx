@@ -74,6 +74,7 @@ export default function FretboardTrainer() {
     selectedFormIndex: 0,
     showFingering: false,
     showNoteNames: false,
+    showChordTones: false,
   });
 
   // Base key from dropdown
@@ -369,7 +370,9 @@ export default function FretboardTrainer() {
     if (mode === MODES.ONE_FRET_RULE) {
       if (!selectedStrings.has(s)) return false;
       const match = isInScalePosition(s, f, rootNote, keyNotes, oneFretRuleState.selectedFormIndex);
-      return match !== null;
+      if (!match) return false;
+      if (oneFretRuleState.showChordTones && match.degree !== 1 && match.degree !== 3 && match.degree !== 5) return false;
+      return true;
     }
 
     if (mode === MODES.CAGED) {
