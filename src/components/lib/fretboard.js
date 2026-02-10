@@ -1,5 +1,5 @@
-export const FRET_COUNT = 15;
-export const FRET_MARKERS = [3, 5, 7, 9, 12, 15];
+export const FRET_COUNT = 19;
+export const FRET_MARKERS = [3, 5, 7, 9, 12, 15, 17, 19];
 export const DOUBLE_MARKERS = [12];
 
 export const MODES = {
@@ -12,10 +12,11 @@ export const MODES = {
 };
 
 export const FRET_REGIONS = {
-  all: { start: 0, end: 15, label: "All Frets" },
+  all: { start: 0, end: 19, label: "All Frets" },
   open: { start: 0, end: 4, label: "Open Position (0-4)" },
   mid_low: { start: 5, end: 8, label: "Frets 5-8" },
   mid: { start: 7, end: 10, label: "Frets 7-10" },
   mid_high: { start: 9, end: 12, label: "Frets 9-12" },
   high: { start: 12, end: 15, label: "Frets 12-15" },
+  upper: { start: 15, end: 19, label: "Frets 15-19" },
 };

@@ -3,6 +3,7 @@
 // si = string index (0=high E, 5=low E), rel = fret offset from root fret
 
 import { STRING_TUNING } from "./music";
+import { FRET_COUNT } from "./fretboard";
 
 export const CAGED_ORDER = ["C", "A", "G", "E", "D"];
 
@@ -129,17 +130,17 @@ export function getCAGEDShapes(rootNoteIndex) {
     const chordTones = [];
     const scaleTones = [];
 
-    // Generate at base octave and +12 to tile across frets 0-15
-    for (const base of [rootFret, rootFret + 12]) {
+    // Generate at base octave, +12, and +24 to tile across all frets
+    for (const base of [rootFret, rootFret + 12, rootFret + 24]) {
       for (const t of shape.chordTones) {
         const fret = base + t.rel;
-        if (fret >= 0 && fret <= 15) {
+        if (fret >= 0 && fret <= FRET_COUNT) {
           chordTones.push({ si: t.si, fret, type: t.type });
         }
       }
       for (const t of shape.scaleTones) {
         const fret = base + t.rel;
-        if (fret >= 0 && fret <= 15) {
+        if (fret >= 0 && fret <= FRET_COUNT) {
           scaleTones.push({ si: t.si, fret, degree: t.degree });
         }
       }
