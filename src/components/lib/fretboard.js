@@ -7,6 +7,7 @@ export const MODES = {
   SCALE_POSITIONS: "scale_positions",
   CAGED: "caged",
   INTERVALS: "intervals",
+  ONE_FRET_RULE: "one_fret_rule",
   QUIZ_IDENTIFY: "quiz_identify",
   QUIZ_FIND: "quiz_find",
 };

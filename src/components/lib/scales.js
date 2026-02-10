@@ -188,3 +188,24 @@ export function isInScalePosition(stringIndex, fret, rootNoteIndex, keyNotes, po
 
   return null;
 }
+
+/**
+ * Inverse of getPositionFret: given a position fret (finger 1 fret) and form index,
+ * compute the root note index (0–11).
+ */
+export function getRootNoteForPosition(positionFret, formIndex) {
+  const form = FORMS[formIndex];
+  const rootFret = positionFret + (form.rootFinger - 1);
+  const openNote = STRING_TUNING[form.rootStringIndex].note;
+  return (openNote + rootFret) % 12;
+}
+
+/**
+ * Generate major scale notes (7 note indices) from any root note index
+ * using the W-W-H-W-W-W-H interval pattern.
+ */
+const MAJOR_SCALE_OFFSETS = [0, 2, 4, 5, 7, 9, 11];
+
+export function computeKeyNotes(rootNoteIndex) {
+  return MAJOR_SCALE_OFFSETS.map(offset => (rootNoteIndex + offset) % 12);
+}

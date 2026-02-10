@@ -36,6 +36,11 @@ export default function Tips({ mode }) {
             <strong style={{ color: "#50be50" }}>Interval Trainer:</strong> See notes as interval labels (R, 2, 3...) instead of note names. Filter specific intervals to focus on finding them across the fretboard. Enable <em>Quiz</em> mode to test your interval recognition — identify the interval at a highlighted position.
           </>
         )}
+        {mode === MODES.ONE_FRET_RULE && (
+          <>
+            <strong style={{ color: "#d4a017" }}>One Fret Rule:</strong> At any fret position, the 7 scale forms produce 7 different keys. Shift one fret and you cover all 12 keys. Pick a fret, then click through the 7 forms to see which key each produces. This is a powerful way to see how scale positions connect across keys at the same fret.
+          </>
+        )}
         {mode === MODES.QUIZ_IDENTIFY && (
           <>
             <strong style={{ color: "#ffc832" }}>Name the Note Quiz:</strong> You{"'"}re given a note name — find and click every occurrence on the fretboard. Use the string and region filters to focus your practice on specific areas. Build your streak!

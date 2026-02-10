@@ -5,7 +5,7 @@ import { CAGED_ORDER } from "./lib/caged";
 import { getPositionLabel } from "./lib/scales";
 import { INTERVAL_LABELS, INTERVAL_NAMES } from "./lib/intervals";
 
-export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNote, scalePositionState, cagedState, intervalState }) {
+export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNote, scalePositionState, cagedState, intervalState, oneFretRuleState, oneFretRuleInfo }) {
   return (
     <div style={{
       marginTop: 16,
@@ -47,6 +47,36 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
         <>
           <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
             Position {getPositionLabel(scalePositionState.positionIndex)}
+          </span>
+          <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
+          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
+          {[
+            { num: 1, label: "Index" },
+            { num: 2, label: "Middle" },
+            { num: 3, label: "Ring" },
+            { num: 4, label: "Pinky" },
+          ].map(({ num, label }) => (
+            <span key={num} style={{
+              display: "inline-flex", alignItems: "center", gap: 3,
+              fontSize: "0.62rem", fontFamily: "'JetBrains Mono', monospace",
+            }}>
+              <span style={{
+                width: 16, height: 16, borderRadius: "50%",
+                background: "rgba(60,160,220,0.2)", border: "1px solid #3ca0dc66",
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                fontSize: "0.55rem", fontWeight: 700, color: "#78c8f0",
+              }}>{num}</span>
+              <span style={{ color: "#999" }}>{label}</span>
+            </span>
+          ))}
+        </>
+      )}
+
+      {/* One Fret Rule legend */}
+      {mode === MODES.ONE_FRET_RULE && oneFretRuleState && oneFretRuleInfo && (
+        <>
+          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
+            Form {oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.formName} &mdash; {getNoteName(oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.rootNote)} Major
           </span>
           <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
           <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>

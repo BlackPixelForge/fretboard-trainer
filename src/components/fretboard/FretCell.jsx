@@ -44,8 +44,8 @@ export default function FretCell({
         opacity: 0.6,
       }} />
 
-      {/* New mode rendering: Scale Positions */}
-      {mode === MODES.SCALE_POSITIONS && visible && (() => {
+      {/* New mode rendering: Scale Positions + One Fret Rule */}
+      {(mode === MODES.SCALE_POSITIONS || mode === MODES.ONE_FRET_RULE) && visible && (() => {
         const data = getNoteDisplayData(si, f);
         if (!data) return null;
         return (

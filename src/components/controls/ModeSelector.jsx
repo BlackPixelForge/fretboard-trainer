@@ -5,6 +5,7 @@ const LEARN_MODES = [
   { key: MODES.SCALE_POSITIONS, label: "Positions" },
   { key: MODES.CAGED, label: "CAGED" },
   { key: MODES.INTERVALS, label: "Intervals" },
+  { key: MODES.ONE_FRET_RULE, label: "1-Fret Rule" },
 ];
 
 const QUIZ_MODES = [

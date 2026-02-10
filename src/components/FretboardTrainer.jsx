@@ -7,7 +7,7 @@ import {
 } from "./lib/music";
 import { MODES, FRET_REGIONS } from "./lib/fretboard";
 import { getIntervalLabel, getIntervalDegree, generateIntervalQuiz, INTERVAL_LABELS } from "./lib/intervals";
-import { isInScalePosition } from "./lib/scales";
+import { isInScalePosition, FORMS, getRootNoteForPosition, computeKeyNotes } from "./lib/scales";
 import { getCAGEDInfo } from "./lib/caged";
 import ModeSelector from "./controls/ModeSelector";
 import KeySelector from "./controls/KeySelector";
@@ -17,6 +17,7 @@ import StringToggles from "./controls/StringToggles";
 import IntervalControls from "./controls/IntervalControls";
 import ScalePositionControls from "./controls/ScalePositionControls";
 import CAGEDControls from "./controls/CAGEDControls";
+import OneFretRuleControls from "./controls/OneFretRuleControls";
 import QuizPrompt from "./quiz/QuizPrompt";
 import QuizFeedback from "./quiz/QuizFeedback";
 import AnswerBubbles from "./quiz/AnswerBubbles";
@@ -68,8 +69,34 @@ export default function FretboardTrainer() {
     correctInterval: null,
   });
 
-  const keyNotes = DIATONIC_KEYS[selectedKey];
-  const rootNote = keyNotes[0];
+  const [oneFretRuleState, setOneFretRuleState] = useState({
+    positionFret: 5,
+    selectedFormIndex: 0,
+    showFingering: false,
+    showNoteNames: false,
+  });
+
+  // Base key from dropdown
+  const baseKeyNotes = DIATONIC_KEYS[selectedKey];
+  const baseRootNote = baseKeyNotes[0];
+
+  // Compute key override for One Fret Rule mode
+  const oneFretRuleInfo = FORMS.map((form, i) => {
+    const rootNoteIdx = getRootNoteForPosition(oneFretRuleState.positionFret, i);
+    return {
+      formName: form.name,
+      rootNote: rootNoteIdx,
+      rootNoteName: getNoteName(rootNoteIdx),
+    };
+  });
+
+  const isOneFretRule = mode === MODES.ONE_FRET_RULE;
+  const keyNotes = isOneFretRule
+    ? computeKeyNotes(oneFretRuleInfo[oneFretRuleState.selectedFormIndex].rootNote)
+    : baseKeyNotes;
+  const rootNote = isOneFretRule
+    ? oneFretRuleInfo[oneFretRuleState.selectedFormIndex].rootNote
+    : baseRootNote;
   const region = FRET_REGIONS[selectedRegion];
 
   const getNoteId = (s, f) => `${s}-${f}`;
@@ -87,6 +114,10 @@ export default function FretboardTrainer() {
     setIntervalState(prev => ({ ...prev, ...updates }));
   };
 
+  const updateOneFretRule = (updates) => {
+    setOneFretRuleState(prev => ({ ...prev, ...updates }));
+  };
+
   // --- getNoteDisplayData: returns mode-specific rendering metadata ---
   const getNoteDisplayData = (s, f) => {
     const noteIndex = getNoteAt(s, f);
@@ -101,6 +132,20 @@ export default function FretboardTrainer() {
         isRoot: match.degree === 1,
         showFingering: scalePositionState.showFingering,
         showNoteNames: scalePositionState.showNoteNames,
+        noteName: getNoteName(noteIndex),
+      };
+    }
+
+    if (mode === MODES.ONE_FRET_RULE) {
+      const match = isInScalePosition(s, f, rootNote, keyNotes, oneFretRuleState.selectedFormIndex);
+      if (!match) return null;
+      return {
+        type: "scalePosition",
+        degree: match.degree,
+        finger: match.finger,
+        isRoot: match.degree === 1,
+        showFingering: oneFretRuleState.showFingering,
+        showNoteNames: oneFretRuleState.showNoteNames,
         noteName: getNoteName(noteIndex),
       };
     }
@@ -154,7 +199,7 @@ export default function FretboardTrainer() {
       return;
     }
     if (mode === MODES.QUIZ_FIND) return;
-    if (mode === MODES.SCALE_POSITIONS || mode === MODES.CAGED || mode === MODES.INTERVALS) return;
+    if (mode === MODES.SCALE_POSITIONS || mode === MODES.CAGED || mode === MODES.INTERVALS || mode === MODES.ONE_FRET_RULE) return;
 
     // Explore mode
     const id = getNoteId(s, f);
@@ -291,6 +336,12 @@ export default function FretboardTrainer() {
       return match !== null;
     }
 
+    if (mode === MODES.ONE_FRET_RULE) {
+      if (!selectedStrings.has(s)) return false;
+      const match = isInScalePosition(s, f, rootNote, keyNotes, oneFretRuleState.selectedFormIndex);
+      return match !== null;
+    }
+
     if (mode === MODES.CAGED) {
       if (!selectedStrings.has(s)) return false;
       const info = getCAGEDInfo(s, f, rootNote, cagedState.selectedShape);
@@ -412,7 +463,23 @@ export default function FretboardTrainer() {
           alignItems: "center",
         }}>
           <ModeSelector mode={mode} onModeChange={handleModeChange} />
-          <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
+          {!isOneFretRule && (
+            <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
+          )}
+          {isOneFretRule && (
+            <span style={{
+              padding: "7px 14px",
+              background: "rgba(212,160,23,0.12)",
+              border: "1px solid rgba(212,160,23,0.3)",
+              borderRadius: 8,
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              color: "#f0d060",
+            }}>
+              {getNoteName(rootNote)} Major
+            </span>
+          )}
           {(mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND || mode === MODES.QUIZ_IDENTIFY || mode === MODES.INTERVALS) && (
             <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
           )}
@@ -444,6 +511,13 @@ export default function FretboardTrainer() {
           )}
           {mode === MODES.CAGED && (
             <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} />
+          )}
+          {mode === MODES.ONE_FRET_RULE && (
+            <OneFretRuleControls
+              oneFretRuleState={oneFretRuleState}
+              updateOneFretRule={updateOneFretRule}
+              oneFretRuleInfo={oneFretRuleInfo}
+            />
           )}
           <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
         </div>
@@ -537,6 +611,8 @@ export default function FretboardTrainer() {
           scalePositionState={scalePositionState}
           cagedState={cagedState}
           intervalState={intervalState}
+          oneFretRuleState={oneFretRuleState}
+          oneFretRuleInfo={oneFretRuleInfo}
         />
 
         {/* Tips */}
