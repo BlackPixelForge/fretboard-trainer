@@ -36,6 +36,19 @@ export const FORMS = [
     ]),
   },
   {
+    name: "6(2)",
+    rootStringIndex: toStringIndex(6), // stringIndex 5
+    rootFinger: 2,
+    notes: buildNotes([
+      [6, [-1,7], [0,1], [2,2]],
+      [5, [-1,3], [0,4], [2,5]],
+      [4, [-1,6], [1,7], [2,1]],
+      [3, [-1,2], [1,3], [2,4]],
+      [2, [0,5], [2,6]],
+      [1, [-1,7], [0,1]],
+    ]),
+  },
+  {
     name: "6(4)",
     rootStringIndex: toStringIndex(6), // stringIndex 5
     rootFinger: 4,
@@ -59,6 +72,19 @@ export const FORMS = [
       [3, [1,7], [2,1], [4,2]],
       [2, [2,3], [3,4], [5,5]],
       [1, [2,6], [4,7], [5,1]],
+    ]),
+  },
+  {
+    name: "5(2)",
+    rootStringIndex: toStringIndex(5), // stringIndex 4
+    rootFinger: 2,
+    notes: buildNotes([
+      [6, [0,5], [2,6]],
+      [5, [-1,7], [0,1], [2,2]],
+      [4, [-1,3], [0,4], [2,5]],
+      [3, [-1,6], [1,7], [2,1]],
+      [2, [0,2], [2,3], [3,4]],
+      [1, [0,5], [2,6], [4,7], [5,1]],
     ]),
   },
   {
