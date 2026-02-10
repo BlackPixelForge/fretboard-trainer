@@ -147,6 +147,14 @@ export default function FretboardTrainer() {
     if (mode === MODES.ONE_FRET_RULE) {
       const match = isInScalePosition(s, f, rootNote, keyNotes, oneFretRuleState.selectedFormIndex);
       if (!match) return null;
+      // When chord toggle is on, check if this note is a chord tone in the mapped CAGED shape
+      const FORM_TO_CAGED = ["E", "E", "G", "A", "A", "C", "D"];
+      let isChordTone = null;
+      if (oneFretRuleState.showChordTones) {
+        const shapeLetter = FORM_TO_CAGED[oneFretRuleState.selectedFormIndex];
+        const cagedInfo = getCAGEDInfo(s, f, rootNote, shapeLetter);
+        isChordTone = cagedInfo ? cagedInfo.isChordTone : false;
+      }
       return {
         type: "scalePosition",
         degree: match.degree,
@@ -155,6 +163,7 @@ export default function FretboardTrainer() {
         showFingering: oneFretRuleState.showFingering,
         showNoteNames: oneFretRuleState.showNoteNames,
         noteName: getNoteName(noteIndex),
+        isChordTone,
       };
     }
 
@@ -370,9 +379,7 @@ export default function FretboardTrainer() {
     if (mode === MODES.ONE_FRET_RULE) {
       if (!selectedStrings.has(s)) return false;
       const match = isInScalePosition(s, f, rootNote, keyNotes, oneFretRuleState.selectedFormIndex);
-      if (!match) return false;
-      if (oneFretRuleState.showChordTones && match.degree !== 1 && match.degree !== 3 && match.degree !== 5) return false;
-      return true;
+      return match !== null;
     }
 
     if (mode === MODES.CAGED) {

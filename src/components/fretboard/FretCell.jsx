@@ -56,6 +56,7 @@ export default function FretCell({
             showNoteNames={data.showNoteNames}
             noteName={data.noteName}
             isRoot={data.isRoot}
+            isChordTone={data.isChordTone}
           />
         );
       })()}
