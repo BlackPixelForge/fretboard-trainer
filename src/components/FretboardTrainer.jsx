@@ -81,9 +81,12 @@ export default function FretboardTrainer() {
   const baseRootNote = baseKeyNotes[0];
 
   // Compute key override for One Fret Rule mode
+  // Root fret ascending pattern: 0, +2, +4 within each root-string group
   const oneFretRuleInfo = FORMS.map((form, i) => {
-    const rootNoteIdx = getRootNoteForPosition(oneFretRuleState.positionFret, i);
-    const rootFret = oneFretRuleState.positionFret + (form.rootFinger - 1);
+    const rootFretOffset = (i % 3) * 2;
+    const rootFret = oneFretRuleState.positionFret + rootFretOffset;
+    const effectivePositionFret = rootFret - (form.rootFinger - 1);
+    const rootNoteIdx = getRootNoteForPosition(effectivePositionFret, i);
     const rootGuitarString = form.rootStringIndex + 1; // stringIndex 0=high E(str 1), 5=low E(str 6)
     return {
       formName: form.name,
