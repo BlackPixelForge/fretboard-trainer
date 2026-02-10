@@ -7,12 +7,12 @@ export default function ScoreBar({ score, streak, bestStreak }) {
       display: "flex", gap: "16px",
       fontFamily: "'JetBrains Mono', monospace",
       fontSize: "0.72rem",
-      color: "#666",
+      color: "#999",
     }}>
       <span>Score: <strong style={{ color: "#c8ccd4" }}>{score.correct}/{score.total}</strong></span>
       <span>Accuracy: <strong style={{ color: accuracy >= 80 ? "#50c850" : accuracy >= 50 ? "#e6a03c" : "#dc3c3c" }}>{accuracy}%</strong></span>
       <span>Streak: <strong style={{ color: streak >= 5 ? "#ffc832" : "#c8ccd4" }}>{streak}</strong></span>
-      <span style={{ color: "#444" }}>Best: {bestStreak}</span>
+      <span style={{ color: "#777" }}>Best: {bestStreak}</span>
     </div>
   );
 }

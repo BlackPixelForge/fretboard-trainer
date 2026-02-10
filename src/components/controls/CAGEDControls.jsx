@@ -6,16 +6,16 @@ export default function CAGEDControls({ cagedState, updateCAGED }) {
 
   return (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#444", fontFamily: "'Outfit', sans-serif" }}>Shape:</span>
+      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Shape:</span>
 
       <button
         onClick={() => updateCAGED({ selectedShape: "all" })}
         style={{
           padding: "5px 10px",
           borderRadius: 6,
-          border: `1px solid ${selectedShape === "all" ? "#88888855" : "#1e1e2e"}`,
-          background: selectedShape === "all" ? "rgba(180,180,180,0.12)" : "#0e0e16",
-          color: selectedShape === "all" ? "#ccc" : "#555",
+          border: `1px solid ${selectedShape === "all" ? "#88888877" : "#1e1e2e"}`,
+          background: selectedShape === "all" ? "rgba(180,180,180,0.18)" : "#0e0e16",
+          color: selectedShape === "all" ? "#ddd" : "#777",
           fontFamily: "'Outfit', sans-serif",
           fontSize: "0.68rem",
           fontWeight: selectedShape === "all" ? 600 : 400,
@@ -39,7 +39,7 @@ export default function CAGEDControls({ cagedState, updateCAGED }) {
               borderRadius: 6,
               border: `1.5px solid ${active ? color.border : "#1e1e2e"}`,
               background: active ? color.bg : "#0e0e16",
-              color: active ? color.text : "#555",
+              color: active ? color.text : "#777",
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: "0.7rem",
               fontWeight: 700,
@@ -63,9 +63,9 @@ export default function CAGEDControls({ cagedState, updateCAGED }) {
         style={{
           padding: "5px 10px",
           borderRadius: 6,
-          border: `1px solid ${showScaleTones ? "#3ca0dc44" : "#1e1e2e"}`,
-          background: showScaleTones ? "rgba(60,160,220,0.1)" : "#0e0e16",
-          color: showScaleTones ? "#3ca0dc" : "#555",
+          border: `1px solid ${showScaleTones ? "#3ca0dc66" : "#1e1e2e"}`,
+          background: showScaleTones ? "rgba(60,160,220,0.18)" : "#0e0e16",
+          color: showScaleTones ? "#78c8f0" : "#777",
           fontFamily: "'Outfit', sans-serif",
           fontSize: "0.68rem",
           fontWeight: 500,

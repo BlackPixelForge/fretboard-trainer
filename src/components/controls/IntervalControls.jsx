@@ -12,9 +12,9 @@ export default function IntervalControls({ intervalState, updateInterval }) {
         style={{
           padding: "5px 10px",
           borderRadius: 6,
-          border: `1px solid ${showIntervals ? "#3ca0dc44" : "#1e1e2e"}`,
-          background: showIntervals ? "rgba(60,160,220,0.1)" : "#0e0e16",
-          color: showIntervals ? "#3ca0dc" : "#555",
+          border: `1px solid ${showIntervals ? "#3ca0dc66" : "#1e1e2e"}`,
+          background: showIntervals ? "rgba(60,160,220,0.18)" : "#0e0e16",
+          color: showIntervals ? "#78c8f0" : "#777",
           fontFamily: "'Outfit', sans-serif",
           fontSize: "0.68rem",
           fontWeight: 500,
@@ -26,7 +26,7 @@ export default function IntervalControls({ intervalState, updateInterval }) {
       </button>
 
       <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
-      <span style={{ fontSize: "0.6rem", color: "#444", fontFamily: "'Outfit', sans-serif" }}>Filter:</span>
+      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Filter:</span>
 
       {DEGREES.map((d) => {
         const active = intervalFilter.has(d);
@@ -44,9 +44,9 @@ export default function IntervalControls({ intervalState, updateInterval }) {
               width: 26,
               height: 26,
               borderRadius: "50%",
-              border: `1px solid ${active ? "#50be5055" : "#1e1e2e"}`,
-              background: active ? "rgba(80,190,80,0.12)" : "#0e0e16",
-              color: active ? "#50be50" : "#444",
+              border: `1px solid ${active ? "#50be5066" : "#1e1e2e"}`,
+              background: active ? "rgba(80,190,80,0.20)" : "#0e0e16",
+              color: active ? "#80e080" : "#666",
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: "0.65rem",
               fontWeight: 600,
@@ -70,9 +70,9 @@ export default function IntervalControls({ intervalState, updateInterval }) {
         style={{
           padding: "5px 10px",
           borderRadius: 6,
-          border: `1px solid ${quizMode ? "#ffc83244" : "#1e1e2e"}`,
-          background: quizMode ? "rgba(255,200,50,0.1)" : "#0e0e16",
-          color: quizMode ? "#ffc832" : "#555",
+          border: `1px solid ${quizMode ? "#ffc83266" : "#1e1e2e"}`,
+          background: quizMode ? "rgba(255,200,50,0.18)" : "#0e0e16",
+          color: quizMode ? "#ffe080" : "#777",
           fontFamily: "'Outfit', sans-serif",
           fontSize: "0.68rem",
           fontWeight: 500,

@@ -13,8 +13,8 @@ export default function NoteDot({ visible, isRoot, colors, noteName, degree, sho
         zIndex: visible && isRoot ? 3 : 2,
         cursor: canClick ? "pointer" : "default",
         background: visible
-          ? (isRoot ? "rgba(232,78,60,0.25)" : colors.bg)
-          : "rgba(255,255,255,0.04)",
+          ? (isRoot ? "rgba(232,78,60,0.40)" : colors.bg)
+          : "rgba(255,255,255,0.06)",
         border: visible
           ? (isRoot ? "2px solid #e84e3c" : `1.5px solid ${colors.border}`)
           : "1px dashed #333",
@@ -27,7 +27,7 @@ export default function NoteDot({ visible, isRoot, colors, noteName, degree, sho
         transition: "all 0.25s ease",
         fontSize: visible && isRoot ? "0.72rem" : "0.65rem",
         fontWeight: visible && isRoot ? 800 : 700,
-        color: visible ? (isRoot ? "#ff6b5a" : colors.text) : "transparent",
+        color: visible ? (isRoot ? "#ffb0a8" : colors.text) : "transparent",
         fontFamily: "'JetBrains Mono', monospace",
         letterSpacing: "-0.02em",
         transform: visible && isRoot ? "rotate(45deg)" : "none",

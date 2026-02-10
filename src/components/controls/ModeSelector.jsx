@@ -17,7 +17,7 @@ function ModeGroup({ label, modes, currentMode, onModeChange, activeGradient }) 
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
       <span style={{
         fontSize: "0.6rem",
-        color: "#444",
+        color: "#777",
         fontFamily: "'Outfit', sans-serif",
         textTransform: "uppercase",
         letterSpacing: "0.08em",
@@ -31,7 +31,7 @@ function ModeGroup({ label, modes, currentMode, onModeChange, activeGradient }) 
             borderRadius: 6,
             border: "none",
             background: currentMode === m.key ? activeGradient : "transparent",
-            color: currentMode === m.key ? "#fff" : "#666",
+            color: currentMode === m.key ? "#fff" : "#888",
             fontFamily: "'Outfit', sans-serif",
             fontSize: "0.75rem",
             fontWeight: currentMode === m.key ? 600 : 400,

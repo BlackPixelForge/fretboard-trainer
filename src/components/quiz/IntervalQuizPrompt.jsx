@@ -21,14 +21,14 @@ export default function IntervalQuizPrompt({ quizNote, onAnswer, selectedAnswer,
         let shadow = "none";
 
         if (showResult && isCorrect) {
-          bg = "rgba(80,200,80,0.15)";
+          bg = "rgba(80,200,80,0.25)";
           border = "#50c850";
-          textColor = "#50c850";
+          textColor = "#80f080";
           shadow = "0 0 10px rgba(80,200,80,0.3)";
         } else if (showResult && isSelected && !isCorrect) {
-          bg = "rgba(220,60,60,0.15)";
+          bg = "rgba(220,60,60,0.25)";
           border = "#dc3c3c";
-          textColor = "#dc3c3c";
+          textColor = "#f08080";
           shadow = "0 0 10px rgba(220,60,60,0.3)";
         }
 
@@ -50,7 +50,7 @@ export default function IntervalQuizPrompt({ quizNote, onAnswer, selectedAnswer,
               cursor: selectedAnswer !== null ? "default" : "pointer",
               transition: "all 0.2s",
               boxShadow: shadow,
-              opacity: showResult && !isSelected && !isCorrect ? 0.35 : 1,
+              opacity: showResult && !isSelected && !isCorrect ? 0.45 : 1,
               transform: showResult && isCorrect ? "scale(1.1)" : "scale(1)",
               outline: "none",
               display: "flex",

@@ -19,7 +19,7 @@ export default function CAGEDDot({ letter, isChordTone, type, degree }) {
       border: `1.5px ${isChordTone ? "solid" : "dashed"} ${colors.border}`,
       boxShadow: isChordTone && type === "R"
         ? `0 0 10px ${colors.bg}`
-        : "none",
+        : isChordTone ? "none" : "inset 0 0 4px rgba(180,180,180,0.08)",
       animation: isChordTone ? "fadeIn 0.2s ease" : "fadeIn 0.3s ease",
       transition: "all 0.25s ease",
       transform: type === "R" ? "rotate(45deg)" : "none",
@@ -30,7 +30,7 @@ export default function CAGEDDot({ letter, isChordTone, type, degree }) {
         alignItems: "center",
         justifyContent: "center",
         fontSize: isChordTone ? "0.7rem" : "0.6rem",
-        fontWeight: isChordTone ? 800 : 500,
+        fontWeight: isChordTone ? 800 : 600,
         color: colors.text,
         fontFamily: "'JetBrains Mono', monospace",
         letterSpacing: "-0.02em",

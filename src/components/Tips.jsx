@@ -12,7 +12,7 @@ export default function Tips({ mode }) {
       <p style={{
         fontFamily: "'Outfit', sans-serif",
         fontSize: "0.72rem",
-        color: "#556",
+        color: "#889",
         margin: 0,
         lineHeight: 1.6,
       }}>

@@ -39,7 +39,7 @@ export default function QuizTarget({ answered, noteName, selectedAnswer }) {
       justifyContent: "center",
       position: "relative",
       zIndex: 4,
-      background: revealCorrect ? "rgba(80,200,80,0.2)" : "rgba(255,200,50,0.2)",
+      background: revealCorrect ? "rgba(80,200,80,0.35)" : "rgba(255,200,50,0.35)",
       border: `2.5px solid ${revealCorrect ? "#50c850" : "#ffc832"}`,
       boxShadow: revealCorrect
         ? "0 0 16px rgba(80,200,80,0.5)"
@@ -47,7 +47,7 @@ export default function QuizTarget({ answered, noteName, selectedAnswer }) {
       animation: "fadeIn 0.25s ease",
       fontSize: "0.82rem",
       fontWeight: 800,
-      color: revealCorrect ? "#50c850" : "#ffc832",
+      color: revealCorrect ? "#80f080" : "#ffe080",
       fontFamily: "'JetBrains Mono', monospace",
     }}>
       {noteName}

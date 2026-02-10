@@ -18,19 +18,19 @@ export default function AnswerBubbles({ quizNote, findChoices, selectedAnswer, o
         let shadow = "none";
 
         if (showResult && isCorrectChoice) {
-          bg = "rgba(80,200,80,0.15)";
+          bg = "rgba(80,200,80,0.25)";
           border = "#50c850";
-          textColor = "#50c850";
+          textColor = "#80f080";
           shadow = "0 0 10px rgba(80,200,80,0.3)";
         } else if (showResult && isSelected && !isCorrectChoice) {
-          bg = "rgba(220,60,60,0.15)";
+          bg = "rgba(220,60,60,0.25)";
           border = "#dc3c3c";
-          textColor = "#dc3c3c";
+          textColor = "#f08080";
           shadow = "0 0 10px rgba(220,60,60,0.3)";
         } else if (!showResult) {
-          bg = "rgba(255,200,50,0.05)";
-          border = "rgba(255,200,50,0.25)";
-          textColor = "#ddd";
+          bg = "rgba(255,200,50,0.08)";
+          border = "rgba(255,200,50,0.30)";
+          textColor = "#eee";
         }
 
         return (
@@ -51,7 +51,7 @@ export default function AnswerBubbles({ quizNote, findChoices, selectedAnswer, o
               cursor: selectedAnswer !== null ? "default" : "pointer",
               transition: "all 0.2s",
               boxShadow: shadow,
-              opacity: showResult && !isSelected && !isCorrectChoice ? 0.35 : 1,
+              opacity: showResult && !isSelected && !isCorrectChoice ? 0.45 : 1,
               transform: showResult && isCorrectChoice ? "scale(1.1)" : "scale(1)",
               outline: "none",
             }}

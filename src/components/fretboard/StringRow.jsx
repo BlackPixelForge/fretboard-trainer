@@ -12,7 +12,7 @@ export default function StringRow({
       alignItems: "center",
       height: 36,
       position: "relative",
-      opacity: selectedStrings.has(si) ? 1 : 0.25,
+      opacity: selectedStrings.has(si) ? 1 : 0.35,
       transition: "opacity 0.3s",
     }}>
       {/* String label */}

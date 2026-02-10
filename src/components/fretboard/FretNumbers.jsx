@@ -10,7 +10,7 @@ export default function FretNumbers() {
           minWidth: f === 0 ? 40 : 52,
           textAlign: "center",
           fontSize: "0.6rem",
-          color: FRET_MARKERS.includes(f) ? "#555" : "#333",
+          color: FRET_MARKERS.includes(f) ? "#888" : "#555",
           fontWeight: FRET_MARKERS.includes(f) ? 600 : 400,
           fontFamily: "'JetBrains Mono', monospace",
         }}>
