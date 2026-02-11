@@ -9,8 +9,8 @@ const LEARN_MODES = [
 ];
 
 const QUIZ_MODES = [
-  { key: MODES.QUIZ_FIND, label: "Find Note" },
-  { key: MODES.QUIZ_IDENTIFY, label: "Name Note" },
+  { key: MODES.QUIZ_FIND, label: "Name Note" },
+  { key: MODES.QUIZ_IDENTIFY, label: "Find Note" },
 ];
 
 function ModeGroup({ label, modes, currentMode, onModeChange, activeGradient }) {

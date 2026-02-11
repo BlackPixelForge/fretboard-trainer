@@ -12,8 +12,8 @@ A guitar fretboard note memorization trainer. Users learn diatonic scale note po
 - **1-Fret Rule** — Inverts Scale Positions: pick a fret position and see which 7 keys the 7 forms produce at that position. At any fret, each form yields a different key; shift ±1 fret to cover all 12 chromatic keys. Key is computed (not selected from dropdown) via `getRootNoteForPosition()` + `computeKeyNotes()`, supporting all 12 keys. Arrow keys step through forms with ascending root fret offsets (0, +2, +4) per root-string group. Chord toggle filters to R/3/5 chord tones only. Reuses `ScalePositionDot` — no new dot component needed.
 
 **Quiz modes:**
-- **Find Note** — A fret position is highlighted with a pulsing dot; pick the correct note name from multiple-choice bubbles
-- **Name Note** — Given a note name, click every occurrence of that note on the fretboard
+- **Name Note** — A fret position is highlighted with a pulsing dot; pick the correct note name from multiple-choice bubbles
+- **Find Note** — Given a note name, find and select every occurrence of that note on the fretboard in a batch quiz
 
 Supports 8 diatonic keys, 6 fret regions, per-string filtering, streak tracking, and score/accuracy stats.
 

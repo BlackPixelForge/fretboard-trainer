@@ -614,7 +614,7 @@ export default function FretboardTrainer() {
           <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
         </div>
 
-        {/* Quiz Prompt — Name Note batch mode */}
+        {/* Quiz Prompt — Find Note batch mode */}
         {mode === MODES.QUIZ_IDENTIFY && (
           <div style={{
             display: "flex",
@@ -634,7 +634,7 @@ export default function FretboardTrainer() {
           </div>
         )}
 
-        {/* Quiz Prompt & Score — Find Note mode */}
+        {/* Quiz Prompt & Score — Name Note mode */}
         {mode === MODES.QUIZ_FIND && (
           <div style={{
             display: "flex",
