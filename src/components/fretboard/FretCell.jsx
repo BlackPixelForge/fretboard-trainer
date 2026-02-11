@@ -5,6 +5,7 @@ import NoteDot from "./NoteDot";
 import QuizTarget from "./QuizTarget";
 import ScalePositionDot from "./ScalePositionDot";
 import CAGEDDot from "./CAGEDDot";
+import TriadDot from "./TriadDot";
 
 export default function FretCell({
   si, f, keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
@@ -71,6 +72,22 @@ export default function FretCell({
             isChordTone={data.isChordTone}
             type={data.chordType}
             degree={data.degree}
+          />
+        );
+      })()}
+
+      {/* New mode rendering: Triads */}
+      {mode === MODES.TRIADS && visible && (() => {
+        const data = getNoteDisplayData(si, f);
+        if (!data) return null;
+        return (
+          <TriadDot
+            interval={data.interval}
+            finger={data.finger}
+            noteName={data.noteName}
+            isRoot={data.isRoot}
+            showFingering={data.showFingering}
+            showNoteNames={data.showNoteNames}
           />
         );
       })()}

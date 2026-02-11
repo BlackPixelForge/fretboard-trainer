@@ -1,11 +1,12 @@
 import { MODES } from "./lib/fretboard";
 import { SCALE_DEGREES, getNoteName } from "./lib/music";
-import { getNoteColor, CAGED_SHAPE_COLORS, getScalePositionColor } from "./lib/colors";
+import { getNoteColor, CAGED_SHAPE_COLORS, getScalePositionColor, getTriadColor } from "./lib/colors";
 import { CAGED_ORDER } from "./lib/caged";
 import { getPositionLabel } from "./lib/scales";
 import { INTERVAL_LABELS, INTERVAL_NAMES } from "./lib/intervals";
+import { INVERSIONS, INVERSION_LABELS, getTriadLabel } from "./lib/triads";
 
-export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNote, scalePositionState, cagedState, intervalState, oneFretRuleState, oneFretRuleInfo }) {
+export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNote, scalePositionState, cagedState, intervalState, oneFretRuleState, oneFretRuleInfo, triadState }) {
   return (
     <div style={{
       marginTop: 16,
@@ -138,6 +139,65 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
           </span>
         </>
       )}
+
+      {/* Triads legend */}
+      {mode === MODES.TRIADS && triadState && (() => {
+        const invKey = INVERSIONS[triadState.inversionIndex];
+        const label = getTriadLabel(invKey, triadState.shapeIndex);
+        const invLabel = INVERSION_LABELS[invKey];
+        const intervals = [
+          { key: "R", label: "Root" },
+          { key: "3", label: "3rd" },
+          { key: "5", label: "5th" },
+        ];
+        return (
+          <>
+            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
+              {label} &middot; {invLabel}
+            </span>
+            <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
+            {intervals.map(({ key, label: iLabel }) => {
+              const isRoot = key === "R";
+              const colors = getTriadColor(key, isRoot);
+              return (
+                <span key={key} style={{
+                  display: "inline-flex", alignItems: "center", gap: 3,
+                  fontSize: "0.62rem", fontFamily: "'JetBrains Mono', monospace",
+                }}>
+                  <span style={{
+                    width: 16, height: 16, borderRadius: isRoot ? 3 : "50%",
+                    background: colors.bg, border: `1.5px solid ${colors.border}`,
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                    fontSize: "0.5rem", fontWeight: 700, color: colors.text,
+                  }}>{key}</span>
+                  <span style={{ color: "#999" }}>{iLabel}</span>
+                </span>
+              );
+            })}
+            <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
+            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
+            {[
+              { num: 1, label: "Index" },
+              { num: 2, label: "Middle" },
+              { num: 3, label: "Ring" },
+              { num: 4, label: "Pinky" },
+            ].map(({ num, label: fLabel }) => (
+              <span key={num} style={{
+                display: "inline-flex", alignItems: "center", gap: 3,
+                fontSize: "0.62rem", fontFamily: "'JetBrains Mono', monospace",
+              }}>
+                <span style={{
+                  width: 16, height: 16, borderRadius: "50%",
+                  background: "rgba(60,160,220,0.2)", border: "1px solid #3ca0dc66",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "0.55rem", fontWeight: 700, color: "#78c8f0",
+                }}>{num}</span>
+                <span style={{ color: "#999" }}>{fLabel}</span>
+              </span>
+            ))}
+          </>
+        );
+      })()}
 
       {/* Intervals legend */}
       {mode === MODES.INTERVALS && (

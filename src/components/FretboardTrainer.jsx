@@ -9,6 +9,7 @@ import { MODES, FRET_REGIONS, FRET_COUNT } from "./lib/fretboard";
 import { getIntervalLabel, getIntervalDegree, generateIntervalQuiz, INTERVAL_LABELS } from "./lib/intervals";
 import { isInScalePosition, FORMS, getRootNoteForPosition, computeKeyNotes } from "./lib/scales";
 import { getCAGEDInfo } from "./lib/caged";
+import { getTriadInfo, INVERSIONS, TRIAD_SHAPES } from "./lib/triads";
 import ModeSelector from "./controls/ModeSelector";
 import KeySelector from "./controls/KeySelector";
 import RegionSelector from "./controls/RegionSelector";
@@ -18,6 +19,7 @@ import IntervalControls from "./controls/IntervalControls";
 import ScalePositionControls from "./controls/ScalePositionControls";
 import CAGEDControls from "./controls/CAGEDControls";
 import OneFretRuleControls from "./controls/OneFretRuleControls";
+import TriadControls from "./controls/TriadControls";
 import QuizPrompt from "./quiz/QuizPrompt";
 import QuizFeedback from "./quiz/QuizFeedback";
 import AnswerBubbles from "./quiz/AnswerBubbles";
@@ -83,6 +85,15 @@ export default function FretboardTrainer() {
     results: null,
   });
 
+  const [triadState, setTriadState] = useState({
+    rootNote: 0,           // 0-11 (C=0), chromatic
+    inversionIndex: 0,     // 0=root, 1=first, 2=second
+    shapeIndex: 0,         // 0-15 (4 string sets x 4 qualities)
+    showFingering: false,
+    showNoteNames: false,
+  });
+  const updateTriad = (updates) => setTriadState(prev => ({ ...prev, ...updates }));
+
   // Base key from dropdown
   const baseKeyNotes = DIATONIC_KEYS[selectedKey];
   const baseRootNote = baseKeyNotes[0];
@@ -105,6 +116,8 @@ export default function FretboardTrainer() {
   });
 
   const isOneFretRule = mode === MODES.ONE_FRET_RULE;
+  const isTriads = mode === MODES.TRIADS;
+  const triadInversionKey = INVERSIONS[triadState.inversionIndex];
   const keyNotes = isOneFretRule
     ? computeKeyNotes(oneFretRuleInfo[oneFretRuleState.selectedFormIndex].rootNote)
     : baseKeyNotes;
@@ -198,6 +211,20 @@ export default function FretboardTrainer() {
       };
     }
 
+    if (mode === MODES.TRIADS) {
+      const info = getTriadInfo(s, f, triadState.rootNote, triadInversionKey, triadState.shapeIndex);
+      if (!info) return null;
+      return {
+        type: "triad",
+        interval: info.interval,
+        finger: info.finger,
+        noteName: info.noteName,
+        isRoot: info.isRoot,
+        showFingering: triadState.showFingering,
+        showNoteNames: triadState.showNoteNames,
+      };
+    }
+
     return null;
   };
 
@@ -218,7 +245,7 @@ export default function FretboardTrainer() {
       return;
     }
     if (mode === MODES.QUIZ_FIND) return;
-    if (mode === MODES.SCALE_POSITIONS || mode === MODES.CAGED || mode === MODES.INTERVALS || mode === MODES.ONE_FRET_RULE) return;
+    if (mode === MODES.SCALE_POSITIONS || mode === MODES.CAGED || mode === MODES.INTERVALS || mode === MODES.ONE_FRET_RULE || mode === MODES.TRIADS) return;
 
     // Explore mode
     const id = getNoteId(s, f);
@@ -406,6 +433,28 @@ export default function FretboardTrainer() {
     return () => window.removeEventListener("keydown", handler);
   }, [mode]);
 
+  // Arrow key navigation for Triads shape stepping
+  useEffect(() => {
+    if (mode !== MODES.TRIADS) return;
+    const handler = (e) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setTriadState(prev => {
+          const total = TRIAD_SHAPES[INVERSIONS[prev.inversionIndex]].length;
+          return { ...prev, shapeIndex: (prev.shapeIndex + 1) % total };
+        });
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setTriadState(prev => {
+          const total = TRIAD_SHAPES[INVERSIONS[prev.inversionIndex]].length;
+          return { ...prev, shapeIndex: (prev.shapeIndex + total - 1) % total };
+        });
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [mode]);
+
   const resetScore = () => {
     setScore({ correct: 0, total: 0 });
     setStreak(0);
@@ -452,6 +501,11 @@ export default function FretboardTrainer() {
         return false;
       }
       return true;
+    }
+
+    if (mode === MODES.TRIADS) {
+      const info = getTriadInfo(s, f, triadState.rootNote, triadInversionKey, triadState.shapeIndex);
+      return info !== null;
     }
 
     // Batch identify mode: show dots at all in-key positions in active region
@@ -555,7 +609,7 @@ export default function FretboardTrainer() {
           alignItems: "center",
         }}>
           <ModeSelector mode={mode} onModeChange={handleModeChange} />
-          {!isOneFretRule && (
+          {!isOneFretRule && !isTriads && (
             <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
           )}
           {isOneFretRule && (
@@ -610,6 +664,9 @@ export default function FretboardTrainer() {
               updateOneFretRule={updateOneFretRule}
               oneFretRuleInfo={oneFretRuleInfo}
             />
+          )}
+          {mode === MODES.TRIADS && (
+            <TriadControls triadState={triadState} updateTriad={updateTriad} />
           )}
           <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
         </div>
@@ -724,6 +781,7 @@ export default function FretboardTrainer() {
           intervalState={intervalState}
           oneFretRuleState={oneFretRuleState}
           oneFretRuleInfo={oneFretRuleInfo}
+          triadState={triadState}
         />
 
         {/* Tips */}

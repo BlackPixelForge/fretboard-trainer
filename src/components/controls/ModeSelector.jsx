@@ -6,6 +6,7 @@ const LEARN_MODES = [
   { key: MODES.CAGED, label: "CAGED" },
   { key: MODES.INTERVALS, label: "Intervals" },
   { key: MODES.ONE_FRET_RULE, label: "1-Fret Rule" },
+  { key: MODES.TRIADS, label: "Triads" },
 ];
 
 const QUIZ_MODES = [

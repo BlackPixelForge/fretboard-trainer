@@ -8,6 +8,7 @@ export const MODES = {
   CAGED: "caged",
   INTERVALS: "intervals",
   ONE_FRET_RULE: "one_fret_rule",
+  TRIADS: "triads",
   QUIZ_IDENTIFY: "quiz_identify",
   QUIZ_FIND: "quiz_find",
 };

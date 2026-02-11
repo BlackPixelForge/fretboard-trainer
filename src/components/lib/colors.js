@@ -37,6 +37,12 @@ export function getCAGEDColor(shapeLetter, isChordTone) {
   };
 }
 
+export function getTriadColor(interval, isRoot) {
+  if (isRoot) return { bg: "rgba(232,78,60,0.40)", border: "#e84e3c", text: "#ffa09a" };
+  if (interval.includes("3")) return DEGREE_COLORS["3"];
+  return DEGREE_COLORS["5"];
+}
+
 export function getNoteColor(noteIndex, keyNotes, rootNote, highlightRoot, mode, quizNote, s, f) {
   if (mode === "quiz_find" && quizNote && s === quizNote.string && f === quizNote.fret) {
     return { bg: "rgba(255,200,50,0.30)", border: "#ffc832", text: "#ffe080", glow: "0 0 12px rgba(255,200,50,0.4)" };

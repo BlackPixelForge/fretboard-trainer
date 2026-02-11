@@ -41,6 +41,11 @@ export default function Tips({ mode }) {
             <strong style={{ color: "#d4a017" }}>One Fret Rule:</strong> At any fret position, the 7 scale forms produce 7 different keys. Shift one fret and you cover all 12 keys. Pick a fret, then use <em>left/right arrow keys</em> or the {"<"}/{">"}  buttons to step through all 7 forms and see each key. The root fret and string update as you go.
           </>
         )}
+        {mode === MODES.TRIADS && (
+          <>
+            <strong style={{ color: "#e84e3c" }}>Triads:</strong> Step through 48 movable triad shapes &mdash; 4 qualities (Major, Minor, Dim, Aug) across 4 string sets. Use <em>arrow keys</em> or the {"<"}/{">"} buttons to navigate. Toggle <em>Notes</em> to see note names, or <em>Fingering</em> for finger numbers. Switch inversions to see Root Position, 1st, and 2nd inversion voicings.
+          </>
+        )}
         {mode === MODES.QUIZ_IDENTIFY && (
           <>
             <strong style={{ color: "#ffc832" }}>Find Note Quiz:</strong> You{"'"}re given a note name — click every fret position where you think that note lives. Selected positions show a gold <strong>?</strong> marker (click again to deselect). When ready, hit <em>Finish Selections</em> to reveal results: green = correct, red = wrong, amber pulsing = missed. Use string and region filters to narrow your focus.
