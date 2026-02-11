@@ -28,6 +28,7 @@ import ScoreBar from "./quiz/ScoreBar";
 import Fretboard from "./fretboard/Fretboard";
 import Legend from "./Legend";
 import Tips from "./Tips";
+import TriadExplainer from "./TriadExplainer";
 
 export default function FretboardTrainer() {
   const [selectedKey, setSelectedKey] = useState("C Major / A Minor");
@@ -809,6 +810,11 @@ export default function FretboardTrainer() {
 
         {/* Tips */}
         <Tips mode={mode} />
+
+        {/* Triad Explainer */}
+        {mode === MODES.TRIADS && (
+          <TriadExplainer triadState={triadState} />
+        )}
       </div>
     </div>
   );
