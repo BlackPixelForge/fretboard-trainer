@@ -91,6 +91,8 @@ export default function FretboardTrainer() {
     shapeIndex: 0,         // 0-15 (4 string sets x 4 qualities)
     showFingering: false,
     showNoteNames: false,
+    autoPlay: false,
+    autoPlaySpeed: 2000,   // ms between steps (500–5000)
   });
   const updateTriad = (updates) => setTriadState(prev => ({ ...prev, ...updates }));
 
@@ -433,6 +435,23 @@ export default function FretboardTrainer() {
     return () => window.removeEventListener("keydown", handler);
   }, [mode]);
 
+  // Auto-cycle for Triads mode
+  useEffect(() => {
+    if (mode !== MODES.TRIADS || !triadState.autoPlay) return;
+    const id = setInterval(() => {
+      setTriadState(prev => {
+        const total = TRIAD_SHAPES[INVERSIONS[prev.inversionIndex]].length;
+        if (prev.shapeIndex < total - 1) {
+          return { ...prev, shapeIndex: prev.shapeIndex + 1 };
+        } else {
+          const nextInversion = (prev.inversionIndex + 1) % 3;
+          return { ...prev, inversionIndex: nextInversion, shapeIndex: 0 };
+        }
+      });
+    }, triadState.autoPlaySpeed);
+    return () => clearInterval(id);
+  }, [mode, triadState.autoPlay, triadState.autoPlaySpeed]);
+
   // Arrow key navigation for Triads shape stepping
   useEffect(() => {
     if (mode !== MODES.TRIADS) return;
@@ -544,6 +563,10 @@ export default function FretboardTrainer() {
     // Reset interval quiz when switching away
     if (newMode !== MODES.INTERVALS) {
       updateInterval({ quizMode: false, quizNote: null, selectedAnswer: null, quizFeedback: null });
+    }
+    // Stop triad auto-play when switching away
+    if (newMode !== MODES.TRIADS) {
+      updateTriad({ autoPlay: false });
     }
   };
 

@@ -2,7 +2,7 @@ import { NOTES } from "../lib/music";
 import { INVERSIONS, INVERSION_LABELS, TRIAD_SHAPES, getTriadLabel } from "../lib/triads";
 
 export default function TriadControls({ triadState, updateTriad }) {
-  const { rootNote, inversionIndex, shapeIndex, showFingering, showNoteNames } = triadState;
+  const { rootNote, inversionIndex, shapeIndex, showFingering, showNoteNames, autoPlay, autoPlaySpeed } = triadState;
   const inversionKey = INVERSIONS[inversionIndex];
   const total = TRIAD_SHAPES[inversionKey].length;
   const shapeLabel = getTriadLabel(inversionKey, shapeIndex);
@@ -146,6 +146,50 @@ export default function TriadControls({ triadState, updateTriad }) {
       >
         Fingering
       </button>
+
+      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+
+      <button
+        onClick={() => updateTriad({ autoPlay: !autoPlay })}
+        title={autoPlay ? "Pause auto-cycle" : "Play auto-cycle"}
+        style={{
+          padding: "5px 10px",
+          borderRadius: 6,
+          border: `1px solid ${autoPlay ? "#4ade8066" : "#1e1e2e"}`,
+          background: autoPlay ? "rgba(74,222,128,0.18)" : "#0e0e16",
+          color: autoPlay ? "#4ade80" : "#777",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "0.75rem",
+          fontWeight: 500,
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
+      >
+        {autoPlay ? "\u23F8" : "\u25B6"}
+      </button>
+
+      <input
+        type="range"
+        min={500}
+        max={5000}
+        step={100}
+        value={autoPlaySpeed}
+        onChange={(e) => updateTriad({ autoPlaySpeed: Number(e.target.value) })}
+        title={`Speed: ${(autoPlaySpeed / 1000).toFixed(1)}s`}
+        style={{
+          width: 80,
+          accentColor: "#4ade80",
+          cursor: "pointer",
+        }}
+      />
+      <span style={{
+        fontSize: "0.6rem",
+        color: "#777",
+        fontFamily: "'JetBrains Mono', monospace",
+        minWidth: 28,
+      }}>
+        {(autoPlaySpeed / 1000).toFixed(1)}s
+      </span>
     </>
   );
 }
