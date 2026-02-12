@@ -15,6 +15,7 @@ import KeySelector from "./controls/KeySelector";
 import RegionSelector from "./controls/RegionSelector";
 import ExploreToggles from "./controls/ExploreToggles";
 import StringToggles from "./controls/StringToggles";
+import KeyButtons from "./controls/KeyButtons";
 import IntervalControls from "./controls/IntervalControls";
 import ScalePositionControls from "./controls/ScalePositionControls";
 import CAGEDControls from "./controls/CAGEDControls";
@@ -718,7 +719,7 @@ export default function FretboardTrainer() {
 
           {/* Key/Region selectors — right on desktop */}
           <div className="flex gap-2 justify-center lg:justify-end mt-2 lg:mt-0 lg:shrink-0" style={{ flexWrap: "wrap" }}>
-            {!isOneFretRule && !isTriads && (
+            {!isOneFretRule && !isTriads && mode !== MODES.CAGED && (
               <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
             )}
             {isOneFretRule && (
@@ -808,7 +809,10 @@ export default function FretboardTrainer() {
             {mode === MODES.TRIADS && (
               <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="secondary" />
             )}
-            <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
+            {mode === MODES.CAGED
+              ? <KeyButtons selectedKey={selectedKey} onKeyChange={handleKeyChange} />
+              : <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
+            }
           </>}
         />
 
