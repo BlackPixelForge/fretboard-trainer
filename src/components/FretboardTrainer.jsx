@@ -29,6 +29,7 @@ import Fretboard from "./fretboard/Fretboard";
 import Legend from "./Legend";
 import Tips from "./Tips";
 import TriadExplainer from "./TriadExplainer";
+import HarmoniesPanel from "./HarmoniesPanel";
 
 export default function FretboardTrainer() {
   const [selectedKey, setSelectedKey] = useState("C Major / A Minor");
@@ -96,6 +97,12 @@ export default function FretboardTrainer() {
     autoPlaySpeed: 2000,   // ms between steps (500–5000)
   });
   const updateTriad = (updates) => setTriadState(prev => ({ ...prev, ...updates }));
+
+  const [harmoniesState, setHarmoniesState] = useState({
+    expanded: false,
+    keyRoot: 0,
+    activeDegree: null,
+  });
 
   // Base key from dropdown
   const baseKeyNotes = DIATONIC_KEYS[selectedKey];
@@ -584,6 +591,24 @@ export default function FretboardTrainer() {
     });
   };
 
+  // Harmonies panel handlers
+  const handleHarmonyChordTap = (chordObj) => {
+    // Jump to the first shape matching this chord's quality in current inversion
+    const qualityIndex = ["major", "minor", "diminished", "augmented"].indexOf(chordObj.quality);
+    const firstMatchingIndex = qualityIndex >= 0 ? qualityIndex : 0;
+    updateTriad({ rootNote: chordObj.rootNoteIndex, shapeIndex: firstMatchingIndex });
+    setHarmoniesState(prev => ({ ...prev, activeDegree: chordObj.degree }));
+  };
+
+  const handleTriadRootChange = (rootNoteValue) => {
+    updateTriad({ rootNote: rootNoteValue });
+    setHarmoniesState(prev => ({ ...prev, keyRoot: rootNoteValue, activeDegree: null }));
+  };
+
+  const handleToggleHarmonies = () => {
+    setHarmoniesState(prev => ({ ...prev, expanded: !prev.expanded }));
+  };
+
   const isQuizActive = mode === MODES.QUIZ_IDENTIFY || mode === MODES.QUIZ_FIND ||
     (mode === MODES.INTERVALS && intervalState.quizMode);
 
@@ -690,7 +715,7 @@ export default function FretboardTrainer() {
             />
           )}
           {mode === MODES.TRIADS && (
-            <TriadControls triadState={triadState} updateTriad={updateTriad} />
+            <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} />
           )}
           <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
         </div>
@@ -810,6 +835,17 @@ export default function FretboardTrainer() {
 
         {/* Tips */}
         <Tips mode={mode} />
+
+        {/* Harmonies Panel — visible on all Learn modes, hidden on quiz modes */}
+        {!isQuizActive && (
+          <HarmoniesPanel
+            mode={mode}
+            triadState={triadState}
+            harmoniesState={harmoniesState}
+            onToggleExpanded={handleToggleHarmonies}
+            onChordTap={handleHarmonyChordTap}
+          />
+        )}
 
         {/* Triad Explainer */}
         {mode === MODES.TRIADS && (

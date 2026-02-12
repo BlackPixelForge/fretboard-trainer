@@ -1,7 +1,7 @@
 import { NOTES } from "../lib/music";
 import { INVERSIONS, INVERSION_LABELS, TRIAD_SHAPES, getTriadLabel } from "../lib/triads";
 
-export default function TriadControls({ triadState, updateTriad }) {
+export default function TriadControls({ triadState, updateTriad, onRootChange }) {
   const { rootNote, inversionIndex, shapeIndex, showFingering, showNoteNames, autoPlay, autoPlaySpeed } = triadState;
   const inversionKey = INVERSIONS[inversionIndex];
   const total = TRIAD_SHAPES[inversionKey].length;
@@ -13,7 +13,7 @@ export default function TriadControls({ triadState, updateTriad }) {
 
       <select
         value={rootNote}
-        onChange={(e) => updateTriad({ rootNote: Number(e.target.value) })}
+        onChange={(e) => (onRootChange || ((v) => updateTriad({ rootNote: v })))(Number(e.target.value))}
         style={{
           padding: "6px 10px",
           borderRadius: 8,
