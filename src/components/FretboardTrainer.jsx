@@ -593,10 +593,11 @@ export default function FretboardTrainer() {
 
   // Harmonies panel handlers
   const handleHarmonyChordTap = (chordObj) => {
-    // Jump to the first shape matching this chord's quality in current inversion
+    // Preserve current string set, switch to matching quality
+    const currentStringSet = Math.floor(triadState.shapeIndex / 4);
     const qualityIndex = ["major", "minor", "diminished", "augmented"].indexOf(chordObj.quality);
-    const firstMatchingIndex = qualityIndex >= 0 ? qualityIndex : 0;
-    updateTriad({ rootNote: chordObj.rootNoteIndex, shapeIndex: firstMatchingIndex });
+    const newShapeIndex = (currentStringSet * 4) + (qualityIndex >= 0 ? qualityIndex : 0);
+    updateTriad({ rootNote: chordObj.rootNoteIndex, shapeIndex: newShapeIndex });
     setHarmoniesState(prev => ({ ...prev, activeDegree: chordObj.degree }));
   };
 
