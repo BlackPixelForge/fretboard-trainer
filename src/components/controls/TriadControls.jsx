@@ -1,13 +1,13 @@
 import { NOTES } from "../lib/music";
 import { INVERSIONS, INVERSION_LABELS, TRIAD_SHAPES, getTriadLabel } from "../lib/triads";
 
-export default function TriadControls({ triadState, updateTriad, onRootChange }) {
+export default function TriadControls({ triadState, updateTriad, onRootChange, renderSection }) {
   const { rootNote, inversionIndex, shapeIndex, showFingering, showNoteNames, autoPlay, autoPlaySpeed } = triadState;
   const inversionKey = INVERSIONS[inversionIndex];
   const total = TRIAD_SHAPES[inversionKey].length;
   const shapeLabel = getTriadLabel(inversionKey, shapeIndex);
 
-  return (
+  const primaryControls = (
     <>
       <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Root:</span>
 
@@ -63,7 +63,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange })
 
       <button
         onClick={() => updateTriad({ shapeIndex: (shapeIndex + total - 1) % total })}
-        title="Previous shape (\u2190 arrow key)"
+        title="Previous shape (← arrow key)"
         style={{
           padding: "5px 8px",
           borderRadius: 6,
@@ -94,7 +94,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange })
 
       <button
         onClick={() => updateTriad({ shapeIndex: (shapeIndex + 1) % total })}
-        title="Next shape (\u2192 arrow key)"
+        title="Next shape (→ arrow key)"
         style={{
           padding: "5px 8px",
           borderRadius: 6,
@@ -109,9 +109,11 @@ export default function TriadControls({ triadState, updateTriad, onRootChange })
       >
         {">"}
       </button>
+    </>
+  );
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
-
+  const secondaryControls = (
+    <>
       <button
         onClick={() => updateTriad({ showNoteNames: !showNoteNames, showFingering: false })}
         style={{
@@ -190,6 +192,17 @@ export default function TriadControls({ triadState, updateTriad, onRootChange })
       }}>
         {(autoPlaySpeed / 1000).toFixed(1)}s
       </span>
+    </>
+  );
+
+  if (renderSection === "primary") return primaryControls;
+  if (renderSection === "secondary") return secondaryControls;
+
+  return (
+    <>
+      {primaryControls}
+      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      {secondaryControls}
     </>
   );
 }

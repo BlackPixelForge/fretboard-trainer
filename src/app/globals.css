@@ -52,3 +52,53 @@ body {
   margin: 0;
   padding: 0;
 }
+
+/* Fretboard scroll */
+.fretboard-scroll {
+  scrollbar-width: none;
+}
+.fretboard-scroll::-webkit-scrollbar {
+  display: none;
+}
+.fretboard-scroll-wrapper {
+  position: relative;
+}
+.fretboard-scroll-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 40px;
+  background: linear-gradient(to right, transparent, #15120d);
+  pointer-events: none;
+  z-index: 5;
+  border-radius: 0 12px 12px 0;
+  transition: opacity 0.3s;
+}
+.fretboard-scroll-wrapper.scrolled-end::after {
+  opacity: 0;
+}
+
+/* Controls drawer */
+.controls-drawer-toggle { display: flex !important; }
+.controls-drawer-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+.controls-drawer-content > div { overflow: hidden; }
+.controls-drawer-open { grid-template-rows: 1fr; }
+
+@media (min-width: 640px) {
+  .controls-drawer-toggle { display: none !important; }
+  .controls-drawer-content { grid-template-rows: 1fr; }
+}
+
+/* Mode selector scroll */
+.mode-selector-scroll {
+  scrollbar-width: none;
+}
+.mode-selector-scroll::-webkit-scrollbar {
+  display: none;
+}

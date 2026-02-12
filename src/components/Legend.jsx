@@ -8,12 +8,11 @@ import { INVERSIONS, INVERSION_LABELS, getTriadLabel } from "./lib/triads";
 
 export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNote, scalePositionState, cagedState, intervalState, oneFretRuleState, oneFretRuleInfo, triadState }) {
   return (
-    <div style={{
+    <div className="p-2.5 sm:p-3 sm:px-4" style={{
       marginTop: 16,
       display: "flex",
       flexWrap: "wrap",
       gap: "8px 16px",
-      padding: "12px 16px",
       background: "#0e0e16",
       borderRadius: 10,
       border: "1px solid #1a1a28",

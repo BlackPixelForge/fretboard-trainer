@@ -2,10 +2,10 @@ import { INTERVAL_LABELS, INTERVAL_NAMES } from "../lib/intervals";
 
 const DEGREES = [1, 2, 3, 4, 5, 6, 7];
 
-export default function IntervalControls({ intervalState, updateInterval }) {
+export default function IntervalControls({ intervalState, updateInterval, renderSection }) {
   const { showIntervals, intervalFilter, quizMode } = intervalState;
 
-  return (
+  const primaryControls = (
     <>
       <button
         onClick={() => updateInterval({ showIntervals: !showIntervals })}
@@ -26,6 +26,29 @@ export default function IntervalControls({ intervalState, updateInterval }) {
       </button>
 
       <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+
+      <button
+        onClick={() => updateInterval({ quizMode: !quizMode })}
+        style={{
+          padding: "5px 10px",
+          borderRadius: 6,
+          border: `1px solid ${quizMode ? "#ffc83266" : "#1e1e2e"}`,
+          background: quizMode ? "rgba(255,200,50,0.18)" : "#0e0e16",
+          color: quizMode ? "#ffe080" : "#777",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "0.68rem",
+          fontWeight: 500,
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
+      >
+        {quizMode ? "Quiz On" : "Quiz Off"}
+      </button>
+    </>
+  );
+
+  const degreeFilters = (
+    <>
       <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Filter:</span>
 
       {DEGREES.map((d) => {
@@ -62,26 +85,17 @@ export default function IntervalControls({ intervalState, updateInterval }) {
           </button>
         );
       })}
+    </>
+  );
 
+  if (renderSection === "primary") return primaryControls;
+  if (renderSection === "secondary") return degreeFilters;
+
+  return (
+    <>
+      {primaryControls}
       <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
-
-      <button
-        onClick={() => updateInterval({ quizMode: !quizMode })}
-        style={{
-          padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${quizMode ? "#ffc83266" : "#1e1e2e"}`,
-          background: quizMode ? "rgba(255,200,50,0.18)" : "#0e0e16",
-          color: quizMode ? "#ffe080" : "#777",
-          fontFamily: "'Outfit', sans-serif",
-          fontSize: "0.68rem",
-          fontWeight: 500,
-          cursor: "pointer",
-          transition: "all 0.2s",
-        }}
-      >
-        {quizMode ? "Quiz On" : "Quiz Off"}
-      </button>
+      {degreeFilters}
     </>
   );
 }

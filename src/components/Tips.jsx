@@ -2,9 +2,8 @@ import { MODES } from "./lib/fretboard";
 
 export default function Tips({ mode }) {
   return (
-    <div style={{
+    <div className="p-2.5 sm:px-4 sm:py-3.5" style={{
       marginTop: 12,
-      padding: "14px 18px",
       background: "linear-gradient(135deg, rgba(60,160,220,0.04), rgba(60,160,220,0.01))",
       borderRadius: 10,
       border: "1px solid rgba(60,160,220,0.1)",

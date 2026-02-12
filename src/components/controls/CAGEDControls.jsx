@@ -3,10 +3,10 @@ import { CAGED_SHAPE_COLORS } from "../lib/colors";
 
 const CAGED_POSITIONS = { C: "5(4)", A: "5(1)", G: "6(4)", E: "6(1)", D: "4(1)" };
 
-export default function CAGEDControls({ cagedState, updateCAGED }) {
+export default function CAGEDControls({ cagedState, updateCAGED, renderSection }) {
   const { selectedShape, showScaleTones } = cagedState;
 
-  return (
+  const shapeButtons = (
     <>
       <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Shape:</span>
 
@@ -67,26 +67,37 @@ export default function CAGEDControls({ cagedState, updateCAGED }) {
           </div>
         );
       })}
+    </>
+  );
 
+  const scaleToneToggle = (
+    <button
+      onClick={() => updateCAGED({ showScaleTones: !showScaleTones })}
+      style={{
+        padding: "5px 10px",
+        borderRadius: 6,
+        border: `1px solid ${showScaleTones ? "#3ca0dc66" : "#1e1e2e"}`,
+        background: showScaleTones ? "rgba(60,160,220,0.18)" : "#0e0e16",
+        color: showScaleTones ? "#78c8f0" : "#777",
+        fontFamily: "'Outfit', sans-serif",
+        fontSize: "0.68rem",
+        fontWeight: 500,
+        cursor: "pointer",
+        transition: "all 0.2s",
+      }}
+    >
+      Scale Tones
+    </button>
+  );
+
+  if (renderSection === "primary") return shapeButtons;
+  if (renderSection === "secondary") return scaleToneToggle;
+
+  return (
+    <>
+      {shapeButtons}
       <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
-
-      <button
-        onClick={() => updateCAGED({ showScaleTones: !showScaleTones })}
-        style={{
-          padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showScaleTones ? "#3ca0dc66" : "#1e1e2e"}`,
-          background: showScaleTones ? "rgba(60,160,220,0.18)" : "#0e0e16",
-          color: showScaleTones ? "#78c8f0" : "#777",
-          fontFamily: "'Outfit', sans-serif",
-          fontSize: "0.68rem",
-          fontWeight: 500,
-          cursor: "pointer",
-          transition: "all 0.2s",
-        }}
-      >
-        Scale Tones
-      </button>
+      {scaleToneToggle}
     </>
   );
 }

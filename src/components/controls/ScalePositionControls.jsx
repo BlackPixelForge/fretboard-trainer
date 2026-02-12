@@ -1,10 +1,10 @@
 import { FORMS, getPositionLabel } from "../lib/scales";
 
-export default function ScalePositionControls({ scalePositionState, updateScalePosition }) {
+export default function ScalePositionControls({ scalePositionState, updateScalePosition, renderSection }) {
   const { positionIndex, showFingering, showNoteNames } = scalePositionState;
   const total = FORMS.length;
 
-  return (
+  const positionButtons = (
     <>
       <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Position:</span>
 
@@ -80,9 +80,11 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
       >
         {">"}
       </button>
+    </>
+  );
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
-
+  const toggleButtons = (
+    <>
       <button
         onClick={() => updateScalePosition({ showNoteNames: !showNoteNames, showFingering: false })}
         style={{
@@ -117,6 +119,17 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
       >
         Fingering
       </button>
+    </>
+  );
+
+  if (renderSection === "primary") return positionButtons;
+  if (renderSection === "secondary") return toggleButtons;
+
+  return (
+    <>
+      {positionButtons}
+      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      {toggleButtons}
     </>
   );
 }

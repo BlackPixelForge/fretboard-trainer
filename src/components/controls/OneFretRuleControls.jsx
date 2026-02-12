@@ -1,15 +1,38 @@
 import { FORMS } from "../lib/scales";
 
-export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo }) {
+export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo, renderSection }) {
   const { positionFret, selectedFormIndex, showFingering, showNoteNames, showChordTones } = oneFretRuleState;
   const total = FORMS.length;
   const currentInfo = oneFretRuleInfo[selectedFormIndex];
 
-  return (
+  const fretSelector = (
     <>
       <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Fret:</span>
 
-      <span style={{ display: "inline-flex", gap: 2, alignItems: "center" }}>
+      {/* Mobile: select dropdown */}
+      <select
+        className="sm:hidden"
+        value={positionFret}
+        onChange={(e) => updateOneFretRule({ positionFret: Number(e.target.value) })}
+        style={{
+          padding: "6px 10px",
+          borderRadius: 8,
+          border: "1px solid #d4a01766",
+          background: "rgba(212,160,23,0.12)",
+          color: "#f0d060",
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: "0.7rem",
+          fontWeight: 700,
+          cursor: "pointer",
+        }}
+      >
+        {Array.from({ length: 12 }, (_, i) => i + 1).map(fret => (
+          <option key={fret} value={fret}>{fret}</option>
+        ))}
+      </select>
+
+      {/* Desktop: individual buttons */}
+      <span className="hidden sm:inline-flex" style={{ gap: 2, alignItems: "center" }}>
         {Array.from({ length: 12 }, (_, i) => i + 1).map(fret => {
           const active = positionFret === fret;
           return (
@@ -39,9 +62,11 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
           );
         })}
       </span>
+    </>
+  );
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
-
+  const formCards = (
+    <>
       <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Form / Key:</span>
 
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center", flexWrap: "wrap" }}>
@@ -188,6 +213,17 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
       >
         Fingering
       </button>
+    </>
+  );
+
+  if (renderSection === "primary") return fretSelector;
+  if (renderSection === "secondary") return formCards;
+
+  return (
+    <>
+      {fretSelector}
+      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      {formCards}
     </>
   );
 }

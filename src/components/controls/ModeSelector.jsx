@@ -14,56 +14,73 @@ const QUIZ_MODES = [
   { key: MODES.QUIZ_IDENTIFY, label: "Find Note" },
 ];
 
-function ModeGroup({ label, modes, currentMode, onModeChange, activeGradient }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <span style={{
-        fontSize: "0.6rem",
-        color: "#777",
-        fontFamily: "'Outfit', sans-serif",
-        textTransform: "uppercase",
-        letterSpacing: "0.08em",
-        fontWeight: 500,
-        minWidth: 30,
-      }}>{label}</span>
-      <div style={{ display: "flex", gap: "2px", background: "#14141e", borderRadius: 8, padding: 2, border: "1px solid #1e1e2e" }}>
-        {modes.map(m => (
-          <button key={m.key} onClick={() => onModeChange(m.key)} style={{
-            padding: "7px 14px",
-            borderRadius: 6,
-            border: "none",
-            background: currentMode === m.key ? activeGradient : "transparent",
-            color: currentMode === m.key ? "#fff" : "#888",
-            fontFamily: "'Outfit', sans-serif",
-            fontSize: "0.75rem",
-            fontWeight: currentMode === m.key ? 600 : 400,
-            cursor: "pointer",
-            transition: "all 0.2s",
-            letterSpacing: "0.02em",
-          }}>{m.label}</button>
-        ))}
-      </div>
-    </div>
-  );
+const LEARN_GRADIENT = "linear-gradient(135deg, #e84e3c, #c83828)";
+const QUIZ_GRADIENT = "linear-gradient(135deg, #ffc832, #e6a03c)";
+
+function isLearnMode(key) {
+  return LEARN_MODES.some(m => m.key === key);
 }
 
 export default function ModeSelector({ mode, onModeChange }) {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" }}>
-      <ModeGroup
-        label="Learn"
-        modes={LEARN_MODES}
-        currentMode={mode}
-        onModeChange={onModeChange}
-        activeGradient="linear-gradient(135deg, #e84e3c, #c83828)"
-      />
-      <ModeGroup
-        label="Quiz"
-        modes={QUIZ_MODES}
-        currentMode={mode}
-        onModeChange={onModeChange}
-        activeGradient="linear-gradient(135deg, #ffc832, #e6a03c)"
-      />
+    <div
+      className="mode-selector-scroll"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
+        background: "#14141e",
+        borderRadius: 8,
+        padding: 2,
+        border: "1px solid #1e1e2e",
+      }}
+    >
+      {LEARN_MODES.map(m => (
+        <button key={m.key} onClick={() => onModeChange(m.key)} style={{
+          padding: "7px 14px",
+          borderRadius: 6,
+          border: "none",
+          background: mode === m.key ? LEARN_GRADIENT : "transparent",
+          color: mode === m.key ? "#fff" : "#888",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "0.75rem",
+          fontWeight: mode === m.key ? 600 : 400,
+          cursor: "pointer",
+          transition: "all 0.2s",
+          letterSpacing: "0.02em",
+          whiteSpace: "nowrap",
+          flexShrink: 0,
+        }}>{m.label}</button>
+      ))}
+
+      {/* Divider between Learn and Quiz */}
+      <span style={{
+        width: 1,
+        height: 20,
+        background: "#2a2a3a",
+        margin: "0 4px",
+        flexShrink: 0,
+      }} />
+
+      {QUIZ_MODES.map(m => (
+        <button key={m.key} onClick={() => onModeChange(m.key)} style={{
+          padding: "7px 14px",
+          borderRadius: 6,
+          border: "none",
+          background: mode === m.key ? QUIZ_GRADIENT : "transparent",
+          color: mode === m.key ? "#fff" : "#888",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "0.75rem",
+          fontWeight: mode === m.key ? 600 : 400,
+          cursor: "pointer",
+          transition: "all 0.2s",
+          letterSpacing: "0.02em",
+          whiteSpace: "nowrap",
+          flexShrink: 0,
+        }}>{m.label}</button>
+      ))}
     </div>
   );
 }

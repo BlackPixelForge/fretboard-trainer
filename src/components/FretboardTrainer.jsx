@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   NOTES, NATURAL_NOTES, SHARP_NOTES, DIATONIC_KEYS,
   getNoteAt, getNoteName, isInKey, getStringLabel, getScaleDegree,
 } from "./lib/music";
 import { MODES, FRET_REGIONS, FRET_COUNT } from "./lib/fretboard";
 import { getIntervalLabel, getIntervalDegree, generateIntervalQuiz, INTERVAL_LABELS } from "./lib/intervals";
-import { isInScalePosition, FORMS, getRootNoteForPosition, computeKeyNotes } from "./lib/scales";
-import { getCAGEDInfo } from "./lib/caged";
+import { isInScalePosition, FORMS, getRootNoteForPosition, computeKeyNotes, getPositionFret } from "./lib/scales";
+import { getCAGEDInfo, getCAGEDShapes } from "./lib/caged";
 import { getTriadInfo, INVERSIONS, TRIAD_SHAPES } from "./lib/triads";
 import ModeSelector from "./controls/ModeSelector";
 import KeySelector from "./controls/KeySelector";
@@ -20,6 +20,7 @@ import ScalePositionControls from "./controls/ScalePositionControls";
 import CAGEDControls from "./controls/CAGEDControls";
 import OneFretRuleControls from "./controls/OneFretRuleControls";
 import TriadControls from "./controls/TriadControls";
+import ControlsDrawer from "./controls/ControlsDrawer";
 import QuizPrompt from "./quiz/QuizPrompt";
 import QuizFeedback from "./quiz/QuizFeedback";
 import AnswerBubbles from "./quiz/AnswerBubbles";
@@ -97,6 +98,8 @@ export default function FretboardTrainer() {
     autoPlaySpeed: 2000,   // ms between steps (500–5000)
   });
   const updateTriad = (updates) => setTriadState(prev => ({ ...prev, ...updates }));
+
+  const fretboardScrollRef = useRef(null);
 
   const [harmoniesState, setHarmoniesState] = useState({
     expanded: false,
@@ -482,6 +485,60 @@ export default function FretboardTrainer() {
     return () => window.removeEventListener("keydown", handler);
   }, [mode]);
 
+  // Auto-scroll fretboard to center on active position/shape
+  useEffect(() => {
+    const container = fretboardScrollRef.current;
+    if (!container) return;
+
+    let centerFret = null;
+
+    if (mode === MODES.ONE_FRET_RULE) {
+      centerFret = oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.rootFret;
+    } else if (mode === MODES.TRIADS) {
+      // Find average fret of lit notes
+      const invKey = INVERSIONS[triadState.inversionIndex];
+      const shapes = TRIAD_SHAPES[invKey];
+      if (shapes && shapes[triadState.shapeIndex]) {
+        const shape = shapes[triadState.shapeIndex];
+        let sum = 0, count = 0;
+        for (const note of shape.notes) {
+          const fret = (triadState.rootNote + note.offset + 120) % 24;
+          if (fret >= 0 && fret <= 19) { sum += fret; count++; }
+        }
+        if (count > 0) centerFret = sum / count;
+      }
+    } else if (mode === MODES.SCALE_POSITIONS) {
+      const posFret = getPositionFret(rootNote, scalePositionState.positionIndex);
+      centerFret = posFret + 2; // center of 4-fret span
+    } else if (mode === MODES.CAGED) {
+      if (cagedState.selectedShape !== "all") {
+        const shapes = getCAGEDShapes(rootNote);
+        const shape = shapes.find(s => s.letter === cagedState.selectedShape);
+        if (shape) {
+          const allFrets = [...shape.chordTones.map(t => t.fret), ...shape.scaleTones.map(t => t.fret)];
+          // Use the lowest occurrence cluster (first octave)
+          const low = allFrets.filter(f => f <= 14);
+          if (low.length > 0) {
+            centerFret = low.reduce((a, b) => a + b, 0) / low.length;
+          }
+        }
+      }
+    }
+
+    if (centerFret == null || centerFret < 1) return;
+
+    const contentWidth = container.scrollWidth;
+    const fretWidth = (contentWidth - 48 - 40) / 19; // label + nut + 19 frets
+    const targetX = 48 + 40 + (centerFret - 1) * fretWidth + fretWidth / 2;
+
+    container.scrollTo({
+      left: Math.max(0, targetX - container.clientWidth / 2),
+      behavior: "smooth",
+    });
+  }, [mode, scalePositionState.positionIndex, oneFretRuleState.selectedFormIndex,
+      oneFretRuleState.positionFret, triadState.rootNote, triadState.inversionIndex,
+      triadState.shapeIndex, cagedState.selectedShape]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const resetScore = () => {
     setScore({ correct: 0, total: 0 });
     setStreak(0);
@@ -614,112 +671,146 @@ export default function FretboardTrainer() {
     (mode === MODES.INTERVALS && intervalState.quizMode);
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "linear-gradient(170deg, #0a0a0f 0%, #12121c 40%, #0d1117 100%)",
-      color: "#c8ccd4",
-      fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', monospace",
-      padding: "20px",
-      boxSizing: "border-box",
-    }}>
-      {/* Header */}
-      <div style={{ maxWidth: 1200, margin: "0 auto 24px", textAlign: "center" }}>
-        <h1 style={{
-          fontFamily: "'Outfit', sans-serif",
-          fontSize: "clamp(1.4rem, 3vw, 2rem)",
-          fontWeight: 800,
-          background: "linear-gradient(135deg, #e84e3c 0%, #f0c832 50%, #3ca0dc 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          margin: "0 0 4px",
-          letterSpacing: "-0.02em",
-        }}>
-          Fretboard Navigator
-        </h1>
-        <p style={{
-          fontFamily: "'Outfit', sans-serif",
-          fontSize: "0.8rem",
-          color: "#555a68",
-          fontWeight: 400,
-          margin: 0,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-        }}>
-          Diatonic Note Memorization Trainer
-        </p>
-      </div>
-
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        {/* Controls Bar */}
-        <div style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px",
-          marginBottom: "16px",
-          alignItems: "center",
-        }}>
-          <ModeSelector mode={mode} onModeChange={handleModeChange} />
-          {!isOneFretRule && !isTriads && (
-            <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
-          )}
-          {isOneFretRule && (
-            <span style={{
-              padding: "7px 14px",
-              background: "rgba(212,160,23,0.12)",
-              border: "1px solid rgba(212,160,23,0.3)",
-              borderRadius: 8,
+    <div
+      className="p-3 sm:p-5"
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(170deg, #0a0a0f 0%, #12121c 40%, #0d1117 100%)",
+        color: "#c8ccd4",
+        fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', monospace",
+        boxSizing: "border-box",
+      }}
+    >
+      <div style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}>
+        {/* Header + Controls Bar — unified responsive row on desktop */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-4 mb-3 sm:mb-4">
+          {/* Title — left on desktop */}
+          <div className="text-center lg:text-left mb-3 sm:mb-4 lg:mb-0 lg:shrink-0">
+            <h1 style={{
               fontFamily: "'Outfit', sans-serif",
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              color: "#f0d060",
+              fontSize: "clamp(1.4rem, 3vw, 2rem)",
+              fontWeight: 800,
+              background: "linear-gradient(135deg, #e84e3c 0%, #f0c832 50%, #3ca0dc 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              margin: "0 0 4px",
+              letterSpacing: "-0.02em",
             }}>
-              {getNoteName(rootNote)} Major
-            </span>
-          )}
-          {(mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND || mode === MODES.QUIZ_IDENTIFY || mode === MODES.INTERVALS) && (
-            <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
-          )}
+              Fretboard Navigator
+            </h1>
+            <p className="hidden sm:block" style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: "0.8rem",
+              color: "#555a68",
+              fontWeight: 400,
+              margin: 0,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+            }}>
+              Diatonic Note Memorization Trainer
+            </p>
+          </div>
+
+          {/* Mode pills — center on desktop */}
+          <div className="lg:flex-1 lg:flex lg:justify-center">
+            <ModeSelector mode={mode} onModeChange={handleModeChange} />
+          </div>
+
+          {/* Key/Region selectors — right on desktop */}
+          <div className="flex gap-2 justify-center lg:justify-end mt-2 lg:mt-0 lg:shrink-0" style={{ flexWrap: "wrap" }}>
+            {!isOneFretRule && !isTriads && (
+              <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
+            )}
+            {isOneFretRule && (
+              <span style={{
+                padding: "7px 14px",
+                background: "rgba(212,160,23,0.12)",
+                border: "1px solid rgba(212,160,23,0.3)",
+                borderRadius: 8,
+                fontFamily: "'Outfit', sans-serif",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                color: "#f0d060",
+              }}>
+                {getNoteName(rootNote)} Major
+              </span>
+            )}
+            {(mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND || mode === MODES.QUIZ_IDENTIFY || mode === MODES.INTERVALS) && (
+              <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
+            )}
+          </div>
         </div>
 
         {/* Sub Controls */}
-        <div style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "6px",
-          marginBottom: "18px",
-          alignItems: "center",
-        }}>
-          {mode === MODES.EXPLORE && (
-            <ExploreToggles
-              showNaturals={showNaturals} setShowNaturals={setShowNaturals}
-              showSharps={showSharps} setShowSharps={setShowSharps}
-              showDegrees={showDegrees} setShowDegrees={setShowDegrees}
-              highlightRoot={highlightRoot} setHighlightRoot={setHighlightRoot}
-              hideAll={hideAll} setHideAll={setHideAll}
-              onResetRevealed={() => setRevealedNotes(new Set())}
-            />
-          )}
-          {mode === MODES.INTERVALS && (
-            <IntervalControls intervalState={intervalState} updateInterval={updateInterval} />
-          )}
-          {mode === MODES.SCALE_POSITIONS && (
-            <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} />
-          )}
-          {mode === MODES.CAGED && (
-            <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} />
-          )}
-          {mode === MODES.ONE_FRET_RULE && (
-            <OneFretRuleControls
-              oneFretRuleState={oneFretRuleState}
-              updateOneFretRule={updateOneFretRule}
-              oneFretRuleInfo={oneFretRuleInfo}
-            />
-          )}
-          {mode === MODES.TRIADS && (
-            <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} />
-          )}
-          <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
-        </div>
+        <ControlsDrawer
+          alwaysVisible={<>
+            {mode === MODES.EXPLORE && (
+              <ExploreToggles
+                showNaturals={showNaturals} setShowNaturals={setShowNaturals}
+                showSharps={showSharps} setShowSharps={setShowSharps}
+                showDegrees={showDegrees} setShowDegrees={setShowDegrees}
+                highlightRoot={highlightRoot} setHighlightRoot={setHighlightRoot}
+                hideAll={hideAll} setHideAll={setHideAll}
+                onResetRevealed={() => setRevealedNotes(new Set())}
+                renderSection="primary"
+              />
+            )}
+            {mode === MODES.INTERVALS && (
+              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} renderSection="primary" />
+            )}
+            {mode === MODES.SCALE_POSITIONS && (
+              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} renderSection="primary" />
+            )}
+            {mode === MODES.CAGED && (
+              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} renderSection="primary" />
+            )}
+            {mode === MODES.ONE_FRET_RULE && (
+              <OneFretRuleControls
+                oneFretRuleState={oneFretRuleState}
+                updateOneFretRule={updateOneFretRule}
+                oneFretRuleInfo={oneFretRuleInfo}
+                renderSection="primary"
+              />
+            )}
+            {mode === MODES.TRIADS && (
+              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="primary" />
+            )}
+          </>}
+          drawerContent={<>
+            {mode === MODES.EXPLORE && (
+              <ExploreToggles
+                showNaturals={showNaturals} setShowNaturals={setShowNaturals}
+                showSharps={showSharps} setShowSharps={setShowSharps}
+                showDegrees={showDegrees} setShowDegrees={setShowDegrees}
+                highlightRoot={highlightRoot} setHighlightRoot={setHighlightRoot}
+                hideAll={hideAll} setHideAll={setHideAll}
+                onResetRevealed={() => setRevealedNotes(new Set())}
+                renderSection="secondary"
+              />
+            )}
+            {mode === MODES.INTERVALS && (
+              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} renderSection="secondary" />
+            )}
+            {mode === MODES.SCALE_POSITIONS && (
+              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} renderSection="secondary" />
+            )}
+            {mode === MODES.CAGED && (
+              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} renderSection="secondary" />
+            )}
+            {mode === MODES.ONE_FRET_RULE && (
+              <OneFretRuleControls
+                oneFretRuleState={oneFretRuleState}
+                updateOneFretRule={updateOneFretRule}
+                oneFretRuleInfo={oneFretRuleInfo}
+                renderSection="secondary"
+              />
+            )}
+            {mode === MODES.TRIADS && (
+              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="secondary" />
+            )}
+            <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
+          </>}
+        />
 
         {/* Quiz Prompt — Find Note batch mode */}
         {mode === MODES.QUIZ_IDENTIFY && (
@@ -817,6 +908,7 @@ export default function FretboardTrainer() {
           cagedState={cagedState}
           intervalState={intervalState}
           identifyState={identifyState}
+          scrollRef={fretboardScrollRef}
         />
 
         {/* Legend */}
