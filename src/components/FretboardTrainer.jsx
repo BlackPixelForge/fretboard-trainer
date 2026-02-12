@@ -63,6 +63,7 @@ export default function FretboardTrainer() {
   const [cagedState, setCagedState] = useState({
     selectedShape: "all",
     showScaleTones: true,
+    rootNote: 0,
   });
 
   const [intervalState, setIntervalState] = useState({
@@ -134,9 +135,11 @@ export default function FretboardTrainer() {
   const triadInversionKey = INVERSIONS[triadState.inversionIndex];
   const keyNotes = isOneFretRule
     ? computeKeyNotes(oneFretRuleInfo[oneFretRuleState.selectedFormIndex].rootNote)
+    : mode === MODES.CAGED ? computeKeyNotes(cagedState.rootNote)
     : baseKeyNotes;
   const rootNote = isOneFretRule
     ? oneFretRuleInfo[oneFretRuleState.selectedFormIndex].rootNote
+    : mode === MODES.CAGED ? cagedState.rootNote
     : baseRootNote;
   const region = FRET_REGIONS[selectedRegion];
 
@@ -538,7 +541,7 @@ export default function FretboardTrainer() {
     });
   }, [mode, scalePositionState.positionIndex, oneFretRuleState.selectedFormIndex,
       oneFretRuleState.positionFret, triadState.rootNote, triadState.inversionIndex,
-      triadState.shapeIndex, cagedState.selectedShape]); // eslint-disable-line react-hooks/exhaustive-deps
+      triadState.shapeIndex, cagedState.selectedShape, cagedState.rootNote]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetScore = () => {
     setScore({ correct: 0, total: 0 });
@@ -810,7 +813,7 @@ export default function FretboardTrainer() {
               <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="secondary" />
             )}
             {mode === MODES.CAGED
-              ? <KeyButtons selectedKey={selectedKey} onKeyChange={handleKeyChange} />
+              ? <KeyButtons rootNote={cagedState.rootNote} onRootChange={(r) => updateCAGED({ rootNote: r })} />
               : <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
             }
           </>}
