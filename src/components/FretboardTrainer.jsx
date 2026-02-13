@@ -709,6 +709,8 @@ export default function FretboardTrainer() {
       className="p-3 sm:p-5"
       style={{
         minHeight: "100vh",
+        maxWidth: "100vw",
+        overflowX: "hidden",
         background: "linear-gradient(170deg, #0a0a0f 0%, #12121c 40%, #0d1117 100%)",
         color: "#c8ccd4",
         fontFamily: "var(--font-mono)",
@@ -747,8 +749,8 @@ export default function FretboardTrainer() {
             </p>
           </div>
 
-          {/* Mode tabs — full width, centered */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          {/* Mode tabs — full width, horizontally scrollable on mobile */}
+          <div style={{ display: "flex", justifyContent: "center", maxWidth: "100%", overflow: "hidden" }}>
             <ModeSelector mode={mode} onModeChange={handleModeChange} />
           </div>
         </div>
