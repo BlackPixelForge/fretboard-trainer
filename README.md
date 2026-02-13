@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Fretboard Navigator
 
-## Getting Started
+A guitar fretboard note memorization trainer. Learn diatonic scale note positions across the entire fretboard through interactive learning and quiz modes.
 
-First, run the development server:
+**Live app:** [fretboard-trainer.vercel.app](https://fretboard-trainer.vercel.app)
+
+## Learning Modes
+
+- **Explore** — View all notes in a key with toggles for naturals, sharps, and scale degrees. Click notes to reveal/hide them, or use "Hide All" to self-test.
+- **Scale Positions** — Navigate the 7 major scale position forms that tile seamlessly across the fretboard. Named by root string + fretting finger (e.g. 6(4) = root on string 6, finger 4). Toggle between scale degrees, note names, and fingering.
+- **CAGED** — See how the 5 open chord shapes (C, A, G, E, D) tile across the fretboard, with chord tone vs scale tone distinction. Each shape maps to one of the 7 scale positions.
+- **Intervals** — View notes as interval labels (R, 2, 3…) with filtering. Includes an interval quiz sub-mode.
+- **1-Fret Rule** — Pick a fret position and see which 7 keys the 7 scale position forms produce at that fret. Shift ±1 fret to cover all 12 chromatic keys.
+- **Triads** — Browse 48 movable triad shapes across 4 string sets, 4 qualities, and 3 inversions for any chromatic root. Includes auto-cycle playback with speed control, and a harmonized chords panel showing I–ii–iii–IV–V–vi–vii° for the current key.
+
+## Quiz Modes
+
+- **Name Note** — A fret position is highlighted; pick the correct note name from multiple-choice bubbles.
+- **Find Note** — Given a note name, find and tap every occurrence of that note on the fretboard.
+
+Both quizzes support key selection, fret region filtering, per-string filtering, streak tracking, and score/accuracy stats.
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Opens at [localhost:3000](http://localhost:3000).
