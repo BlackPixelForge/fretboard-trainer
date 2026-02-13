@@ -5,7 +5,7 @@ import FretMarkers from "./FretMarkers";
 import StringRow from "./StringRow";
 
 export default function Fretboard({
-  keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
+  keyNotes, rootNote, mode, selectedRegion, region,
   highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
   getNoteDisplayData, scalePositionState, cagedState, intervalState, identifyState,
   scrollRef,
@@ -50,7 +50,6 @@ export default function Fretboard({
               keyNotes={keyNotes}
               rootNote={rootNote}
               mode={mode}
-              selectedStrings={selectedStrings}
               selectedRegion={selectedRegion}
               region={region}
               highlightRoot={highlightRoot}

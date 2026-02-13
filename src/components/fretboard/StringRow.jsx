@@ -2,7 +2,7 @@ import { FRET_COUNT } from "../lib/fretboard";
 import FretCell from "./FretCell";
 
 export default function StringRow({
-  string, si, keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
+  string, si, keyNotes, rootNote, mode, selectedRegion, region,
   highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
   getNoteDisplayData, scalePositionState, cagedState, intervalState, identifyState,
 }) {
@@ -12,8 +12,6 @@ export default function StringRow({
       alignItems: "center",
       height: 36,
       position: "relative",
-      opacity: selectedStrings.has(si) ? 1 : 0.35,
-      transition: "opacity 0.3s",
     }}>
       {/* String label */}
       <div style={{
@@ -37,7 +35,6 @@ export default function StringRow({
           keyNotes={keyNotes}
           rootNote={rootNote}
           mode={mode}
-          selectedStrings={selectedStrings}
           selectedRegion={selectedRegion}
           region={region}
           highlightRoot={highlightRoot}

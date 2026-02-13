@@ -14,7 +14,6 @@ import ModeSelector from "./controls/ModeSelector";
 import KeySelector from "./controls/KeySelector";
 import RegionSelector from "./controls/RegionSelector";
 import ExploreToggles from "./controls/ExploreToggles";
-import StringToggles from "./controls/StringToggles";
 import KeyButtons from "./controls/KeyButtons";
 import IntervalControls from "./controls/IntervalControls";
 import ScalePositionControls from "./controls/ScalePositionControls";
@@ -42,7 +41,6 @@ export default function FretboardTrainer() {
   const [highlightRoot, setHighlightRoot] = useState(true);
   const [revealedNotes, setRevealedNotes] = useState(new Set());
   const [hideAll, setHideAll] = useState(false);
-  const [selectedStrings, setSelectedStrings] = useState(new Set([0, 1, 2, 3, 4, 5]));
   const [quizNote, setQuizNote] = useState(null);
   const [quizTarget, setQuizTarget] = useState(null);
   const [quizFeedback, setQuizFeedback] = useState(null);
@@ -250,7 +248,6 @@ export default function FretboardTrainer() {
       if (identifyState.phase !== "selecting") return;
       const noteIndex = getNoteAt(s, f);
       if (!isInKey(noteIndex, keyNotes)) return;
-      if (!selectedStrings.has(s)) return;
       if (selectedRegion !== "all" && (f < region.start || f > region.end)) return;
       const id = getNoteId(s, f);
       setIdentifyState(prev => {
@@ -283,9 +280,7 @@ export default function FretboardTrainer() {
   }, [keyNotes]);
 
   const generateFindQuiz = useCallback(() => {
-    const strings = Array.from(selectedStrings);
-    if (strings.length === 0) return;
-    const s = strings[Math.floor(Math.random() * strings.length)];
+    const s = Math.floor(Math.random() * 6);
     const minF = region.start;
     const maxF = region.end;
     const validFrets = [];
@@ -308,7 +303,7 @@ export default function FretboardTrainer() {
     setFindChoices(choices);
     setSelectedAnswer(null);
     setQuizFeedback(null);
-  }, [selectedStrings, keyNotes, region]);
+  }, [keyNotes, region]);
 
   const handleFindAnswer = (chosenNote) => {
     if (selectedAnswer !== null) return;
@@ -333,7 +328,7 @@ export default function FretboardTrainer() {
 
   // --- Interval quiz ---
   const generateIntervalQuizNote = useCallback(() => {
-    const result = generateIntervalQuiz(keyNotes, selectedStrings, region);
+    const result = generateIntervalQuiz(keyNotes, region);
     if (result) {
       updateInterval({
         quizNote: { string: result.stringIndex, fret: result.fret },
@@ -342,7 +337,7 @@ export default function FretboardTrainer() {
         quizFeedback: null,
       });
     }
-  }, [keyNotes, selectedStrings, region]);
+  }, [keyNotes, region]);
 
   const handleIntervalAnswer = (chosenDegree) => {
     if (intervalState.selectedAnswer !== null) return;
@@ -377,7 +372,6 @@ export default function FretboardTrainer() {
     const fretStart = selectedRegion === "all" ? 0 : region.start;
     const fretEnd = selectedRegion === "all" ? FRET_COUNT : region.end;
     for (let s = 0; s <= 5; s++) {
-      if (!selectedStrings.has(s)) continue;
       for (let f = fretStart; f <= fretEnd; f++) {
         const noteIndex = getNoteAt(s, f);
         if (!isInKey(noteIndex, keyNotes)) continue;
@@ -552,19 +546,16 @@ export default function FretboardTrainer() {
   const isNoteVisible = (s, f) => {
     // New modes define their own note sets
     if (mode === MODES.SCALE_POSITIONS) {
-      if (!selectedStrings.has(s)) return false;
       const match = isInScalePosition(s, f, rootNote, keyNotes, scalePositionState.positionIndex);
       return match !== null;
     }
 
     if (mode === MODES.ONE_FRET_RULE) {
-      if (!selectedStrings.has(s)) return false;
       const match = isInScalePosition(s, f, rootNote, keyNotes, oneFretRuleState.selectedFormIndex);
       return match !== null;
     }
 
     if (mode === MODES.CAGED) {
-      if (!selectedStrings.has(s)) return false;
       const info = getCAGEDInfo(s, f, rootNote, cagedState.selectedShape);
       if (!info) return false;
       if (!info.isChordTone && !cagedState.showScaleTones) return false;
@@ -572,7 +563,6 @@ export default function FretboardTrainer() {
     }
 
     if (mode === MODES.INTERVALS) {
-      if (!selectedStrings.has(s)) return false;
       const noteIndex = getNoteAt(s, f);
       if (!isInKey(noteIndex, keyNotes)) return false;
       if (selectedRegion !== "all") {
@@ -598,7 +588,6 @@ export default function FretboardTrainer() {
 
     // Batch identify mode: show dots at all in-key positions in active region
     if (mode === MODES.QUIZ_IDENTIFY) {
-      if (!selectedStrings.has(s)) return false;
       if (selectedRegion !== "all" && (f < region.start || f > region.end)) return false;
       const noteIndex = getNoteAt(s, f);
       return isInKey(noteIndex, keyNotes);
@@ -607,7 +596,6 @@ export default function FretboardTrainer() {
     // Original logic for explore/quiz modes
     const noteIndex = getNoteAt(s, f);
     if (!isInKey(noteIndex, keyNotes)) return false;
-    if (!selectedStrings.has(s)) return false;
     if (selectedRegion !== "all") {
       if (f < region.start || f > region.end) return false;
     }
@@ -642,14 +630,6 @@ export default function FretboardTrainer() {
   const handleKeyChange = (key) => {
     setSelectedKey(key);
     setRevealedNotes(new Set());
-  };
-
-  const handleToggleString = (i) => {
-    setSelectedStrings(prev => {
-      const next = new Set(prev);
-      if (next.has(i)) next.delete(i); else next.add(i);
-      return next;
-    });
   };
 
   // Harmonies panel handlers
@@ -812,10 +792,9 @@ export default function FretboardTrainer() {
             {mode === MODES.TRIADS && (
               <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="secondary" />
             )}
-            {mode === MODES.CAGED
-              ? <KeyButtons rootNote={cagedState.rootNote} onRootChange={(r) => updateCAGED({ rootNote: r })} />
-              : <StringToggles selectedStrings={selectedStrings} onToggleString={handleToggleString} />
-            }
+            {mode === MODES.CAGED && (
+              <KeyButtons rootNote={cagedState.rootNote} onRootChange={(r) => updateCAGED({ rootNote: r })} />
+            )}
           </>}
         />
 
@@ -900,7 +879,6 @@ export default function FretboardTrainer() {
           keyNotes={keyNotes}
           rootNote={rootNote}
           mode={mode}
-          selectedStrings={selectedStrings}
           selectedRegion={selectedRegion}
           region={region}
           highlightRoot={highlightRoot}

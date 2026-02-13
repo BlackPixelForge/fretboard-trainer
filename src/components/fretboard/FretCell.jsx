@@ -8,7 +8,7 @@ import CAGEDDot from "./CAGEDDot";
 import TriadDot from "./TriadDot";
 
 export default function FretCell({
-  si, f, keyNotes, rootNote, mode, selectedStrings, selectedRegion, region,
+  si, f, keyNotes, rootNote, mode, selectedRegion, region,
   highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
   getNoteDisplayData, scalePositionState, cagedState, intervalState, identifyState,
 }) {
@@ -140,7 +140,7 @@ export default function FretCell({
       })()}
 
       {/* Batch identify mode rendering */}
-      {mode === MODES.QUIZ_IDENTIFY && inKey && isInRegion && selectedStrings.has(si) && (() => {
+      {mode === MODES.QUIZ_IDENTIFY && inKey && isInRegion && (() => {
         if (identifyState?.phase === "selecting") {
           const id = `${si}-${f}`;
           const isSelected = identifyState.selections.has(id);
@@ -232,7 +232,7 @@ export default function FretCell({
             noteName={noteName}
             degree={degree}
             showDegrees={showDegrees}
-            canClick={selectedStrings.has(si)}
+            canClick={true}
             onClick={() => onToggleReveal(si, f)}
             hideAll={hideAll}
           />
