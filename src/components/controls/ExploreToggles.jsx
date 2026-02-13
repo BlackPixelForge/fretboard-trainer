@@ -25,7 +25,7 @@ export default function ExploreToggles({
       border: `1px solid ${toggle.val ? "#3ca0dc66" : "#1e1e2e"}`,
       background: toggle.val ? "rgba(60,160,220,0.18)" : "#0e0e16",
       color: toggle.val ? "#78c8f0" : "#777",
-      fontFamily: "'Outfit', sans-serif",
+      fontFamily: "var(--font-sans)",
       fontSize: "0.68rem",
       fontWeight: 500,
       cursor: "pointer",
@@ -45,7 +45,7 @@ export default function ExploreToggles({
         <button onClick={onResetRevealed} style={{
           padding: "5px 10px", borderRadius: 6, border: "1px solid #1e1e2e",
           background: "#0e0e16", color: "#777",
-          fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", fontWeight: 500, cursor: "pointer",
+          fontFamily: "var(--font-sans)", fontSize: "0.68rem", fontWeight: 500, cursor: "pointer",
         }}>Reset Revealed</button>
       </>
     );
@@ -67,7 +67,7 @@ export default function ExploreToggles({
       <button onClick={onResetRevealed} style={{
         padding: "5px 10px", borderRadius: 6, border: "1px solid #1e1e2e",
         background: "#0e0e16", color: "#777",
-        fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", fontWeight: 500, cursor: "pointer",
+        fontFamily: "var(--font-sans)", fontSize: "0.68rem", fontWeight: 500, cursor: "pointer",
       }}>Reset Revealed</button>
     </>
   );

@@ -9,7 +9,7 @@ export default function Tips({ mode }) {
       border: "1px solid rgba(60,160,220,0.1)",
     }}>
       <p style={{
-        fontFamily: "'Outfit', sans-serif",
+        fontFamily: "var(--font-sans)",
         fontSize: "0.72rem",
         color: "#889",
         margin: 0,

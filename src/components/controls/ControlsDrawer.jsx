@@ -31,7 +31,7 @@ export default function ControlsDrawer({ alwaysVisible, drawerContent }) {
           border: "1px solid rgba(60,160,220,0.15)",
           borderRadius: 6,
           color: "#78c8f0",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",

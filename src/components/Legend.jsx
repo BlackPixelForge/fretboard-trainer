@@ -20,14 +20,14 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
       {/* Default scale degree legend for Explore and Quiz modes */}
       {(mode === MODES.EXPLORE || mode === MODES.QUIZ_IDENTIFY || mode === MODES.QUIZ_FIND) && (
         <>
-          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>Scale Degrees:</span>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>Scale Degrees:</span>
           {SCALE_DEGREES.map((d, i) => {
             const noteIndex = keyNotes[i];
             const colors = getNoteColor(noteIndex, keyNotes, rootNote, highlightRoot, mode, quizNote, -1, -1);
             return (
               <span key={d} style={{
                 display: "inline-flex", alignItems: "center", gap: 4,
-                fontSize: "0.68rem", fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.68rem", fontFamily: "var(--font-mono)",
               }}>
                 <span style={{
                   width: 16, height: 16, borderRadius: "50%",
@@ -45,11 +45,11 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
       {/* Scale Positions legend */}
       {mode === MODES.SCALE_POSITIONS && scalePositionState && (
         <>
-          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
             Position {getPositionLabel(scalePositionState.positionIndex)}
           </span>
           <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
-          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
           {[
             { num: 1, label: "Index" },
             { num: 2, label: "Middle" },
@@ -58,7 +58,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
           ].map(({ num, label }) => (
             <span key={num} style={{
               display: "inline-flex", alignItems: "center", gap: 3,
-              fontSize: "0.62rem", fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "0.62rem", fontFamily: "var(--font-mono)",
             }}>
               <span style={{
                 width: 16, height: 16, borderRadius: "50%",
@@ -75,14 +75,14 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
       {/* One Fret Rule legend */}
       {mode === MODES.ONE_FRET_RULE && oneFretRuleState && oneFretRuleInfo && (
         <>
-          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
             Form {oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.formName} &mdash; {getNoteName(oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.rootNote)} Major
             <span style={{ color: "#666", marginLeft: 6, fontSize: "0.6rem" }}>
               (root: string {oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.rootGuitarString}, fret {oneFretRuleInfo[oneFretRuleState.selectedFormIndex]?.rootFret})
             </span>
           </span>
           <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
-          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
           {[
             { num: 1, label: "Index" },
             { num: 2, label: "Middle" },
@@ -91,7 +91,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
           ].map(({ num, label }) => (
             <span key={num} style={{
               display: "inline-flex", alignItems: "center", gap: 3,
-              fontSize: "0.62rem", fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "0.62rem", fontFamily: "var(--font-mono)",
             }}>
               <span style={{
                 width: 16, height: 16, borderRadius: "50%",
@@ -108,14 +108,14 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
       {/* CAGED legend */}
       {mode === MODES.CAGED && (
         <>
-          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>CAGED Shapes:</span>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>CAGED Shapes:</span>
           {CAGED_ORDER.map((letter) => {
             const color = CAGED_SHAPE_COLORS[letter];
             const active = cagedState?.selectedShape === "all" || cagedState?.selectedShape === letter;
             return (
               <span key={letter} style={{
                 display: "inline-flex", alignItems: "center", gap: 3,
-                fontSize: "0.68rem", fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.68rem", fontFamily: "var(--font-mono)",
                 opacity: active ? 1 : 0.5,
               }}>
                 <span style={{
@@ -128,11 +128,11 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
             );
           })}
           <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.6rem", color: "#999", fontFamily: "'Outfit', sans-serif" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.6rem", color: "#999", fontFamily: "var(--font-sans)" }}>
             <span style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.12)", border: "1px solid #888" }} />
             Chord tone
           </span>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.6rem", color: "#999", fontFamily: "'Outfit', sans-serif" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.6rem", color: "#999", fontFamily: "var(--font-sans)" }}>
             <span style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(180,180,180,0.08)", border: "1px dashed #666" }} />
             Scale tone
           </span>
@@ -151,7 +151,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
         ];
         return (
           <>
-            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
               {label} &middot; {invLabel}
             </span>
             <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
@@ -161,7 +161,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
               return (
                 <span key={key} style={{
                   display: "inline-flex", alignItems: "center", gap: 3,
-                  fontSize: "0.62rem", fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "0.62rem", fontFamily: "var(--font-mono)",
                 }}>
                   <span style={{
                     width: 16, height: 16, borderRadius: isRoot ? 3 : "50%",
@@ -174,7 +174,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
               );
             })}
             <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
-            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", color: "#999" }}>Fingering:</span>
             {[
               { num: 1, label: "Index" },
               { num: 2, label: "Middle" },
@@ -183,7 +183,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
             ].map(({ num, label: fLabel }) => (
               <span key={num} style={{
                 display: "inline-flex", alignItems: "center", gap: 3,
-                fontSize: "0.62rem", fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.62rem", fontFamily: "var(--font-mono)",
               }}>
                 <span style={{
                   width: 16, height: 16, borderRadius: "50%",
@@ -201,7 +201,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
       {/* Intervals legend */}
       {mode === MODES.INTERVALS && (
         <>
-          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>Intervals:</span>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>Intervals:</span>
           {SCALE_DEGREES.map((d, i) => {
             const deg = i + 1;
             const noteIndex = keyNotes[i];
@@ -210,7 +210,7 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
             return (
               <span key={d} style={{
                 display: "inline-flex", alignItems: "center", gap: 3,
-                fontSize: "0.62rem", fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.62rem", fontFamily: "var(--font-mono)",
                 opacity: active ? 1 : 0.45,
               }}>
                 <span style={{

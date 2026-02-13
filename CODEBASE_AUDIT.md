@@ -188,15 +188,20 @@
 
 ---
 
-### 14. No Font Fallback Stack
+### 14. ~~No Font Fallback Stack~~ ✅ FIXED
 
-**File:** `src/app/globals.css`
+**File:** `src/app/globals.css` + 29 component files
 **Severity:** Low
 **Category:** CSS
+**Status:** Fixed
 
-Google Fonts (`JetBrains Mono`, `Outfit`) are imported without system font fallbacks. If the CDN is slow or blocked, text renders in the browser default until fonts load.
+**What was wrong:** Google Fonts (`JetBrains Mono`, `Outfit`) were used in 100+ inline `fontFamily` declarations across 29 files with inconsistent fallback stacks (some had only `monospace`/`sans-serif`, one had `'Fira Code', 'SF Mono'`, HarmoniesPanel used unquoted variants).
 
-**Fix:** Add fallback fonts: `font-family: 'JetBrains Mono', 'Courier New', monospace;`
+**What was fixed:** Defined CSS custom properties in `globals.css` with proper fallback stacks:
+- `--font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Courier New', monospace`
+- `--font-sans: 'Outfit', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif`
+
+Replaced all 100+ inline `fontFamily` references across 29 component files with `var(--font-mono)` or `var(--font-sans)`. Font stacks are now defined once and referenced everywhere — future font changes require editing a single line.
 
 ---
 

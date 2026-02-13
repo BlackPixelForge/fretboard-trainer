@@ -9,7 +9,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
 
   const primaryControls = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Root:</span>
+      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Root:</span>
 
       <select
         value={rootNote}
@@ -20,7 +20,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
           border: "1px solid #1e1e2e",
           background: "#0e0e16",
           color: "#c8ccd4",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
         }}
@@ -45,7 +45,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
                 border: `1px solid ${active ? "#e84e3c66" : "#1e1e2e"}`,
                 background: active ? "rgba(232,78,60,0.22)" : "#0e0e16",
                 color: active ? "#ffa09a" : "#777",
-                fontFamily: "'Outfit', sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.62rem",
                 fontWeight: active ? 600 : 400,
                 cursor: "pointer",
@@ -71,7 +71,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
           border: "1px solid #1e1e2e",
           background: "#0e0e16",
           color: "#888",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
           transition: "all 0.2s",
@@ -83,7 +83,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
       <span style={{
         fontSize: "0.62rem",
         color: "#999",
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "var(--font-mono)",
         padding: "4px 8px",
         background: "rgba(232,78,60,0.08)",
         border: "1px solid rgba(232,78,60,0.15)",
@@ -103,7 +103,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
           border: "1px solid #1e1e2e",
           background: "#0e0e16",
           color: "#888",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
           transition: "all 0.2s",
@@ -124,7 +124,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
           border: `1px solid ${showNoteNames ? "#3ca0dc66" : "#1e1e2e"}`,
           background: showNoteNames ? "rgba(60,160,220,0.18)" : "#0e0e16",
           color: showNoteNames ? "#78c8f0" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
@@ -141,7 +141,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
           border: `1px solid ${showFingering ? "#3ca0dc66" : "#1e1e2e"}`,
           background: showFingering ? "rgba(60,160,220,0.18)" : "#0e0e16",
           color: showFingering ? "#78c8f0" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
@@ -163,7 +163,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
           border: `1px solid ${autoPlay ? "#4ade8066" : "#1e1e2e"}`,
           background: autoPlay ? "rgba(74,222,128,0.18)" : "#0e0e16",
           color: autoPlay ? "#4ade80" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           fontWeight: 500,
           cursor: "pointer",
@@ -191,7 +191,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
       <span style={{
         fontSize: "0.6rem",
         color: "#777",
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "var(--font-mono)",
         minWidth: 28,
       }}>
         {(autoPlaySpeed / 1000).toFixed(1)}s

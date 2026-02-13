@@ -60,7 +60,7 @@ export default function KeyButtons({ rootNote, onRootChange }) {
   return (
     <>
       <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
-      <span style={{ fontSize: "0.65rem", color: "#777", fontFamily: "'Outfit', sans-serif", marginRight: 2 }}>Key:</span>
+      <span style={{ fontSize: "0.65rem", color: "#777", fontFamily: "var(--font-sans)", marginRight: 2 }}>Key:</span>
       {NATURALS.map(({ name, index }) => {
         const active = natural === index;
         return (
@@ -69,7 +69,7 @@ export default function KeyButtons({ rootNote, onRootChange }) {
             border: `1px solid ${active ? "#f0c83266" : "#1e1e2e"}`,
             background: active ? "rgba(240,200,50,0.18)" : "#0e0e16",
             color: active ? "#f0d060" : "#666",
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: "0.6rem", fontWeight: 600, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
             padding: "0 4px", transition: "all 0.2s",
@@ -86,7 +86,7 @@ export default function KeyButtons({ rootNote, onRootChange }) {
           border: `1px solid ${accidental === "sharp" ? "#f0c83266" : "#1e1e2e"}`,
           background: accidental === "sharp" ? "rgba(240,200,50,0.18)" : "#0e0e16",
           color: sharpDisabled ? "#333" : accidental === "sharp" ? "#f0d060" : "#666",
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: "0.65rem", fontWeight: 700, cursor: sharpDisabled ? "default" : "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
           padding: "0 3px", transition: "all 0.2s",
@@ -102,7 +102,7 @@ export default function KeyButtons({ rootNote, onRootChange }) {
           border: `1px solid ${accidental === "flat" ? "#f0c83266" : "#1e1e2e"}`,
           background: accidental === "flat" ? "rgba(240,200,50,0.18)" : "#0e0e16",
           color: flatDisabled ? "#333" : accidental === "flat" ? "#f0d060" : "#666",
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: "0.65rem", fontWeight: 700, cursor: flatDisabled ? "default" : "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
           padding: "0 3px", transition: "all 0.2s",

@@ -9,7 +9,7 @@ const INTERVAL_PILL_STYLE = (interval, isRoot) => {
     padding: "1px 6px", borderRadius: isRoot ? 3 : 10,
     background: colors.bg, border: `1.5px solid ${colors.border}`,
     fontSize: "0.65rem", fontWeight: 700, color: colors.text,
-    fontFamily: "'JetBrains Mono', monospace",
+    fontFamily: "var(--font-mono)",
   };
 };
 
@@ -26,7 +26,7 @@ function Section({ title, defaultOpen, highlight, children }) {
         style={{
           width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "10px 0", background: "none", border: "none", cursor: "pointer",
-          fontFamily: "'Outfit', sans-serif", fontSize: "0.78rem", fontWeight: 600,
+          fontFamily: "var(--font-sans)", fontSize: "0.78rem", fontWeight: 600,
           color: highlight ? "#ffa09a" : "#c8ccd4",
           transition: "color 0.2s",
         }}
@@ -49,7 +49,7 @@ function Section({ title, defaultOpen, highlight, children }) {
 }
 
 const textStyle = {
-  fontFamily: "'Outfit', sans-serif", fontSize: "0.72rem", color: "#999",
+  fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "#999",
   lineHeight: 1.7, margin: 0,
 };
 
@@ -74,7 +74,7 @@ export default function TriadExplainer({ triadState }) {
             display: "flex", alignItems: "center", gap: 6,
             padding: "8px 14px", background: "rgba(232,78,60,0.06)",
             border: "1px solid rgba(232,78,60,0.15)", borderRadius: 8,
-            fontFamily: "'Outfit', sans-serif", fontSize: "0.72rem", fontWeight: 500,
+            fontFamily: "var(--font-sans)", fontSize: "0.72rem", fontWeight: 500,
             color: "#e8907a", cursor: "pointer", transition: "all 0.2s",
           }}
         >
@@ -94,7 +94,7 @@ export default function TriadExplainer({ triadState }) {
       border: "1px solid #1a1a28",
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-        <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: "0.82rem", fontWeight: 700, color: "#c8ccd4" }}>
+        <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", fontWeight: 700, color: "#c8ccd4" }}>
           Triad Theory Guide
         </span>
         <button
@@ -102,7 +102,7 @@ export default function TriadExplainer({ triadState }) {
           aria-label="Close triad theory guide"
           style={{
             background: "none", border: "none", cursor: "pointer",
-            fontFamily: "'Outfit', sans-serif", fontSize: "0.65rem", color: "#555",
+            fontFamily: "var(--font-sans)", fontSize: "0.65rem", color: "#555",
             padding: "4px 8px",
           }}
         >
@@ -176,7 +176,7 @@ export default function TriadExplainer({ triadState }) {
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                   <span style={{
-                    fontFamily: "'Outfit', sans-serif", fontSize: "0.75rem", fontWeight: 700,
+                    fontFamily: "var(--font-sans)", fontSize: "0.75rem", fontWeight: 700,
                     color: active ? "#ffa09a" : "#c8ccd4",
                   }}>
                     {q.label}
@@ -188,7 +188,7 @@ export default function TriadExplainer({ triadState }) {
                   </span>
                   {active && (
                     <span style={{
-                      fontSize: "0.55rem", color: "#e84e3c", fontFamily: "'Outfit', sans-serif",
+                      fontSize: "0.55rem", color: "#e84e3c", fontFamily: "var(--font-sans)",
                       fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase",
                     }}>
                       current
@@ -213,7 +213,7 @@ export default function TriadExplainer({ triadState }) {
             How they relate:
           </p>
           <pre style={{
-            fontFamily: "'JetBrains Mono', monospace", fontSize: "0.6rem",
+            fontFamily: "var(--font-mono)", fontSize: "0.6rem",
             color: "#889", lineHeight: 1.5, margin: 0, whiteSpace: "pre",
             overflowX: "auto",
           }}>
@@ -257,24 +257,24 @@ export default function TriadExplainer({ triadState }) {
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                   <span style={{
-                    fontFamily: "'Outfit', sans-serif", fontSize: "0.72rem", fontWeight: 700,
+                    fontFamily: "var(--font-sans)", fontSize: "0.72rem", fontWeight: 700,
                     color: active ? "#ffa09a" : "#c8ccd4",
                   }}>
                     {inv.label}
                   </span>
                   <span style={{
-                    fontFamily: "'JetBrains Mono', monospace", fontSize: "0.62rem", color: "#889",
+                    fontFamily: "var(--font-mono)", fontSize: "0.62rem", color: "#889",
                   }}>
                     {inv.formula}
                   </span>
                   <span style={{
-                    fontFamily: "'Outfit', sans-serif", fontSize: "0.58rem", color: "#666",
+                    fontFamily: "var(--font-sans)", fontSize: "0.58rem", color: "#666",
                   }}>
                     ({inv.bass})
                   </span>
                   {active && (
                     <span style={{
-                      fontSize: "0.55rem", color: "#e84e3c", fontFamily: "'Outfit', sans-serif",
+                      fontSize: "0.55rem", color: "#e84e3c", fontFamily: "var(--font-sans)",
                       fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase",
                     }}>
                       current
@@ -312,7 +312,7 @@ export default function TriadExplainer({ triadState }) {
                 transition: "all 0.3s",
               }}>
                 <span style={{
-                  fontFamily: "'Outfit', sans-serif", fontSize: "0.7rem", fontWeight: 600,
+                  fontFamily: "var(--font-sans)", fontSize: "0.7rem", fontWeight: 600,
                   color: active ? "#ffa09a" : "#c8ccd4",
                 }}>
                   {ss.label}:
@@ -324,7 +324,7 @@ export default function TriadExplainer({ triadState }) {
                 {active && (
                   <span style={{
                     marginLeft: 8, fontSize: "0.55rem", color: "#e84e3c",
-                    fontFamily: "'Outfit', sans-serif", fontWeight: 600,
+                    fontFamily: "var(--font-sans)", fontWeight: 600,
                     letterSpacing: "0.05em", textTransform: "uppercase",
                   }}>
                     current

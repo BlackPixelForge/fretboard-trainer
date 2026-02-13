@@ -48,7 +48,7 @@ export default function QuizTarget({ answered, noteName, selectedAnswer }) {
       fontSize: "0.82rem",
       fontWeight: 800,
       color: revealCorrect ? "#80f080" : "#ffe080",
-      fontFamily: "'JetBrains Mono', monospace",
+      fontFamily: "var(--font-mono)",
     }}>
       {noteName}
     </div>

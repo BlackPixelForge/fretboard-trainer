@@ -45,7 +45,7 @@ function LearnSection({ children }) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          fontFamily: "Outfit, sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.8rem",
         }}
       >
@@ -53,7 +53,7 @@ function LearnSection({ children }) {
         <span style={{ transform: open ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.2s" }}>▼</span>
       </button>
       {open && (
-        <div style={{ padding: "0 14px 14px", animation: "slideDown 0.2s ease", color: "#c8ccd4", fontSize: "0.82rem", lineHeight: 1.6, fontFamily: "Outfit, sans-serif" }}>
+        <div style={{ padding: "0 14px 14px", animation: "slideDown 0.2s ease", color: "#c8ccd4", fontSize: "0.82rem", lineHeight: 1.6, fontFamily: "var(--font-sans)" }}>
           {children}
         </div>
       )}
@@ -98,14 +98,14 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
             display: "flex",
             alignItems: "center",
             gap: 8,
-            fontFamily: "Outfit, sans-serif",
+            fontFamily: "var(--font-sans)",
             fontSize: "0.85rem",
             transition: "border-color 0.2s",
           }}
         >
           <span style={{ color: "#8a8fa6", fontSize: "0.75rem" }}>▶</span>
           <span style={{ color: "#8a8fa6" }}>Scale Harmonies:</span>
-          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.82rem", letterSpacing: "0.02em" }}>{preview}</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.82rem", letterSpacing: "0.02em" }}>{preview}</span>
         </button>
       </div>
     );
@@ -130,10 +130,10 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
         borderBottom: "1px solid #1a1a28",
       }}>
         <div>
-          <span style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.9rem", color: "#e8e8f0", fontWeight: 600 }}>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", color: "#e8e8f0", fontWeight: 600 }}>
             Key of {keyName} Major
           </span>
-          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.75rem", color: "#8a8fa6", marginLeft: 10 }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "#8a8fa6", marginLeft: 10 }}>
             {keySig}
           </span>
         </div>
@@ -146,7 +146,7 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
             cursor: "pointer",
             fontSize: "0.75rem",
             padding: "4px 8px",
-            fontFamily: "Outfit, sans-serif",
+            fontFamily: "var(--font-sans)",
           }}
         >
           ▲ Collapse
@@ -189,14 +189,14 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
                 }}
               >
                 <span style={{
-                  fontFamily: "JetBrains Mono, monospace",
+                  fontFamily: "var(--font-mono)",
                   fontSize: "0.7rem",
                   color: "#8a8fa6",
                 }}>
                   {chord.degree === 8 ? "I" : chord.numeral}
                 </span>
                 <span style={{
-                  fontFamily: "Outfit, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   fontSize: "0.9rem",
                   fontWeight: 600,
                   color: isActive ? colors.text : "#e0e0e8",
@@ -219,7 +219,7 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
                   borderRadius: 4,
                   fontSize: "0.72rem",
                   color: "#c8ccd4",
-                  fontFamily: "Outfit, sans-serif",
+                  fontFamily: "var(--font-sans)",
                   animation: "slideDown 0.15s ease",
                   zIndex: 10,
                 }}>
@@ -238,7 +238,7 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
         gap: 16,
         padding: "4px 14px 10px",
         fontSize: "0.72rem",
-        fontFamily: "Outfit, sans-serif",
+        fontFamily: "var(--font-sans)",
         color: "#8a8fa6",
       }}>
         {[
@@ -265,7 +265,7 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
           Every major scale produces the same chord quality pattern when you harmonize it by stacking thirds:
         </p>
         <p style={{
-          fontFamily: "JetBrains Mono, monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: "0.85rem",
           color: "#e8e8f0",
           textAlign: "center",

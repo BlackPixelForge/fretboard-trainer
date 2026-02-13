@@ -12,7 +12,7 @@ export default function FretNumbers() {
           fontSize: "0.6rem",
           color: FRET_MARKERS.includes(f) ? "#888" : "#555",
           fontWeight: FRET_MARKERS.includes(f) ? 600 : 400,
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: "var(--font-mono)",
         }}>
           {f === 0 ? "" : f}
         </div>

@@ -15,7 +15,7 @@ export default function IntervalControls({ intervalState, updateInterval, render
           border: `1px solid ${showIntervals ? "#3ca0dc66" : "#1e1e2e"}`,
           background: showIntervals ? "rgba(60,160,220,0.18)" : "#0e0e16",
           color: showIntervals ? "#78c8f0" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
@@ -35,7 +35,7 @@ export default function IntervalControls({ intervalState, updateInterval, render
           border: `1px solid ${quizMode ? "#ffc83266" : "#1e1e2e"}`,
           background: quizMode ? "rgba(255,200,50,0.18)" : "#0e0e16",
           color: quizMode ? "#ffe080" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
@@ -49,7 +49,7 @@ export default function IntervalControls({ intervalState, updateInterval, render
 
   const degreeFilters = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Filter:</span>
+      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Filter:</span>
 
       {DEGREES.map((d) => {
         const active = intervalFilter.has(d);
@@ -70,7 +70,7 @@ export default function IntervalControls({ intervalState, updateInterval, render
               border: `1px solid ${active ? "#50be5066" : "#1e1e2e"}`,
               background: active ? "rgba(80,190,80,0.20)" : "#0e0e16",
               color: active ? "#80e080" : "#666",
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: "0.65rem",
               fontWeight: 600,
               cursor: "pointer",

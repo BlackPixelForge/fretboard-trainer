@@ -32,7 +32,7 @@ export default function TriadDot({ interval, finger, noteName, isRoot, showFinge
         fontSize: isRoot ? "0.72rem" : "0.6rem",
         fontWeight: isRoot ? 800 : 700,
         color: isRoot ? "#ffb0a8" : colors.text,
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "var(--font-mono)",
         letterSpacing: "-0.02em",
       }}>
         {label}

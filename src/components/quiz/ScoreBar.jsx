@@ -5,7 +5,7 @@ export default function ScoreBar({ score, streak, bestStreak }) {
     <div style={{
       marginLeft: "auto",
       display: "flex", gap: "16px",
-      fontFamily: "'JetBrains Mono', monospace",
+      fontFamily: "var(--font-mono)",
       fontSize: "0.72rem",
       color: "#999",
     }}>

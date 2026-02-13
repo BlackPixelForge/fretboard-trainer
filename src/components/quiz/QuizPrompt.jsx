@@ -8,7 +8,7 @@ export default function QuizPrompt({ mode, quizTarget, quizNote, identifyState, 
     border: "1px solid rgba(255,200,50,0.4)",
     background: "rgba(255,200,50,0.12)",
     color: "#ffc832",
-    fontFamily: "'Outfit', sans-serif",
+    fontFamily: "var(--font-sans)",
     fontSize: "0.8rem",
     fontWeight: 600,
     cursor: "pointer",
@@ -21,7 +21,7 @@ export default function QuizPrompt({ mode, quizTarget, quizNote, identifyState, 
       background: "linear-gradient(135deg, rgba(255,200,50,0.12), rgba(255,200,50,0.04))",
       border: "1px solid rgba(255,200,50,0.3)",
       borderRadius: 10,
-      fontFamily: "'Outfit', sans-serif",
+      fontFamily: "var(--font-sans)",
     }}>
       {mode === MODES.QUIZ_IDENTIFY && quizTarget && (
         <>

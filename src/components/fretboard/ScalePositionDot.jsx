@@ -35,7 +35,7 @@ export default function ScalePositionDot({ degree, finger, showFingering, showNo
         fontSize: isRoot ? "0.72rem" : faded ? "0.6rem" : "0.65rem",
         fontWeight: isRoot ? 800 : faded ? 600 : 700,
         color: isRoot ? "#ffb0a8" : faded ? colors.text + "cc" : colors.text,
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "var(--font-mono)",
         letterSpacing: "-0.02em",
       }}>
         {label}

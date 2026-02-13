@@ -30,7 +30,7 @@ export default function NoteDot({ visible, isRoot, colors, noteName, degree, sho
         fontSize: visible && isRoot ? "0.72rem" : "0.65rem",
         fontWeight: visible && isRoot ? 800 : 700,
         color: visible ? (isRoot ? "#ffb0a8" : colors.text) : "transparent",
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "var(--font-mono)",
         letterSpacing: "-0.02em",
         transform: visible && isRoot ? "rotate(45deg)" : "none",
       }}

@@ -690,7 +690,7 @@ export default function FretboardTrainer() {
         minHeight: "100vh",
         background: "linear-gradient(170deg, #0a0a0f 0%, #12121c 40%, #0d1117 100%)",
         color: "#c8ccd4",
-        fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', monospace",
+        fontFamily: "var(--font-mono)",
         boxSizing: "border-box",
       }}
     >
@@ -700,7 +700,7 @@ export default function FretboardTrainer() {
           {/* Title — left on desktop */}
           <div className="text-center lg:text-left mb-3 sm:mb-4 lg:mb-0 lg:shrink-0">
             <h1 style={{
-              fontFamily: "'Outfit', sans-serif",
+              fontFamily: "var(--font-sans)",
               fontSize: "clamp(1.4rem, 3vw, 2rem)",
               fontWeight: 800,
               background: "linear-gradient(135deg, #e84e3c 0%, #f0c832 50%, #3ca0dc 100%)",
@@ -712,7 +712,7 @@ export default function FretboardTrainer() {
               Fretboard Navigator
             </h1>
             <p className="hidden sm:block" style={{
-              fontFamily: "'Outfit', sans-serif",
+              fontFamily: "var(--font-sans)",
               fontSize: "0.8rem",
               color: "#555a68",
               fontWeight: 400,
@@ -740,7 +740,7 @@ export default function FretboardTrainer() {
                 background: "rgba(212,160,23,0.12)",
                 border: "1px solid rgba(212,160,23,0.3)",
                 borderRadius: 8,
-                fontFamily: "'Outfit', sans-serif",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.75rem",
                 fontWeight: 600,
                 color: "#f0d060",
@@ -884,7 +884,7 @@ export default function FretboardTrainer() {
               background: "linear-gradient(135deg, rgba(255,200,50,0.08), rgba(255,200,50,0.02))",
               border: "1px solid rgba(255,200,50,0.2)",
               borderRadius: 10,
-              fontFamily: "'Outfit', sans-serif",
+              fontFamily: "var(--font-sans)",
             }}>
               {intervalState.quizNote && (
                 <span style={{ fontSize: "0.85rem", color: "#ffc832" }}>

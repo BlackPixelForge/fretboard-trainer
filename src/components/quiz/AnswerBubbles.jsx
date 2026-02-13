@@ -45,7 +45,7 @@ export default function AnswerBubbles({ quizNote, findChoices, selectedAnswer, o
               border: `2px solid ${border}`,
               background: bg,
               color: textColor,
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: "0.82rem",
               fontWeight: 700,
               cursor: selectedAnswer !== null ? "default" : "pointer",

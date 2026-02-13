@@ -8,7 +8,7 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection }
 
   const shapeButtons = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Shape:</span>
+      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Shape:</span>
 
       <button
         onClick={() => updateCAGED({ selectedShape: "all" })}
@@ -18,7 +18,7 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection }
           border: `1px solid ${selectedShape === "all" ? "#88888877" : "#1e1e2e"}`,
           background: selectedShape === "all" ? "rgba(180,180,180,0.18)" : "#0e0e16",
           color: selectedShape === "all" ? "#ddd" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: selectedShape === "all" ? 600 : 400,
           cursor: "pointer",
@@ -42,7 +42,7 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection }
                 border: `1.5px solid ${active ? color.border : "#1e1e2e"}`,
                 background: active ? color.bg : "#0e0e16",
                 color: active ? color.text : "#777",
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "0.7rem",
                 fontWeight: 700,
                 cursor: "pointer",
@@ -58,7 +58,7 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection }
             <span style={{
               fontSize: "0.5rem",
               color: active ? color.text : "#555",
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: "var(--font-mono)",
               lineHeight: 1,
               transition: "all 0.2s",
             }}>
@@ -79,7 +79,7 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection }
         border: `1px solid ${showScaleTones ? "#3ca0dc66" : "#1e1e2e"}`,
         background: showScaleTones ? "rgba(60,160,220,0.18)" : "#0e0e16",
         color: showScaleTones ? "#78c8f0" : "#777",
-        fontFamily: "'Outfit', sans-serif",
+        fontFamily: "var(--font-sans)",
         fontSize: "0.68rem",
         fontWeight: 500,
         cursor: "pointer",

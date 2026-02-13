@@ -8,7 +8,7 @@ export default function KeySelector({ selectedKey, onKeyChange }) {
       border: "1px solid #1e1e2e",
       background: "#14141e",
       color: "#c8ccd4",
-      fontFamily: "'JetBrains Mono', monospace",
+      fontFamily: "var(--font-mono)",
       fontSize: "0.72rem",
       cursor: "pointer",
       outline: "none",

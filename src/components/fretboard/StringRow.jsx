@@ -21,7 +21,7 @@ export default function StringRow({
         fontSize: "0.7rem",
         fontWeight: 600,
         color: "#5a5040",
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "var(--font-mono)",
       }}>
         {string.name}{si === 0 ? "\u00B9" : si === 5 ? "\u2076" : ""}
       </div>

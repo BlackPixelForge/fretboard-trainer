@@ -32,7 +32,7 @@ export default function CAGEDDot({ letter, isChordTone, type, degree }) {
         fontSize: isChordTone ? "0.7rem" : "0.6rem",
         fontWeight: isChordTone ? 800 : 600,
         color: colors.text,
-        fontFamily: "'JetBrains Mono', monospace",
+        fontFamily: "var(--font-mono)",
         letterSpacing: "-0.02em",
       }}>
         {label}

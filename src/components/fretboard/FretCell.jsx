@@ -159,7 +159,7 @@ export default function FretCell({
                   boxShadow: "0 0 8px rgba(255,200,50,0.4)",
                   animation: "fadeIn 0.15s ease",
                   fontSize: "0.7rem", fontWeight: 700, color: "#ffe080",
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "var(--font-mono)",
                 }}
               >?</button>
             );
@@ -207,7 +207,7 @@ export default function FretCell({
               boxShadow: shadow,
               animation: anim,
               fontSize: "0.6rem", fontWeight: 700, color: text,
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: "var(--font-mono)",
             }}>
               {noteName}
             </div>

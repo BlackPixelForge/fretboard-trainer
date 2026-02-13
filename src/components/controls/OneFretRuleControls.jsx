@@ -7,7 +7,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
 
   const fretSelector = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Fret:</span>
+      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Fret:</span>
 
       {/* Mobile: select dropdown */}
       <select
@@ -20,7 +20,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
           border: "1px solid #d4a01766",
           background: "rgba(212,160,23,0.12)",
           color: "#f0d060",
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: "0.7rem",
           fontWeight: 700,
           cursor: "pointer",
@@ -46,7 +46,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
                 border: `1px solid ${active ? "#d4a01766" : "#1e1e2e"}`,
                 background: active ? "rgba(212,160,23,0.22)" : "#0e0e16",
                 color: active ? "#f0d060" : "#777",
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "0.6rem",
                 fontWeight: 700,
                 cursor: "pointer",
@@ -67,7 +67,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
 
   const formCards = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "'Outfit', sans-serif" }}>Form / Key:</span>
+      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Form / Key:</span>
 
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center", flexWrap: "wrap" }}>
         {oneFretRuleInfo.map((info, i) => {
@@ -84,7 +84,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
                 border: `1px solid ${active ? "#e84e3c66" : "#1e1e2e"}`,
                 background: active ? "rgba(232,78,60,0.22)" : "#0e0e16",
                 color: active ? "#ffa09a" : "#777",
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "0.55rem",
                 fontWeight: 700,
                 cursor: "pointer",
@@ -118,7 +118,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
           border: "1px solid #1e1e2e",
           background: "#0e0e16",
           color: "#888",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
           transition: "all 0.2s",
@@ -138,7 +138,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
           border: "1px solid #1e1e2e",
           background: "#0e0e16",
           color: "#888",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
           transition: "all 0.2s",
@@ -151,7 +151,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
       <span style={{
         fontSize: "0.6rem",
         color: "#999",
-        fontFamily: "'Outfit', sans-serif",
+        fontFamily: "var(--font-sans)",
         padding: "4px 8px",
         background: "rgba(232,78,60,0.08)",
         border: "1px solid rgba(232,78,60,0.15)",
@@ -170,7 +170,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
           border: `1px solid ${showChordTones ? "#f0c83266" : "#1e1e2e"}`,
           background: showChordTones ? "rgba(240,200,50,0.18)" : "#0e0e16",
           color: showChordTones ? "#f0d060" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
@@ -187,7 +187,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
           border: `1px solid ${showNoteNames ? "#3ca0dc66" : "#1e1e2e"}`,
           background: showNoteNames ? "rgba(60,160,220,0.18)" : "#0e0e16",
           color: showNoteNames ? "#78c8f0" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
@@ -204,7 +204,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
           border: `1px solid ${showFingering ? "#3ca0dc66" : "#1e1e2e"}`,
           background: showFingering ? "rgba(60,160,220,0.18)" : "#0e0e16",
           color: showFingering ? "#78c8f0" : "#777",
-          fontFamily: "'Outfit', sans-serif",
+          fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
