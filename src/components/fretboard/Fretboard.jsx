@@ -44,7 +44,7 @@ export default function Fretboard({
 
           {STRING_TUNING.map((string, si) => (
             <StringRow
-              key={si}
+              key={string.name + string.octave}
               string={string}
               si={si}
               keyNotes={keyNotes}

@@ -175,13 +175,16 @@
 
 ---
 
-### 13. Array Index as React Key
+### 13. ~~Array Index as React Key~~ ✅ FIXED
 
 **File:** `src/components/fretboard/Fretboard.jsx`
 **Severity:** Low
 **Category:** React Patterns
+**Status:** Fixed
 
-`STRING_TUNING.map((string, si) => <StringRow key={si} ...>)` uses array index as key. Since strings are never reordered this is safe in practice, but `key={string.note}` would be more robust.
+**What was wrong:** `STRING_TUNING.map((string, si) => <StringRow key={si} ...>)` used array index as key. While safe in practice (strings are never reordered), it's not a stable content-based key.
+
+**What was fixed:** Changed `key={si}` to `key={string.name + string.octave}`, producing unique keys like `"E4"`, `"B3"`, `"G3"`, `"D3"`, `"A2"`, `"E2"`. Note: `string.note` alone wouldn't work since both E strings share `note=4`.
 
 ---
 
