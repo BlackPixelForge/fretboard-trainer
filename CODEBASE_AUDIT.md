@@ -79,15 +79,16 @@
 
 ## Medium Severity
 
-### 6. No Bounds Check on `FORMS[]` Access
+### 6. ~~No Bounds Check on `FORMS[]` Access~~ ✅ FIXED
 
 **File:** `src/components/lib/scales.js` (lines ~122, 140, 150, 174)
 **Severity:** Medium
 **Category:** Safety
+**Status:** Fixed
 
-Four exported functions (`getPositionLabel`, `getPositionFret`, `getScalePositionNotes`, `isInScalePosition`) index into `FORMS[positionIndex]` without validating that `positionIndex` is in range `[0, 6]`. An out-of-range index crashes with `Cannot read property of undefined`.
+**What was wrong:** Five exported functions (`getPositionLabel`, `getPositionFret`, `getScalePositionNotes`, `isInScalePosition`, `getRootNoteForPosition`) indexed into `FORMS[positionIndex]` without validating the index was in range, crashing with `Cannot read property of undefined` on out-of-range values.
 
-**Fix:** Add early-return guard: `if (positionIndex < 0 || positionIndex >= FORMS.length) return null;`
+**What was fixed:** Added early-return bounds guards to all five functions. Functions return `null` (or `[]` for `getScalePositionNotes`) when the index is out of range.
 
 ---
 

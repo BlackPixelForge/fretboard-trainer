@@ -119,6 +119,7 @@ export const FORMS = [
  * Get display label for a position, e.g. "6(1)"
  */
 export function getPositionLabel(positionIndex) {
+  if (positionIndex < 0 || positionIndex >= FORMS.length) return null;
   return FORMS[positionIndex].name;
 }
 
@@ -140,6 +141,7 @@ function getRootFret(rootNoteIndex, form) {
  * Get the fret where finger 1 sits for a position in a given key.
  */
 export function getPositionFret(rootNoteIndex, positionIndex) {
+  if (positionIndex < 0 || positionIndex >= FORMS.length) return null;
   const form = FORMS[positionIndex];
   const rootFret = getRootFret(rootNoteIndex, form);
   let posFret = rootFret - (form.rootFinger - 1);
@@ -152,6 +154,7 @@ export function getPositionFret(rootNoteIndex, positionIndex) {
  * Returns array of { stringIndex, fret, finger, degree }
  */
 export function getScalePositionNotes(rootNoteIndex, keyNotes, positionIndex) {
+  if (positionIndex < 0 || positionIndex >= FORMS.length) return [];
   const form = FORMS[positionIndex];
   const rootFret = getRootFret(rootNoteIndex, form);
   const results = [];
@@ -176,6 +179,7 @@ export function getScalePositionNotes(rootNoteIndex, keyNotes, positionIndex) {
  * Returns { finger, degree } or null.
  */
 export function isInScalePosition(stringIndex, fret, rootNoteIndex, keyNotes, positionIndex) {
+  if (positionIndex < 0 || positionIndex >= FORMS.length) return null;
   const form = FORMS[positionIndex];
   const rootFret = getRootFret(rootNoteIndex, form);
 
@@ -199,6 +203,7 @@ export function isInScalePosition(stringIndex, fret, rootNoteIndex, keyNotes, po
  * compute the root note index (0–11).
  */
 export function getRootNoteForPosition(positionFret, formIndex) {
+  if (formIndex < 0 || formIndex >= FORMS.length) return null;
   const form = FORMS[formIndex];
   const rootFret = positionFret + (form.rootFinger - 1);
   const openNote = STRING_TUNING[form.rootStringIndex].note;
