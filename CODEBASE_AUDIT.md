@@ -38,21 +38,16 @@
 
 ---
 
-### 3. Negative Fret Positions from `getPositionFret()`
+### 3. ~~Negative Fret Positions from `getPositionFret()`~~ ✅ FIXED
 
 **File:** `src/components/lib/scales.js` (line ~142)
 **Severity:** Critical
 **Category:** Logic
+**Status:** Fixed
 
-```javascript
-return rootFret - (form.rootFinger - 1);
-```
+**What was wrong:** `getPositionFret()` computed `rootFret - (rootFinger - 1)` which could go negative for forms 6(4) and 5(4) where `rootFinger = 4` (e.g., `1 - 3 = -2`), producing incorrect position fret values used for display and auto-scrolling.
 
-For forms 6(4) and 5(4) where `rootFinger = 4`, the result can go negative (e.g., `1 - 3 = -2`). The upstream `getRootFret()` function at line ~132 explicitly avoids returning fret 0, but `getPositionFret` can still produce 0 or negative values.
-
-**Impact:** Negative fret positions produce incorrect scale position displays for certain key/form combinations. Notes may be rendered off-board or at wrong positions.
-
-**Fix:** Clamp the return value to `[0, FRET_COUNT]` or wrap around using modular arithmetic (add 12 when result is negative).
+**What was fixed:** Moved the fix into `getRootFret()` so all callers benefit: if any note in the form would land at a negative fret (`rootFret + minOffset < 0`), the root is shifted up one octave (+12 frets). This ensures the full position renders at the first valid octave — e.g., key of F with form 6(4) now displays with root at fret 13. `getPositionFret` retains a safety-net wrap for defensive coverage.
 
 ---
 

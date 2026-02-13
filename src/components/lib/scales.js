@@ -130,6 +130,9 @@ function getRootFret(rootNoteIndex, form) {
   const openNote = STRING_TUNING[form.rootStringIndex].note;
   let rootFret = (rootNoteIndex - openNote + 12) % 12;
   if (rootFret === 0) rootFret = 12; // avoid open string
+  // If any note in the form would land at a negative fret, shift up one octave
+  const minOffset = Math.min(...form.notes.map(n => n.offset));
+  if (rootFret + minOffset < 0) rootFret += 12;
   return rootFret;
 }
 
@@ -139,7 +142,9 @@ function getRootFret(rootNoteIndex, form) {
 export function getPositionFret(rootNoteIndex, positionIndex) {
   const form = FORMS[positionIndex];
   const rootFret = getRootFret(rootNoteIndex, form);
-  return rootFret - (form.rootFinger - 1);
+  let posFret = rootFret - (form.rootFinger - 1);
+  if (posFret < 0) posFret += 12;
+  return posFret;
 }
 
 /**
