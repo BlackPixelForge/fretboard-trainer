@@ -943,8 +943,8 @@ export default function FretboardTrainer() {
         {/* Tips */}
         <Tips mode={mode} />
 
-        {/* Harmonies Panel — visible on all Learn modes, hidden on quiz modes */}
-        {!isQuizActive && (
+        {/* Harmonies Panel — visible on Triads and CAGED modes only */}
+        {(isTriads || mode === MODES.CAGED) && (
           <HarmoniesPanel
             mode={mode}
             triadState={triadState}
