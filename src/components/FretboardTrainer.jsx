@@ -431,10 +431,14 @@ export default function FretboardTrainer() {
     };
   }, [mode]);
 
-  // Ratcheting min-height for controls zone — only grows, never shrinks
+  // Reset min-height when mode changes, then ratchet within that mode
   useEffect(() => {
     const el = controlsZoneRef.current;
     if (!el) return;
+    // Reset for the new mode
+    maxZoneHeight.current = 0;
+    el.style.minHeight = "";
+    // After a frame, start ratcheting for this mode's controls
     const ro = new ResizeObserver(() => {
       const h = el.scrollHeight;
       if (h > maxZoneHeight.current) {
@@ -444,7 +448,7 @@ export default function FretboardTrainer() {
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [mode]);
 
   // Generate identify quiz on mode enter or when keyNotes changes while active
   useEffect(() => {
@@ -712,10 +716,10 @@ export default function FretboardTrainer() {
       }}
     >
       <div style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}>
-        {/* Header + Controls Bar — unified responsive row on desktop */}
-        <div className="flex flex-col mb-3 sm:mb-4 header-bar">
-          {/* Title — left on desktop */}
-          <div className="text-center sm:text-left">
+        {/* Header — title + tabs, no interactive controls */}
+        <div className="mb-3 sm:mb-4 header-bar">
+          {/* Title row */}
+          <div className="text-center sm:text-left" style={{ marginBottom: 8 }}>
             <h1 style={{
               fontFamily: "var(--font-sans)",
               fontSize: "clamp(1.4rem, 3vw, 2rem)",
@@ -725,6 +729,7 @@ export default function FretboardTrainer() {
               WebkitTextFillColor: "transparent",
               margin: "0 0 4px",
               letterSpacing: "-0.02em",
+              whiteSpace: "nowrap",
             }}>
               Fretboard Navigator
             </h1>
@@ -736,38 +741,15 @@ export default function FretboardTrainer() {
               margin: 0,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
+              whiteSpace: "nowrap",
             }}>
               Diatonic Note Memorization Trainer
             </p>
           </div>
 
-          {/* Mode pills — center on desktop */}
-          <div style={{ justifySelf: "center" }}>
+          {/* Mode tabs — full width, centered */}
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <ModeSelector mode={mode} onModeChange={handleModeChange} />
-          </div>
-
-          {/* Key/Region selectors — right on desktop */}
-          <div className="flex gap-2 justify-center mt-2 header-right-col" style={{ flexWrap: "wrap" }}>
-            {!isOneFretRule && !isTriads && mode !== MODES.CAGED && (
-              <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
-            )}
-            {isOneFretRule && (
-              <span style={{
-                padding: "7px 14px",
-                background: "rgba(212,160,23,0.12)",
-                border: "1px solid rgba(212,160,23,0.3)",
-                borderRadius: 8,
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-                color: "#f0d060",
-              }}>
-                {getNoteName(rootNote)} Major
-              </span>
-            )}
-            {(mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND || mode === MODES.QUIZ_IDENTIFY || mode === MODES.INTERVALS) && (
-              <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
-            )}
           </div>
         </div>
 
@@ -775,6 +757,17 @@ export default function FretboardTrainer() {
         <div ref={controlsZoneRef} className="controls-zone">
         <ControlsDrawer
           alwaysVisible={<>
+            {/* Key & Region selectors — shown for modes that use them */}
+            {!isOneFretRule && !isTriads && mode !== MODES.CAGED && (
+              <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
+            )}
+            {(mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND || mode === MODES.QUIZ_IDENTIFY || mode === MODES.INTERVALS) && (
+              <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
+            )}
+            {/* Divider after selectors when both selectors and mode controls present */}
+            {(mode === MODES.EXPLORE || mode === MODES.INTERVALS || mode === MODES.SCALE_POSITIONS) && (
+              <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+            )}
             {mode === MODES.EXPLORE && (
               <ExploreToggles
                 showNaturals={showNaturals} setShowNaturals={setShowNaturals}
@@ -800,6 +793,7 @@ export default function FretboardTrainer() {
                 oneFretRuleState={oneFretRuleState}
                 updateOneFretRule={updateOneFretRule}
                 oneFretRuleInfo={oneFretRuleInfo}
+                rootNote={rootNote}
                 renderSection="primary"
               />
             )}
@@ -833,6 +827,7 @@ export default function FretboardTrainer() {
                 oneFretRuleState={oneFretRuleState}
                 updateOneFretRule={updateOneFretRule}
                 oneFretRuleInfo={oneFretRuleInfo}
+                rootNote={rootNote}
                 renderSection="secondary"
               />
             )}

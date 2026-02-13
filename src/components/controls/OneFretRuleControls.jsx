@@ -1,12 +1,27 @@
 import { FORMS } from "../lib/scales";
+import { getNoteName } from "../lib/music";
 
-export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo, renderSection }) {
+export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo, rootNote, renderSection }) {
   const { positionFret, selectedFormIndex, showFingering, showNoteNames, showChordTones } = oneFretRuleState;
   const total = FORMS.length;
   const currentInfo = oneFretRuleInfo[selectedFormIndex];
 
   const fretSelector = (
     <>
+      {/* Key badge — computed from selected form */}
+      <span style={{
+        padding: "7px 14px",
+        background: "rgba(212,160,23,0.12)",
+        border: "1px solid rgba(212,160,23,0.3)",
+        borderRadius: 8,
+        fontFamily: "var(--font-sans)",
+        fontSize: "0.75rem",
+        fontWeight: 600,
+        color: "#f0d060",
+      }}>
+        {getNoteName(rootNote)} Major
+      </span>
+      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
       <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Fret:</span>
 
       {/* Mobile: select dropdown */}
