@@ -13,6 +13,8 @@ export const MODES = {
   QUIZ_FIND: "quiz_find",
 };
 
+// Adjacent regions intentionally overlap by 1-2 frets (e.g. mid_low 5-8 and mid 7-10)
+// so practice transitions feel smooth — notes near a boundary appear in both regions.
 export const FRET_REGIONS = {
   all: { start: 0, end: 19, label: "All Frets" },
   open: { start: 0, end: 4, label: "Open Position (0-4)" },

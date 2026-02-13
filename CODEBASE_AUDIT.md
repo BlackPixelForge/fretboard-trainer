@@ -218,7 +218,7 @@ No React error boundary wraps `FretboardTrainer`. An uncaught error in any child
 
 ---
 
-### 16. Undocumented Overlapping Fret Regions
+### 16. Undocumented Overlapping Fret Regions — ✅ FIXED
 
 **File:** `src/components/lib/fretboard.js` (lines ~16-24)
 **Severity:** Low
@@ -227,6 +227,8 @@ No React error boundary wraps `FretboardTrainer`. An uncaught error in any child
 Adjacent `FRET_REGIONS` share frets (e.g., frets 7-8 appear in both `mid_low` and `mid`). This appears intentional for smooth practice transitions but is undocumented.
 
 **Fix:** Add a comment explaining the intentional overlap.
+
+**Resolution:** Added a comment above `FRET_REGIONS` explaining the intentional 1-2 fret overlap between adjacent regions for smooth practice transitions.
 
 ---
 
