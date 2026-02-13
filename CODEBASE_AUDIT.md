@@ -64,15 +64,16 @@
 
 ---
 
-### 5. Timeout Accumulation on Mode Switch
+### 5. ~~Timeout Accumulation on Mode Switch~~ ✅ FIXED
 
 **File:** `src/components/FretboardTrainer.jsx` (lines ~320, 325, 357, 365)
 **Severity:** High
 **Category:** Memory/State
+**Status:** Fixed
 
-Multiple `setTimeout` calls are created for quiz transitions but their IDs are never stored. If the user switches modes while a timeout is pending, the callback fires against the wrong mode's state, potentially causing UI glitches or errors.
+**What was wrong:** Four `setTimeout` calls in `handleFindAnswer` and `handleIntervalAnswer` were created for quiz transitions but their IDs were never stored. If the user switched modes while a timeout was pending, the callback fired against the wrong mode's state.
 
-**Fix:** Store timeout IDs in a ref and clear them in `useEffect` cleanup functions on mode change.
+**What was fixed:** Added a `quizTimeoutsRef` to track all pending timeout IDs. Replaced bare `setTimeout` calls with a `scheduleQuizTimeout` helper that pushes each ID into the ref. Added a `useEffect` with `[mode]` dependency whose cleanup clears all pending timeouts on mode change.
 
 ---
 

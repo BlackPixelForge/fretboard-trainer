@@ -102,6 +102,7 @@ export default function FretboardTrainer() {
   const fretboardScrollRef = useRef(null);
   const findAnswerLockRef = useRef(false);
   const intervalAnswerLockRef = useRef(false);
+  const quizTimeoutsRef = useRef([]);
 
   const [harmoniesState, setHarmoniesState] = useState({
     expanded: false,
@@ -321,12 +322,12 @@ export default function FretboardTrainer() {
         setBestStreak(b => Math.max(b, next));
         return next;
       });
-      setTimeout(() => generateFindQuizRef.current(), 1000);
+      scheduleQuizTimeout(() => generateFindQuizRef.current(), 1000);
     } else {
       setQuizFeedback({ correct: false, message: `\u2717 That's ${correctNote}, not ${chosenNote}` });
       setScore(p => ({ ...p, total: p.total + 1 }));
       setStreak(0);
-      setTimeout(() => generateFindQuizRef.current(), 1500);
+      scheduleQuizTimeout(() => generateFindQuizRef.current(), 1500);
     }
   };
 
@@ -350,6 +351,12 @@ export default function FretboardTrainer() {
   const generateIntervalQuizNoteRef = useRef(generateIntervalQuizNote);
   generateIntervalQuizNoteRef.current = generateIntervalQuizNote;
 
+  // Schedule a quiz timeout and track its ID for cleanup
+  const scheduleQuizTimeout = (fn, delay) => {
+    const id = setTimeout(fn, delay);
+    quizTimeoutsRef.current.push(id);
+  };
+
   const handleIntervalAnswer = (chosenDegree) => {
     if (intervalAnswerLockRef.current) return;
     intervalAnswerLockRef.current = true;
@@ -366,7 +373,7 @@ export default function FretboardTrainer() {
         setBestStreak(b => Math.max(b, next));
         return next;
       });
-      setTimeout(() => generateIntervalQuizNoteRef.current(), 1000);
+      scheduleQuizTimeout(() => generateIntervalQuizNoteRef.current(), 1000);
     } else {
       updateInterval({
         selectedAnswer: chosenDegree,
@@ -374,7 +381,7 @@ export default function FretboardTrainer() {
       });
       setScore(p => ({ ...p, total: p.total + 1 }));
       setStreak(0);
-      setTimeout(() => generateIntervalQuizNoteRef.current(), 1500);
+      scheduleQuizTimeout(() => generateIntervalQuizNoteRef.current(), 1500);
     }
   };
 
@@ -412,6 +419,14 @@ export default function FretboardTrainer() {
   const handleNewIdentifyRound = () => {
     generateIdentifyQuiz();
   };
+
+  // Clear pending quiz timeouts on mode change to prevent stale callbacks
+  useEffect(() => {
+    return () => {
+      quizTimeoutsRef.current.forEach(clearTimeout);
+      quizTimeoutsRef.current = [];
+    };
+  }, [mode]);
 
   // Generate identify quiz on mode enter or when keyNotes changes while active
   useEffect(() => {
