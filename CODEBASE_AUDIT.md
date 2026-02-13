@@ -7,21 +7,21 @@
 
 ## Critical / High Severity
 
-### 1. Stale Closures in Quiz Callbacks
+### 1. ~~Stale Closures in Quiz Callbacks~~ ✅ FIXED
 
 **File:** `src/components/FretboardTrainer.jsx`
 **Severity:** Critical
 **Category:** State/Effects
+**Status:** Fixed
 
-Multiple `useCallback` and `useEffect` hooks have incomplete dependency arrays, suppressed with `eslint-disable-line`. This causes quiz logic to use stale state values.
+**What was wrong:** Multiple `useCallback` and `useEffect` hooks had incomplete dependency arrays, suppressed with `eslint-disable-line`. Quiz logic used stale state values when key or region changed mid-session.
 
-- **Lines ~407-422**: Effects that trigger quiz generation on mode change list only `[mode]` or `[selectedKey]` as dependencies but call `generateIdentifyQuiz`, `generateFindQuiz`, and `generateIntervalQuizNote` — all of which close over `keyNotes` and `region`. If the user changes key or region while in a quiz mode, the next question uses outdated values.
-- **Line ~282-306**: `generateFindQuiz` is memoized with `[keyNotes, region]`, but the `handleFindAnswer` function that calls it via `setTimeout` is not memoized at all. The timeout captures a stale reference to the callback.
-- **Line ~330-340**: `generateIntervalQuizNote` has incomplete dependencies, so interval quizzes can use stale key/region data.
-
-**Impact:** Incorrect quiz questions after changing key or region mid-session.
-
-**Fix:** Properly list all dependencies in `useCallback`/`useEffect` hooks and remove `eslint-disable` suppressions. Consider using refs for values that should always be current without triggering re-memoization.
+**What was fixed:**
+- Split the combined quiz effect into two separate effects with proper deps: `[mode, generateIdentifyQuiz]` and `[mode, generateFindQuiz]` — each re-runs when its generator's closed-over values (`keyNotes`, `region`) change
+- Removed the redundant `[selectedKey]` effect (now covered by generator deps)
+- Added `generateIntervalQuizNote` to the interval quiz effect deps
+- Added `useRef`-based refs (`generateFindQuizRef`, `generateIntervalQuizNoteRef`) so `setTimeout` callbacks always call the latest generator version
+- Removed `eslint-disable` suppressions on fixed effects
 
 ---
 

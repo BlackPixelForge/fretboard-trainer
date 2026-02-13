@@ -317,12 +317,12 @@ export default function FretboardTrainer() {
         setBestStreak(b => Math.max(b, next));
         return next;
       });
-      setTimeout(() => generateFindQuiz(), 1000);
+      setTimeout(() => generateFindQuizRef.current(), 1000);
     } else {
       setQuizFeedback({ correct: false, message: `\u2717 That's ${correctNote}, not ${chosenNote}` });
       setScore(p => ({ ...p, total: p.total + 1 }));
       setStreak(0);
-      setTimeout(() => generateFindQuiz(), 1500);
+      setTimeout(() => generateFindQuizRef.current(), 1500);
     }
   };
 
@@ -339,6 +339,12 @@ export default function FretboardTrainer() {
     }
   }, [keyNotes, region]);
 
+  // Refs to ensure timeouts always call the latest quiz generators
+  const generateFindQuizRef = useRef(generateFindQuiz);
+  generateFindQuizRef.current = generateFindQuiz;
+  const generateIntervalQuizNoteRef = useRef(generateIntervalQuizNote);
+  generateIntervalQuizNoteRef.current = generateIntervalQuizNote;
+
   const handleIntervalAnswer = (chosenDegree) => {
     if (intervalState.selectedAnswer !== null) return;
     const correct = chosenDegree === intervalState.correctInterval;
@@ -354,7 +360,7 @@ export default function FretboardTrainer() {
         setBestStreak(b => Math.max(b, next));
         return next;
       });
-      setTimeout(() => generateIntervalQuizNote(), 1000);
+      setTimeout(() => generateIntervalQuizNoteRef.current(), 1000);
     } else {
       updateInterval({
         selectedAnswer: chosenDegree,
@@ -362,7 +368,7 @@ export default function FretboardTrainer() {
       });
       setScore(p => ({ ...p, total: p.total + 1 }));
       setStreak(0);
-      setTimeout(() => generateIntervalQuizNote(), 1500);
+      setTimeout(() => generateIntervalQuizNoteRef.current(), 1500);
     }
   };
 
@@ -401,17 +407,17 @@ export default function FretboardTrainer() {
     generateIdentifyQuiz();
   };
 
+  // Generate identify quiz on mode enter or when keyNotes changes while active
   useEffect(() => {
     if (mode === MODES.QUIZ_IDENTIFY) generateIdentifyQuiz();
-    else if (mode === MODES.QUIZ_FIND) generateFindQuiz();
-  }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [mode, generateIdentifyQuiz]);
 
-  // Reset identify quiz when key changes
+  // Generate find quiz on mode enter or when keyNotes/region changes while active
   useEffect(() => {
-    if (mode === MODES.QUIZ_IDENTIFY) generateIdentifyQuiz();
-  }, [selectedKey]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (mode === MODES.QUIZ_FIND) generateFindQuiz();
+  }, [mode, generateFindQuiz]);
 
-  // Interval quiz mode effect
+  // Interval quiz mode effect — regenerate on mode/quiz toggle or keyNotes/region change
   useEffect(() => {
     if (mode === MODES.INTERVALS && intervalState.quizMode) {
       generateIntervalQuizNote();
@@ -419,7 +425,7 @@ export default function FretboardTrainer() {
     } else {
       updateInterval({ quizNote: null, selectedAnswer: null, quizFeedback: null, correctInterval: null });
     }
-  }, [intervalState.quizMode, mode]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [intervalState.quizMode, mode, generateIntervalQuizNote]); // eslint-disable-line react-hooks/exhaustive-deps -- resetScore/updateInterval are stable
 
   // Arrow key navigation for One Fret Rule form stepping
   useEffect(() => {
