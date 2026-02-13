@@ -139,15 +139,16 @@ Fret cells with click handlers use `<div onClick={...}>` instead of `<button>`. 
 
 ---
 
-### 11. Missing Null Check in `handleFinishIdentify`
+### 11. ~~Missing Null Check in `handleFinishIdentify`~~ ✅ FIXED
 
 **File:** `src/components/FretboardTrainer.jsx` (lines ~369-398)
 **Severity:** Medium
 **Category:** Safety
+**Status:** Fixed
 
-Accesses `quizTarget.name` without verifying `quizTarget` exists. If the user rapidly clicks "Finish" before quiz generation completes, this throws.
+**What was wrong:** `handleFinishIdentify` accessed `quizTarget.name` without verifying `quizTarget` exists. Rapidly clicking "Finish" before quiz generation completed would throw.
 
-**Fix:** Add early return: `if (!quizTarget) return;`
+**What was fixed:** Added early return guard: `if (!quizTarget) return;`
 
 ---
 

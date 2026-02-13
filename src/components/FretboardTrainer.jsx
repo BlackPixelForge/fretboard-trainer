@@ -386,6 +386,7 @@ export default function FretboardTrainer() {
   };
 
   const handleFinishIdentify = () => {
+    if (!quizTarget) return;
     const positionMap = new Map();
     let correct = 0, incorrect = 0, missed = 0;
     const fretStart = selectedRegion === "all" ? 0 : region.start;
