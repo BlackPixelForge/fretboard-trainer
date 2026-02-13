@@ -1,5 +1,10 @@
+import ErrorBoundary from "../components/ErrorBoundary";
 import FretboardTrainer from "../components/FretboardTrainer";
 
 export default function Home() {
-  return <FretboardTrainer />;
+  return (
+    <ErrorBoundary>
+      <FretboardTrainer />
+    </ErrorBoundary>
+  );
 }

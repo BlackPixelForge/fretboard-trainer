@@ -205,7 +205,7 @@ Replaced all 100+ inline `fontFamily` references across 29 component files with 
 
 ---
 
-### 15. No Error Boundary
+### 15. No Error Boundary — ✅ FIXED
 
 **Severity:** Low
 **Category:** Resilience
@@ -213,6 +213,8 @@ Replaced all 100+ inline `fontFamily` references across 29 component files with 
 No React error boundary wraps `FretboardTrainer`. An uncaught error in any child component will crash the entire app with a white screen rather than showing a fallback UI.
 
 **Fix:** Add an error boundary component wrapping `<FretboardTrainer />` in `page.js`.
+
+**Resolution:** Created `ErrorBoundary.jsx` class component with `getDerivedStateFromError`/`componentDidCatch`. Wraps `<FretboardTrainer />` in `page.js`. Fallback UI shows a dark-themed card with "Something went wrong" message and a reload button, matching the app's visual style.
 
 ---
 
