@@ -103,6 +103,8 @@ export default function FretboardTrainer() {
   const findAnswerLockRef = useRef(false);
   const intervalAnswerLockRef = useRef(false);
   const quizTimeoutsRef = useRef([]);
+  const controlsZoneRef = useRef(null);
+  const maxZoneHeight = useRef(0);
 
   const [harmoniesState, setHarmoniesState] = useState({
     expanded: false,
@@ -429,6 +431,21 @@ export default function FretboardTrainer() {
     };
   }, [mode]);
 
+  // Ratcheting min-height for controls zone — only grows, never shrinks
+  useEffect(() => {
+    const el = controlsZoneRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      const h = el.scrollHeight;
+      if (h > maxZoneHeight.current) {
+        maxZoneHeight.current = h;
+        el.style.minHeight = `${h}px`;
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   // Generate identify quiz on mode enter or when keyNotes changes while active
   useEffect(() => {
     if (mode === MODES.QUIZ_IDENTIFY) generateIdentifyQuiz();
@@ -696,9 +713,9 @@ export default function FretboardTrainer() {
     >
       <div style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}>
         {/* Header + Controls Bar — unified responsive row on desktop */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-4 mb-3 sm:mb-4">
+        <div className="flex flex-col mb-3 sm:mb-4 header-bar">
           {/* Title — left on desktop */}
-          <div className="text-center lg:text-left mb-3 sm:mb-4 lg:mb-0 lg:shrink-0">
+          <div className="text-center sm:text-left">
             <h1 style={{
               fontFamily: "var(--font-sans)",
               fontSize: "clamp(1.4rem, 3vw, 2rem)",
@@ -725,12 +742,12 @@ export default function FretboardTrainer() {
           </div>
 
           {/* Mode pills — center on desktop */}
-          <div className="lg:flex-1 lg:flex lg:justify-center">
+          <div style={{ justifySelf: "center" }}>
             <ModeSelector mode={mode} onModeChange={handleModeChange} />
           </div>
 
           {/* Key/Region selectors — right on desktop */}
-          <div className="flex gap-2 justify-center lg:justify-end mt-2 lg:mt-0 lg:shrink-0" style={{ flexWrap: "wrap" }}>
+          <div className="flex gap-2 justify-center mt-2 header-right-col" style={{ flexWrap: "wrap" }}>
             {!isOneFretRule && !isTriads && mode !== MODES.CAGED && (
               <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
             )}
@@ -754,7 +771,8 @@ export default function FretboardTrainer() {
           </div>
         </div>
 
-        {/* Sub Controls */}
+        {/* Sub Controls + Quiz Prompts — stable height zone */}
+        <div ref={controlsZoneRef} className="controls-zone">
         <ControlsDrawer
           alwaysVisible={<>
             {mode === MODES.EXPLORE && (
@@ -835,7 +853,7 @@ export default function FretboardTrainer() {
             gap: "16px",
             marginBottom: "16px",
             alignItems: "center",
-            animation: "slideDown 0.3s ease",
+            animation: "fadeInQuiz 0.2s ease",
           }}>
             <QuizPrompt
               mode={mode}
@@ -855,7 +873,7 @@ export default function FretboardTrainer() {
             gap: "16px",
             marginBottom: "16px",
             alignItems: "center",
-            animation: "slideDown 0.3s ease",
+            animation: "fadeInQuiz 0.2s ease",
           }}>
             <QuizPrompt mode={mode} quizNote={quizNote} />
             <QuizFeedback feedback={quizFeedback} />
@@ -877,7 +895,7 @@ export default function FretboardTrainer() {
             gap: "16px",
             marginBottom: "16px",
             alignItems: "center",
-            animation: "slideDown 0.3s ease",
+            animation: "fadeInQuiz 0.2s ease",
           }}>
             <div style={{
               padding: "10px 20px",
@@ -902,6 +920,7 @@ export default function FretboardTrainer() {
             <ScoreBar score={score} streak={streak} bestStreak={bestStreak} />
           </div>
         )}
+        </div>
 
         {/* Fretboard */}
         <Fretboard

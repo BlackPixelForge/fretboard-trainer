@@ -5,7 +5,7 @@ export default function ControlsDrawer({ alwaysVisible, drawerContent }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{ marginBottom: 18 }}>
+    <div>
       {/* Always-visible controls */}
       <div style={{
         display: "flex",

@@ -109,6 +109,38 @@ body {
   background: var(--hover-bg) !important;
 }
 
+/* Header grid — stabilize tab centering on sm+ */
+@media (min-width: 640px) {
+  .header-bar {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .header-right-col {
+    min-width: 180px;
+    margin-top: 0;
+  }
+}
+@media (min-width: 1024px) {
+  .header-bar {
+    gap: 1rem;
+  }
+  .header-right-col {
+    min-width: 240px;
+  }
+}
+
+/* Controls zone — stable height across mode switches */
+.controls-zone {
+  margin-bottom: 12px;
+}
+
+@keyframes fadeInQuiz {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Mode selector scroll */
 .mode-selector-scroll {
   scrollbar-width: none;
