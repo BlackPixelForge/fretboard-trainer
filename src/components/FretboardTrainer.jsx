@@ -280,18 +280,18 @@ export default function FretboardTrainer() {
   }, [keyNotes]);
 
   const generateFindQuiz = useCallback(() => {
-    const s = Math.floor(Math.random() * 6);
     const minF = region.start;
     const maxF = region.end;
-    const validFrets = [];
-    for (let f = minF; f <= maxF; f++) {
-      const noteIndex = getNoteAt(s, f);
-      if (isInKey(noteIndex, keyNotes)) {
-        validFrets.push(f);
+    const validPositions = [];
+    for (let s = 0; s < 6; s++) {
+      for (let f = minF; f <= maxF; f++) {
+        if (isInKey(getNoteAt(s, f), keyNotes)) {
+          validPositions.push({ s, f });
+        }
       }
     }
-    if (validFrets.length === 0) return generateFindQuiz();
-    const f = validFrets[Math.floor(Math.random() * validFrets.length)];
+    if (validPositions.length === 0) return;
+    const { s, f } = validPositions[Math.floor(Math.random() * validPositions.length)];
     const correctNote = getNoteName(getNoteAt(s, f));
 
     const keyNoteNames = keyNotes.map(n => getNoteName(n));

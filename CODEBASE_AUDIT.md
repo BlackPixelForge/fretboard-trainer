@@ -25,19 +25,16 @@
 
 ---
 
-### 2. Infinite Recursion Risk in `generateFindQuiz`
+### 2. ~~Infinite Recursion Risk in `generateFindQuiz`~~ ✅ FIXED
 
 **File:** `src/components/FretboardTrainer.jsx` (line ~293)
 **Severity:** Critical
 **Category:** Logic
+**Status:** Fixed
 
-```javascript
-if (validFrets.length === 0) return generateFindQuiz();
-```
+**What was wrong:** `generateFindQuiz` picked a random string, checked for valid frets in the region, and recursively called itself if none were found — with no base case or depth limit, risking a stack overflow.
 
-If the selected region contains no notes in the current key (an edge case but possible), this recursion has no base case or depth limit. It will cause a stack overflow crash.
-
-**Fix:** Add a fallback (e.g., expand to full fretboard) or a recursion counter that bails out after a few attempts.
+**What was fixed:** Replaced the single-string-then-recurse approach with upfront collection of all valid (string, fret) positions across all 6 strings. Picks randomly from the full set. If no valid positions exist (impossible in practice but guarded), returns early instead of recursing.
 
 ---
 
