@@ -37,7 +37,7 @@ export default function Tips({ mode }) {
         )}
         {mode === MODES.ONE_FRET_RULE && (
           <>
-            <strong style={{ color: "#d4a017" }}>One Fret Rule:</strong> At any fret position, the 7 scale forms produce 7 different keys. Shift one fret and you cover all 12 keys. Pick a fret, then use <em>left/right arrow keys</em> or the {"<"}/{">"}  buttons to step through all 7 forms and see each key. The root fret and string update as you go.
+            <strong style={{ color: "#d4a017" }}>One Fret Rule:</strong> At any fret, the 7 scale forms produce 7 different keys. Pick the next fret up or down and the 7 forms there fill in the remaining 5 — giving you all 12 keys from just two adjacent frets. Use <em>left/right arrow keys</em> or the {"<"}/{">"}  buttons to step through forms and see each key. The root fret and string update as you go.
           </>
         )}
         {mode === MODES.TRIADS && (
