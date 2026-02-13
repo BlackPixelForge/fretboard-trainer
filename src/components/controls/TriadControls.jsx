@@ -64,6 +64,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
       <button
         onClick={() => updateTriad({ shapeIndex: (shapeIndex + total - 1) % total })}
         title="Previous shape (← arrow key)"
+        aria-label="Previous triad shape"
         style={{
           padding: "5px 8px",
           borderRadius: 6,
@@ -95,6 +96,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
       <button
         onClick={() => updateTriad({ shapeIndex: (shapeIndex + 1) % total })}
         title="Next shape (→ arrow key)"
+        aria-label="Next triad shape"
         style={{
           padding: "5px 8px",
           borderRadius: 6,
@@ -154,6 +156,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
       <button
         onClick={() => updateTriad({ autoPlay: !autoPlay })}
         title={autoPlay ? "Pause auto-cycle" : "Play auto-cycle"}
+        aria-label={autoPlay ? "Pause auto-cycle" : "Play auto-cycle"}
         style={{
           padding: "5px 10px",
           borderRadius: 6,
@@ -178,6 +181,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
         value={autoPlaySpeed}
         onChange={(e) => updateTriad({ autoPlaySpeed: Number(e.target.value) })}
         title={`Speed: ${(autoPlaySpeed / 1000).toFixed(1)}s`}
+        aria-label="Auto-cycle speed"
         style={{
           width: 80,
           accentColor: "#4ade80",

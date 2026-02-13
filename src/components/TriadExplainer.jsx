@@ -21,6 +21,8 @@ function Section({ title, defaultOpen, highlight, children }) {
     }}>
       <button
         onClick={() => setOpen(p => !p)}
+        aria-expanded={open}
+        aria-label={`${open ? "Collapse" : "Expand"} ${title}`}
         style={{
           width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "10px 0", background: "none", border: "none", cursor: "pointer",
@@ -67,6 +69,7 @@ export default function TriadExplainer({ triadState }) {
       <div style={{ marginTop: 12 }}>
         <button
           onClick={() => setPanelOpen(true)}
+          aria-label="Open triad theory guide"
           style={{
             display: "flex", alignItems: "center", gap: 6,
             padding: "8px 14px", background: "rgba(232,78,60,0.06)",
@@ -96,6 +99,7 @@ export default function TriadExplainer({ triadState }) {
         </span>
         <button
           onClick={() => setPanelOpen(false)}
+          aria-label="Close triad theory guide"
           style={{
             background: "none", border: "none", cursor: "pointer",
             fontFamily: "'Outfit', sans-serif", fontSize: "0.65rem", color: "#555",

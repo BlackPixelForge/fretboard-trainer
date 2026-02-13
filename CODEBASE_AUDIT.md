@@ -159,15 +159,19 @@
 
 ## Low Severity
 
-### 12. Missing ARIA Labels on Navigation Buttons
+### 12. ~~Missing ARIA Labels on Navigation Buttons~~ ✅ FIXED
 
 **Files:** `src/components/controls/ScalePositionControls.jsx`, `src/components/controls/TriadControls.jsx`, `src/components/TriadExplainer.jsx`
 **Severity:** Low
 **Category:** Accessibility
+**Status:** Fixed
 
-Prev/next buttons, stepper buttons, and collapsible panel toggles lack `aria-label` attributes, making them opaque to screen readers.
+**What was wrong:** Prev/next buttons, play/pause, speed slider, and collapsible panel toggles lacked `aria-label` attributes, making them opaque to screen readers (they only displayed symbols like `<`, `>`, `⏸`/`▶`, `▼`).
 
-**Fix:** Add descriptive `aria-label` props (e.g., `aria-label="Previous scale position"`).
+**What was fixed:** Added descriptive `aria-label` attributes to all icon-only and symbol-only interactive elements across three files:
+- `ScalePositionControls.jsx` — prev/next position buttons
+- `TriadControls.jsx` — prev/next shape buttons, play/pause toggle, speed slider
+- `TriadExplainer.jsx` — section toggle buttons (`aria-expanded` + `aria-label`), panel open/close buttons
 
 ---
 

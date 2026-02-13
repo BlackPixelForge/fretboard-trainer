@@ -47,6 +47,7 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
           const prev = positionIndex > 0 ? positionIndex - 1 : total - 1;
           updateScalePosition({ positionIndex: prev });
         }}
+        aria-label="Previous scale position"
         style={{
           padding: "5px 8px",
           borderRadius: 6,
@@ -66,6 +67,7 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
           const next = positionIndex < total - 1 ? positionIndex + 1 : 0;
           updateScalePosition({ positionIndex: next });
         }}
+        aria-label="Next scale position"
         style={{
           padding: "5px 8px",
           borderRadius: 6,
