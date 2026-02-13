@@ -100,6 +100,8 @@ export default function FretboardTrainer() {
   const updateTriad = (updates) => setTriadState(prev => ({ ...prev, ...updates }));
 
   const fretboardScrollRef = useRef(null);
+  const findAnswerLockRef = useRef(false);
+  const intervalAnswerLockRef = useRef(false);
 
   const [harmoniesState, setHarmoniesState] = useState({
     expanded: false,
@@ -303,10 +305,12 @@ export default function FretboardTrainer() {
     setFindChoices(choices);
     setSelectedAnswer(null);
     setQuizFeedback(null);
+    findAnswerLockRef.current = false;
   }, [keyNotes, region]);
 
   const handleFindAnswer = (chosenNote) => {
-    if (selectedAnswer !== null) return;
+    if (findAnswerLockRef.current) return;
+    findAnswerLockRef.current = true;
     const correctNote = getNoteName(getNoteAt(quizNote.string, quizNote.fret));
     setSelectedAnswer(chosenNote);
     if (chosenNote === correctNote) {
@@ -336,6 +340,7 @@ export default function FretboardTrainer() {
         selectedAnswer: null,
         quizFeedback: null,
       });
+      intervalAnswerLockRef.current = false;
     }
   }, [keyNotes, region]);
 
@@ -346,7 +351,8 @@ export default function FretboardTrainer() {
   generateIntervalQuizNoteRef.current = generateIntervalQuizNote;
 
   const handleIntervalAnswer = (chosenDegree) => {
-    if (intervalState.selectedAnswer !== null) return;
+    if (intervalAnswerLockRef.current) return;
+    intervalAnswerLockRef.current = true;
     const correct = chosenDegree === intervalState.correctInterval;
     const label = INTERVAL_LABELS[intervalState.correctInterval];
     if (correct) {

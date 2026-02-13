@@ -51,15 +51,16 @@
 
 ---
 
-### 4. Quiz Double-Click Race Condition
+### 4. ~~Quiz Double-Click Race Condition~~ ✅ FIXED
 
 **File:** `src/components/FretboardTrainer.jsx` (lines ~308-327)
 **Severity:** High
 **Category:** State
+**Status:** Fixed
 
-`handleFindAnswer` guards against duplicate answers with `if (selectedAnswer !== null) return`, but two rapid clicks can both pass this check before `setSelectedAnswer` has flushed. Each queues its own `setTimeout(() => generateFindQuiz(), ...)`, causing double quiz generation — the user sees a question flash by instantly.
+**What was wrong:** `handleFindAnswer` and `handleIntervalAnswer` used state-based guards (`selectedAnswer !== null`) that two rapid clicks could both pass before `setState` flushed, causing double quiz generation.
 
-**Fix:** Use a ref-based guard (`useRef`) instead of state for the lock, since refs update synchronously.
+**What was fixed:** Replaced state-based guards with synchronous ref-based locks (`findAnswerLockRef`, `intervalAnswerLockRef`). Lock is set to `true` immediately on answer, reset to `false` when the next quiz question generates. Refs update synchronously so concurrent clicks are properly blocked.
 
 ---
 
