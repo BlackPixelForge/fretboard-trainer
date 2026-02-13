@@ -116,15 +116,16 @@
 
 ---
 
-### 9. Direct DOM Style Mutation
+### 9. ~~Direct DOM Style Mutation~~ ✅ FIXED
 
 **File:** `src/components/HarmoniesPanel.jsx` (lines ~104-105, 188-199)
 **Severity:** Medium
 **Category:** React Patterns
+**Status:** Fixed
 
-Multiple `onMouseEnter`/`onMouseLeave` handlers directly mutate `e.currentTarget.style`. This bypasses React's reconciliation and can cause style inconsistencies if React re-renders between event and read.
+**What was wrong:** Multiple `onMouseEnter`/`onMouseLeave` handlers directly mutated `e.currentTarget.style`. This bypassed React's reconciliation and could cause style inconsistencies if React re-rendered between the event and the read.
 
-**Fix:** Use React state or CSS `:hover` pseudo-classes instead of direct DOM manipulation.
+**What was fixed:** Replaced all direct DOM style mutations with CSS `:hover` pseudo-classes. Added `.harmonies-collapsed-btn:hover` and `.chord-btn-hoverable:hover` classes to `globals.css`. The chord buttons pass dynamic colors via CSS custom properties (`--hover-border`, `--hover-bg`) on the inline style, and the `chord-btn-hoverable` class is only applied when the button is not active, preserving the original conditional hover behavior.
 
 ---
 

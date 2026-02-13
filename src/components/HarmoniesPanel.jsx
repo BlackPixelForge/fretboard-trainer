@@ -86,6 +86,7 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
       <div style={{ marginTop: 12 }}>
         <button
           onClick={onToggleExpanded}
+          className="harmonies-collapsed-btn"
           style={{
             width: "100%",
             padding: "10px 16px",
@@ -101,8 +102,6 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
             fontSize: "0.85rem",
             transition: "border-color 0.2s",
           }}
-          onMouseEnter={e => e.currentTarget.style.borderColor = "#2a2a3a"}
-          onMouseLeave={e => e.currentTarget.style.borderColor = "#1a1a28"}
         >
           <span style={{ color: "#8a8fa6", fontSize: "0.75rem" }}>▶</span>
           <span style={{ color: "#8a8fa6" }}>Scale Harmonies:</span>
@@ -171,6 +170,7 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
             <div key={chord.degree} style={{ position: "relative" }}>
               <button
                 onClick={() => handleChordClick(chord)}
+                className={!isActive ? "chord-btn-hoverable" : undefined}
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -184,18 +184,8 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
                   cursor: "pointer",
                   transition: "all 0.15s ease",
                   boxShadow: isActive ? `0 0 12px ${colors.glow}` : "none",
-                }}
-                onMouseEnter={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.borderColor = colors.activeBorder;
-                    e.currentTarget.style.background = colors.activeBg;
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.borderColor = colors.border;
-                    e.currentTarget.style.background = colors.bg;
-                  }
+                  "--hover-border": colors.activeBorder,
+                  "--hover-bg": colors.activeBg,
                 }}
               >
                 <span style={{

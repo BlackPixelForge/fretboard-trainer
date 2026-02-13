@@ -95,6 +95,15 @@ body {
   .controls-drawer-content { grid-template-rows: 1fr; }
 }
 
+/* Harmonies panel hover effects */
+.harmonies-collapsed-btn:hover {
+  border-color: #2a2a3a !important;
+}
+.chord-btn-hoverable:hover {
+  border-color: var(--hover-border) !important;
+  background: var(--hover-bg) !important;
+}
+
 /* Mode selector scroll */
 .mode-selector-scroll {
   scrollbar-width: none;
