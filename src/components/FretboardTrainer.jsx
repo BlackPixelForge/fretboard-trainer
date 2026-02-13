@@ -615,8 +615,9 @@ export default function FretboardTrainer() {
     }
 
     // Batch identify mode: show dots at all in-key positions in active region
+    // During results phase, bypass region filter so all quiz results stay visible
     if (mode === MODES.QUIZ_IDENTIFY) {
-      if (selectedRegion !== "all" && (f < region.start || f > region.end)) return false;
+      if (identifyState.phase !== "results" && selectedRegion !== "all" && (f < region.start || f > region.end)) return false;
       const noteIndex = getNoteAt(s, f);
       return isInKey(noteIndex, keyNotes);
     }

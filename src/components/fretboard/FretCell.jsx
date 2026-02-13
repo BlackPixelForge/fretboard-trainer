@@ -139,8 +139,8 @@ export default function FretCell({
         );
       })()}
 
-      {/* Batch identify mode rendering */}
-      {mode === MODES.QUIZ_IDENTIFY && inKey && isInRegion && (() => {
+      {/* Batch identify mode rendering — bypass region filter during results so all quiz results stay visible */}
+      {mode === MODES.QUIZ_IDENTIFY && inKey && (isInRegion || identifyState?.phase === "results") && (() => {
         if (identifyState?.phase === "selecting") {
           const id = `${si}-${f}`;
           const isSelected = identifyState.selections.has(id);

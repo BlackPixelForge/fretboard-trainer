@@ -92,15 +92,16 @@
 
 ---
 
-### 7. Identify Quiz Results Phase Visibility Bug
+### 7. ~~Identify Quiz Results Phase Visibility Bug~~ ✅ FIXED
 
 **File:** `src/components/FretboardTrainer.jsx` (lines ~589-594)
 **Severity:** Medium
 **Category:** Logic
+**Status:** Fixed
 
-In quiz identify mode's "results" phase, `isNoteVisible` still filters by region and key membership. Notes outside the region that were part of the quiz won't display during review, making the results incomplete.
+**What was wrong:** In quiz identify mode's "results" phase, `isNoteVisible` and FretCell's rendering gate both filtered by the current region. If the user changed the region selector after finishing a quiz, result dots (correct/incorrect/missed) would disappear.
 
-**Fix:** In the results phase, show all notes that were part of the quiz regardless of region filtering.
+**What was fixed:** Bypassed the region filter during the results phase in both places: `isNoteVisible` (FretboardTrainer.jsx) skips region filtering when `identifyState.phase === "results"`, and FretCell.jsx allows results-phase dots to render outside the current region via `(isInRegion || identifyState?.phase === "results")`.
 
 ---
 
