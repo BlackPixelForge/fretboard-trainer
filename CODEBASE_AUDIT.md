@@ -105,15 +105,14 @@
 
 ---
 
-### 8. Harmonies Panel State Desynchronization
+### 8. ~~Harmonies Panel State Desynchronization~~ ✅ BY DESIGN
 
 **File:** `src/components/FretboardTrainer.jsx` (lines ~104-108, 636-648)
 **Severity:** Medium
 **Category:** State
+**Status:** By design — not a bug
 
-`harmoniesState.keyRoot` and `triadState.rootNote` are synced via `handleTriadRootChange`, but when the user taps a chord in the HarmoniesPanel, only `triadState.rootNote` updates — `harmoniesState.keyRoot` becomes stale. On subsequent renders, the harmonies panel may show chords for the wrong key.
-
-**Fix:** Either derive `keyRoot` from `triadState.rootNote` (single source of truth) or ensure all code paths that update `triadState.rootNote` also update `harmoniesState.keyRoot`.
+**Why this is intentional:** `harmoniesState.keyRoot` deliberately stays independent of `triadState.rootNote` after chord taps. When the user taps a chord in the HarmoniesPanel (e.g., "Em" in C Major), the fretboard navigates to that triad shape (`rootNote` → E) while the panel keeps showing C Major chords (`keyRoot` → C). This lets users browse multiple chords from the same key without the panel resetting each time. The root picker (`handleTriadRootChange`) correctly syncs both values when the user explicitly changes the key. See CLAUDE.md: "Panel maintains its own `keyRoot` separate from `triadState.rootNote` so chord taps don't shift the displayed key."
 
 ---
 
