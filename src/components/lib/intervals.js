@@ -27,12 +27,9 @@ export function getIntervalDegree(noteIndex, keyNotes) {
 import { getNoteAt, isInKey } from "./music";
 import { FRET_COUNT } from "./fretboard";
 
-export function generateIntervalQuiz(keyNotes, selectedStrings, region) {
-  const strings = Array.from(selectedStrings);
-  if (strings.length === 0) return null;
-
+export function generateIntervalQuiz(keyNotes, region) {
   const candidates = [];
-  for (const s of strings) {
+  for (let s = 0; s < 6; s++) {
     for (let f = region.start; f <= Math.min(region.end, FRET_COUNT); f++) {
       const noteIndex = getNoteAt(s, f);
       if (isInKey(noteIndex, keyNotes)) {
