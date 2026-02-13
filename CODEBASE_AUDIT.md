@@ -129,15 +129,18 @@
 
 ---
 
-### 10. Clickable Divs Instead of Buttons
+### 10. ~~Clickable Divs Instead of Buttons~~ ✅ FIXED
 
-**File:** `src/components/fretboard/FretCell.jsx` (lines ~150, 167)
+**File:** `src/components/fretboard/FretCell.jsx` (lines ~150, 167), `src/components/fretboard/NoteDot.jsx`
 **Severity:** Medium
 **Category:** Accessibility
+**Status:** Fixed
 
-Fret cells with click handlers use `<div onClick={...}>` instead of `<button>`. These are invisible to keyboard navigation (Tab, Enter/Space) and screen readers. This affects Explore mode's reveal/hide functionality.
+**What was wrong:** Clickable fret cell elements used `<div onClick={...}>` instead of semantic `<button>` elements, making them invisible to keyboard navigation (Tab, Enter/Space) and screen readers.
 
-**Fix:** Replace clickable `<div>` elements with `<button>` elements styled to look the same, or add `role="button"`, `tabIndex={0}`, and `onKeyDown` handlers.
+**What was fixed:** Replaced all three clickable `<div>` elements with `<button>` across two files:
+- `NoteDot.jsx` — Conditionally renders `<button>` when `canClick` is true (Explore mode reveal/hide), `<div>` otherwise. Includes `aria-label` describing the action and note name.
+- `FretCell.jsx` — Both identify quiz "selecting" phase dots (selected and unselected) changed from `<div>` to `<button>` with `type="button"` and descriptive `aria-label` attributes. Added `padding: 0` to reset default button padding.
 
 ---
 

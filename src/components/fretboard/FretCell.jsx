@@ -146,12 +146,14 @@ export default function FretCell({
           const isSelected = identifyState.selections.has(id);
           if (isSelected) {
             return (
-              <div
+              <button
+                type="button"
                 onClick={() => onToggleReveal(si, f)}
+                aria-label={`Deselect note at string ${si + 1} fret ${f}`}
                 style={{
                   width: 28, height: 28, borderRadius: "50%",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  position: "relative", zIndex: 2, cursor: "pointer",
+                  position: "relative", zIndex: 2, cursor: "pointer", padding: 0,
                   background: "rgba(255,200,50,0.3)",
                   border: "2px solid #ffc832",
                   boxShadow: "0 0 8px rgba(255,200,50,0.4)",
@@ -159,16 +161,18 @@ export default function FretCell({
                   fontSize: "0.7rem", fontWeight: 700, color: "#ffe080",
                   fontFamily: "'JetBrains Mono', monospace",
                 }}
-              >?</div>
+              >?</button>
             );
           }
           return (
-            <div
+            <button
+              type="button"
               onClick={() => onToggleReveal(si, f)}
+              aria-label={`Select note at string ${si + 1} fret ${f}`}
               style={{
                 width: 28, height: 28, borderRadius: "50%",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                position: "relative", zIndex: 2, cursor: "pointer",
+                position: "relative", zIndex: 2, cursor: "pointer", padding: 0,
                 background: "rgba(255,255,255,0.06)",
                 border: "1px dashed #333",
                 transition: "all 0.25s ease",

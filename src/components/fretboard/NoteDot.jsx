@@ -1,7 +1,8 @@
 export default function NoteDot({ visible, isRoot, colors, noteName, degree, showDegrees, onClick, canClick }) {
+  const Tag = canClick ? "button" : "div";
   return (
-    <div
-      onClick={canClick ? onClick : undefined}
+    <Tag
+      {...(canClick ? { type: "button", onClick, "aria-label": `${visible ? "Hide" : "Reveal"} note ${noteName}` } : {})}
       style={{
         width: visible && isRoot ? 34 : 28,
         height: visible && isRoot ? 34 : 28,
@@ -12,6 +13,7 @@ export default function NoteDot({ visible, isRoot, colors, noteName, degree, sho
         position: "relative",
         zIndex: visible && isRoot ? 3 : 2,
         cursor: canClick ? "pointer" : "default",
+        padding: 0,
         background: visible
           ? (isRoot ? "rgba(232,78,60,0.40)" : colors.bg)
           : "rgba(255,255,255,0.06)",
@@ -36,6 +38,6 @@ export default function NoteDot({ visible, isRoot, colors, noteName, degree, sho
       <span style={{ transform: visible && isRoot ? "rotate(-45deg)" : "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
         {visible ? (showDegrees && degree ? degree : noteName) : ""}
       </span>
-    </div>
+    </Tag>
   );
 }
