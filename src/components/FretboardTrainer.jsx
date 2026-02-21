@@ -105,7 +105,6 @@ export default function FretboardTrainer() {
   const quizTimeoutsRef = useRef([]);
   const controlsZoneRef = useRef(null);
   const maxZoneHeight = useRef(0);
-  const [modeTransitioning, setModeTransitioning] = useState(false);
 
   const [harmoniesState, setHarmoniesState] = useState({
     expanded: false,
@@ -676,9 +675,6 @@ export default function FretboardTrainer() {
     if (newMode !== MODES.TRIADS) {
       updateTriad({ autoPlay: false });
     }
-    // Trigger mode transition animation
-    setModeTransitioning(true);
-    setTimeout(() => setModeTransitioning(false), 300);
   };
 
   const handleKeyChange = (key) => {
@@ -777,7 +773,7 @@ export default function FretboardTrainer() {
         </div>
 
         {/* Sub Controls + Quiz Prompts — stable height zone */}
-        <div ref={controlsZoneRef} className={`controls-zone${modeTransitioning ? " mode-transitioning" : ""}`}>
+        <div ref={controlsZoneRef} className="controls-zone">
         <ControlsDrawer
           alwaysVisible={<>
             {/* Key & Region selectors — shown for modes that use them */}
