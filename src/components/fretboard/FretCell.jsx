@@ -68,7 +68,7 @@ export default function FretCell({
         if (!data) return null;
         return (
           <CAGEDDot
-            key={data.chordType === "R" ? "root" : "dot"}
+            key={cagedState.selectedShape}
             letter={data.letter}
             isChordTone={data.isChordTone}
             type={data.chordType}
