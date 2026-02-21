@@ -21,7 +21,7 @@ export default function CAGEDDot({ letter, isChordTone, type, degree }) {
         ? `0 0 10px ${colors.bg}`
         : isChordTone ? "none" : "inset 0 0 4px rgba(180,180,180,0.08)",
       animation: isChordTone ? "positionTransition 300ms var(--ease-out-expo)" : "positionTransition 350ms var(--ease-out-expo)",
-      transition: "all 0.25s ease",
+      transition: "background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease",
       transform: type === "R" ? "rotate(45deg)" : "none",
     }}>
       <span style={{
