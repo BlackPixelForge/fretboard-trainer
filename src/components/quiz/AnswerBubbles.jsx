@@ -13,20 +13,23 @@ export default function AnswerBubbles({ quizNote, findChoices, selectedAnswer, o
         const isCorrectChoice = choice === correctNote;
 
         let bg = "rgba(255,255,255,0.04)";
-        let border = "#2a2a3a";
-        let textColor = "#c8ccd4";
-        let shadow = "none";
+        let border = "var(--border-visible)";
+        let textColor = "var(--text-primary)";
+        let shadow = "inset 0 1px 0 rgba(255,255,255,0.02)";
+        let anim = "none";
 
         if (showResult && isCorrectChoice) {
           bg = "rgba(80,200,80,0.25)";
           border = "#50c850";
           textColor = "#80f080";
-          shadow = "0 0 10px rgba(80,200,80,0.3)";
+          shadow = "0 0 14px rgba(80,200,80,0.35)";
+          anim = "springCorrect 0.5s var(--ease-spring)";
         } else if (showResult && isSelected && !isCorrectChoice) {
           bg = "rgba(220,60,60,0.25)";
           border = "#dc3c3c";
           textColor = "#f08080";
-          shadow = "0 0 10px rgba(220,60,60,0.3)";
+          shadow = "0 0 14px rgba(220,60,60,0.35)";
+          anim = "springWrong 0.5s var(--ease-out-expo)";
         } else if (!showResult) {
           bg = "rgba(255,200,50,0.08)";
           border = "rgba(255,200,50,0.30)";
@@ -49,10 +52,10 @@ export default function AnswerBubbles({ quizNote, findChoices, selectedAnswer, o
               fontSize: "0.82rem",
               fontWeight: 700,
               cursor: selectedAnswer !== null ? "default" : "pointer",
-              transition: "all 0.2s",
+              transition: `all var(--duration-normal) var(--ease-smooth)`,
               boxShadow: shadow,
               opacity: showResult && !isSelected && !isCorrectChoice ? 0.45 : 1,
-              transform: showResult && isCorrectChoice ? "scale(1.1)" : "scale(1)",
+              animation: anim,
               outline: "none",
             }}
           >

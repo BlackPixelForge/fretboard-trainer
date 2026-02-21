@@ -27,15 +27,16 @@ export default function ControlsDrawer({ alwaysVisible, drawerContent }) {
           width: "100%",
           marginTop: 8,
           padding: "6px 0",
-          background: "rgba(60,160,220,0.06)",
-          border: "1px solid rgba(60,160,220,0.15)",
-          borderRadius: 6,
-          color: "#78c8f0",
+          background: "linear-gradient(135deg, rgba(60,160,220,0.06), rgba(60,160,220,0.02))",
+          border: "1px solid rgba(60,160,220,0.18)",
+          borderRadius: "var(--radius-sm)",
+          color: "var(--accent-blue-text)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {open ? "Hide controls" : "More controls"}{" "}

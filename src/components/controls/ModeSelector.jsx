@@ -17,11 +17,32 @@ const QUIZ_MODES = [
 const LEARN_GRADIENT = "linear-gradient(135deg, #e84e3c, #c83828)";
 const QUIZ_GRADIENT = "linear-gradient(135deg, #ffc832, #e6a03c)";
 
-function isLearnMode(key) {
-  return LEARN_MODES.some(m => m.key === key);
-}
-
 export default function ModeSelector({ mode, onModeChange }) {
+  const renderTab = (m, gradient) => {
+    const active = mode === m.key;
+    return (
+      <button key={m.key} onClick={() => onModeChange(m.key)} style={{
+        padding: "7px 14px",
+        borderRadius: "var(--radius-sm)",
+        border: "none",
+        background: active ? gradient : "transparent",
+        color: active ? "#fff" : "var(--text-muted)",
+        fontFamily: "var(--font-sans)",
+        fontSize: "0.75rem",
+        fontWeight: active ? 600 : 400,
+        cursor: "pointer",
+        transition: `all var(--duration-normal) var(--ease-out-expo)`,
+        letterSpacing: "0.02em",
+        whiteSpace: "nowrap",
+        flexShrink: 0,
+        boxShadow: active
+          ? "0 2px 8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)"
+          : "none",
+        textShadow: active ? "0 1px 2px rgba(0,0,0,0.3)" : "none",
+      }}>{m.label}</button>
+    );
+  };
+
   return (
     <div
       className="mode-selector-scroll"
@@ -31,56 +52,25 @@ export default function ModeSelector({ mode, onModeChange }) {
         gap: 2,
         overflowX: "auto",
         WebkitOverflowScrolling: "touch",
-        background: "#14141e",
-        borderRadius: 8,
-        padding: 2,
-        border: "1px solid #1e1e2e",
+        background: "linear-gradient(180deg, #16161f, #12121b)",
+        borderRadius: "var(--radius-md)",
+        padding: 3,
+        border: "1px solid var(--border-muted)",
+        boxShadow: "inset 0 1px 3px rgba(0,0,0,0.3)",
       }}
     >
-      {LEARN_MODES.map(m => (
-        <button key={m.key} onClick={() => onModeChange(m.key)} style={{
-          padding: "7px 14px",
-          borderRadius: 6,
-          border: "none",
-          background: mode === m.key ? LEARN_GRADIENT : "transparent",
-          color: mode === m.key ? "#fff" : "#888",
-          fontFamily: "var(--font-sans)",
-          fontSize: "0.75rem",
-          fontWeight: mode === m.key ? 600 : 400,
-          cursor: "pointer",
-          transition: "all 0.2s",
-          letterSpacing: "0.02em",
-          whiteSpace: "nowrap",
-          flexShrink: 0,
-        }}>{m.label}</button>
-      ))}
+      {LEARN_MODES.map(m => renderTab(m, LEARN_GRADIENT))}
 
       {/* Divider between Learn and Quiz */}
       <span style={{
         width: 1,
         height: 20,
-        background: "#2a2a3a",
-        margin: "0 4px",
+        background: "linear-gradient(180deg, transparent, var(--border-visible), transparent)",
+        margin: "0 6px",
         flexShrink: 0,
       }} />
 
-      {QUIZ_MODES.map(m => (
-        <button key={m.key} onClick={() => onModeChange(m.key)} style={{
-          padding: "7px 14px",
-          borderRadius: 6,
-          border: "none",
-          background: mode === m.key ? QUIZ_GRADIENT : "transparent",
-          color: mode === m.key ? "#fff" : "#888",
-          fontFamily: "var(--font-sans)",
-          fontSize: "0.75rem",
-          fontWeight: mode === m.key ? 600 : 400,
-          cursor: "pointer",
-          transition: "all 0.2s",
-          letterSpacing: "0.02em",
-          whiteSpace: "nowrap",
-          flexShrink: 0,
-        }}>{m.label}</button>
-      ))}
+      {QUIZ_MODES.map(m => renderTab(m, QUIZ_GRADIENT))}
     </div>
   );
 }

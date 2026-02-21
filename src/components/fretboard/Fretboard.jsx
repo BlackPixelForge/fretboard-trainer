@@ -19,55 +19,59 @@ export default function Fretboard({
   }, []);
 
   return (
-    <div
-      className={`fretboard-scroll-wrapper${scrolledEnd ? " scrolled-end" : ""}`}
-      style={{
-        background: "linear-gradient(180deg, #1a1510 0%, #15120d 100%)",
-        borderRadius: 12,
-        border: "1px solid #2a2218",
-        overflow: "hidden",
-        boxShadow: "inset 0 2px 20px rgba(0,0,0,0.4), 0 4px 30px rgba(0,0,0,0.3)",
-      }}
-    >
+    <div className="fretboard-container" style={{ position: "relative", margin: "8px 0" }}>
       <div
-        ref={scrollRef}
-        className="fretboard-scroll"
-        onScroll={handleScroll}
+        className={`fretboard-scroll-wrapper${scrolledEnd ? " scrolled-end" : ""}`}
         style={{
-          overflowX: "auto",
-          WebkitOverflowScrolling: "touch",
-          padding: "16px 0 16px 42px",
+          background: "linear-gradient(180deg, #1a1510 0%, #15120d 100%)",
+          borderRadius: "var(--radius-xl)",
+          border: "1px solid #2a2218",
+          overflow: "hidden",
+          boxShadow: "inset 0 2px 20px rgba(0,0,0,0.4), 0 4px 30px rgba(0,0,0,0.3), 0 0 60px rgba(210,170,90,0.03), 0 1px 0 rgba(255,255,255,0.03)",
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        <div style={{ minWidth: 1076 }}>
-          <FretNumbers />
+        <div
+          ref={scrollRef}
+          className="fretboard-scroll"
+          onScroll={handleScroll}
+          style={{
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+            padding: "16px 0 16px 42px",
+          }}
+        >
+          <div style={{ minWidth: 1076 }}>
+            <FretNumbers />
 
-          {STRING_TUNING.map((string, si) => (
-            <StringRow
-              key={string.name + string.octave}
-              string={string}
-              si={si}
-              keyNotes={keyNotes}
-              rootNote={rootNote}
-              mode={mode}
-              selectedRegion={selectedRegion}
-              region={region}
-              highlightRoot={highlightRoot}
-              showDegrees={showDegrees}
-              quizNote={quizNote}
-              selectedAnswer={selectedAnswer}
-              isNoteVisible={isNoteVisible}
-              onToggleReveal={onToggleReveal}
-              hideAll={hideAll}
-              getNoteDisplayData={getNoteDisplayData}
-              scalePositionState={scalePositionState}
-              cagedState={cagedState}
-              intervalState={intervalState}
-              identifyState={identifyState}
-            />
-          ))}
+            {STRING_TUNING.map((string, si) => (
+              <StringRow
+                key={string.name + string.octave}
+                string={string}
+                si={si}
+                keyNotes={keyNotes}
+                rootNote={rootNote}
+                mode={mode}
+                selectedRegion={selectedRegion}
+                region={region}
+                highlightRoot={highlightRoot}
+                showDegrees={showDegrees}
+                quizNote={quizNote}
+                selectedAnswer={selectedAnswer}
+                isNoteVisible={isNoteVisible}
+                onToggleReveal={onToggleReveal}
+                hideAll={hideAll}
+                getNoteDisplayData={getNoteDisplayData}
+                scalePositionState={scalePositionState}
+                cagedState={cagedState}
+                intervalState={intervalState}
+                identifyState={identifyState}
+              />
+            ))}
 
-          <FretMarkers />
+            <FretMarkers />
+          </div>
         </div>
       </div>
     </div>

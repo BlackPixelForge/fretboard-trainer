@@ -1,5 +1,6 @@
 export default function ScoreBar({ score, streak, bestStreak }) {
   const accuracy = score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
+  const highStreak = streak >= 5;
 
   return (
     <div style={{
@@ -7,12 +8,15 @@ export default function ScoreBar({ score, streak, bestStreak }) {
       display: "flex", gap: "16px",
       fontFamily: "var(--font-mono)",
       fontSize: "0.72rem",
-      color: "#999",
+      color: "var(--text-secondary)",
     }}>
-      <span>Score: <strong style={{ color: "#c8ccd4" }}>{score.correct}/{score.total}</strong></span>
+      <span>Score: <strong style={{ color: "var(--text-primary)" }}>{score.correct}/{score.total}</strong></span>
       <span>Accuracy: <strong style={{ color: accuracy >= 80 ? "#50c850" : accuracy >= 50 ? "#e6a03c" : "#dc3c3c" }}>{accuracy}%</strong></span>
-      <span>Streak: <strong style={{ color: streak >= 5 ? "#ffc832" : "#c8ccd4" }}>{streak}</strong></span>
-      <span style={{ color: "#777" }}>Best: {bestStreak}</span>
+      <span>Streak: <strong style={{
+        color: highStreak ? "var(--accent-gold)" : "var(--text-primary)",
+        animation: highStreak ? "streakGlow 1.5s ease-in-out infinite" : "none",
+      }}>{streak}</strong></span>
+      <span style={{ color: "var(--text-muted)" }}>Best: {bestStreak}</span>
     </div>
   );
 }

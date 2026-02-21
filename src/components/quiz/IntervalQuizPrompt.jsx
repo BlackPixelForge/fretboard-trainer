@@ -5,7 +5,6 @@ const ALL_DEGREES = [1, 2, 3, 4, 5, 6, 7];
 export default function IntervalQuizPrompt({ quizNote, onAnswer, selectedAnswer, correctInterval }) {
   if (!quizNote) return null;
 
-  const correctLabel = INTERVAL_LABELS[correctInterval];
   const showResult = selectedAnswer !== null;
 
   return (
@@ -18,18 +17,21 @@ export default function IntervalQuizPrompt({ quizNote, onAnswer, selectedAnswer,
         let bg = "rgba(255,200,50,0.05)";
         let border = "rgba(255,200,50,0.25)";
         let textColor = "#ddd";
-        let shadow = "none";
+        let shadow = "inset 0 1px 0 rgba(255,255,255,0.02)";
+        let anim = "none";
 
         if (showResult && isCorrect) {
           bg = "rgba(80,200,80,0.25)";
           border = "#50c850";
           textColor = "#80f080";
-          shadow = "0 0 10px rgba(80,200,80,0.3)";
+          shadow = "0 0 14px rgba(80,200,80,0.35)";
+          anim = "springCorrect 0.5s var(--ease-spring)";
         } else if (showResult && isSelected && !isCorrect) {
           bg = "rgba(220,60,60,0.25)";
           border = "#dc3c3c";
           textColor = "#f08080";
-          shadow = "0 0 10px rgba(220,60,60,0.3)";
+          shadow = "0 0 14px rgba(220,60,60,0.35)";
+          anim = "springWrong 0.5s var(--ease-out-expo)";
         }
 
         return (
@@ -48,10 +50,10 @@ export default function IntervalQuizPrompt({ quizNote, onAnswer, selectedAnswer,
               fontSize: "0.8rem",
               fontWeight: 700,
               cursor: selectedAnswer !== null ? "default" : "pointer",
-              transition: "all 0.2s",
+              transition: `all var(--duration-normal) var(--ease-smooth)`,
               boxShadow: shadow,
               opacity: showResult && !isSelected && !isCorrect ? 0.45 : 1,
-              transform: showResult && isCorrect ? "scale(1.1)" : "scale(1)",
+              animation: anim,
               outline: "none",
               display: "flex",
               alignItems: "center",

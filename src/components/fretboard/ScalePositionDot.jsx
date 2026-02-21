@@ -22,7 +22,7 @@ export default function ScalePositionDot({ degree, finger, showFingering, showNo
       boxShadow: isRoot
         ? "0 0 12px rgba(232,78,60,0.5), inset 0 0 8px rgba(232,78,60,0.2)"
         : faded ? "inset 0 0 4px rgba(180,180,180,0.08)" : "none",
-      animation: isRoot ? "rootPulse 2s infinite ease-in-out" : "fadeIn 0.2s ease",
+      animation: isRoot ? "rootPulse 2s infinite ease-in-out" : "positionTransition 300ms var(--ease-out-expo)",
       transition: "all 0.25s ease",
       transform: isRoot ? "rotate(45deg)" : "none",
       opacity: faded ? 0.5 : 1,

@@ -9,17 +9,17 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
 
   const primaryControls = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Root:</span>
+      <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}>Root:</span>
 
       <select
         value={rootNote}
         onChange={(e) => (onRootChange || ((v) => updateTriad({ rootNote: v })))(Number(e.target.value))}
         style={{
           padding: "6px 10px",
-          borderRadius: 8,
-          border: "1px solid #1e1e2e",
-          background: "#0e0e16",
-          color: "#c8ccd4",
+          borderRadius: "var(--radius-md)",
+          border: "1px solid var(--border-muted)",
+          background: "var(--surface-base)",
+          color: "var(--text-primary)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
@@ -30,7 +30,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
         ))}
       </select>
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center" }}>
         {INVERSIONS.map((inv, i) => {
@@ -41,16 +41,19 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
               onClick={() => updateTriad({ inversionIndex: i, shapeIndex: 0 })}
               style={{
                 padding: "5px 10px",
-                borderRadius: 6,
-                border: `1px solid ${active ? "#e84e3c66" : "#1e1e2e"}`,
-                background: active ? "rgba(232,78,60,0.22)" : "#0e0e16",
-                color: active ? "#ffa09a" : "#777",
+                borderRadius: "var(--radius-sm)",
+                border: `1px solid ${active ? "rgba(232,78,60,0.35)" : "var(--border-muted)"}`,
+                background: active ? "var(--accent-red-glow)" : "var(--surface-base)",
+                color: active ? "var(--accent-red-text)" : "var(--text-muted)",
                 fontFamily: "var(--font-sans)",
                 fontSize: "0.62rem",
                 fontWeight: active ? 600 : 400,
                 cursor: "pointer",
-                transition: "all 0.2s",
+                transition: `all var(--duration-normal) var(--ease-smooth)`,
                 whiteSpace: "nowrap",
+                boxShadow: active
+                  ? "0 0 12px rgba(232,78,60,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+                  : "inset 0 1px 0 rgba(255,255,255,0.02)",
               }}
             >
               {INVERSION_LABELS[inv]}
@@ -59,7 +62,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
         })}
       </span>
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <button
         onClick={() => updateTriad({ shapeIndex: (shapeIndex + total - 1) % total })}
@@ -67,14 +70,15 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
         aria-label="Previous triad shape"
         style={{
           padding: "5px 8px",
-          borderRadius: 6,
-          border: "1px solid #1e1e2e",
-          background: "#0e0e16",
-          color: "#888",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid var(--border-muted)",
+          background: "var(--surface-base)",
+          color: "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {"<"}
@@ -82,12 +86,12 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
 
       <span style={{
         fontSize: "0.62rem",
-        color: "#999",
+        color: "var(--text-secondary)",
         fontFamily: "var(--font-mono)",
         padding: "4px 8px",
         background: "rgba(232,78,60,0.08)",
         border: "1px solid rgba(232,78,60,0.15)",
-        borderRadius: 6,
+        borderRadius: "var(--radius-sm)",
         whiteSpace: "nowrap",
       }}>
         {shapeIndex + 1}/{total} {shapeLabel}
@@ -99,14 +103,15 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
         aria-label="Next triad shape"
         style={{
           padding: "5px 8px",
-          borderRadius: 6,
-          border: "1px solid #1e1e2e",
-          background: "#0e0e16",
-          color: "#888",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid var(--border-muted)",
+          background: "var(--surface-base)",
+          color: "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {">"}
@@ -120,15 +125,18 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
         onClick={() => updateTriad({ showNoteNames: !showNoteNames, showFingering: false })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showNoteNames ? "#3ca0dc66" : "#1e1e2e"}`,
-          background: showNoteNames ? "rgba(60,160,220,0.18)" : "#0e0e16",
-          color: showNoteNames ? "#78c8f0" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${showNoteNames ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+          background: showNoteNames ? "var(--accent-blue-glow)" : "var(--surface-base)",
+          color: showNoteNames ? "var(--accent-blue-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: showNoteNames
+            ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         Notes
@@ -137,21 +145,24 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
         onClick={() => updateTriad({ showFingering: !showFingering, showNoteNames: false })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showFingering ? "#3ca0dc66" : "#1e1e2e"}`,
-          background: showFingering ? "rgba(60,160,220,0.18)" : "#0e0e16",
-          color: showFingering ? "#78c8f0" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${showFingering ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+          background: showFingering ? "var(--accent-blue-glow)" : "var(--surface-base)",
+          color: showFingering ? "var(--accent-blue-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: showFingering
+            ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         Fingering
       </button>
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <button
         onClick={() => updateTriad({ autoPlay: !autoPlay })}
@@ -159,15 +170,18 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
         aria-label={autoPlay ? "Pause auto-cycle" : "Play auto-cycle"}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${autoPlay ? "#4ade8066" : "#1e1e2e"}`,
-          background: autoPlay ? "rgba(74,222,128,0.18)" : "#0e0e16",
-          color: autoPlay ? "#4ade80" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${autoPlay ? "rgba(74,222,128,0.35)" : "var(--border-muted)"}`,
+          background: autoPlay ? "rgba(74,222,128,0.18)" : "var(--surface-base)",
+          color: autoPlay ? "#4ade80" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: autoPlay
+            ? "0 0 12px rgba(74,222,128,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {autoPlay ? "\u23F8" : "\u25B6"}
@@ -190,7 +204,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
       />
       <span style={{
         fontSize: "0.6rem",
-        color: "#777",
+        color: "var(--text-muted)",
         fontFamily: "var(--font-mono)",
         minWidth: 28,
       }}>
@@ -205,7 +219,7 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
   return (
     <>
       {primaryControls}
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
       {secondaryControls}
     </>
   );

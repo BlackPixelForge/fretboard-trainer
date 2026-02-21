@@ -11,35 +11,41 @@ export default function IntervalControls({ intervalState, updateInterval, render
         onClick={() => updateInterval({ showIntervals: !showIntervals })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showIntervals ? "#3ca0dc66" : "#1e1e2e"}`,
-          background: showIntervals ? "rgba(60,160,220,0.18)" : "#0e0e16",
-          color: showIntervals ? "#78c8f0" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${showIntervals ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+          background: showIntervals ? "var(--accent-blue-glow)" : "var(--surface-base)",
+          color: showIntervals ? "var(--accent-blue-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: showIntervals
+            ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {showIntervals ? "Intervals" : "Note Names"}
       </button>
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <button
         onClick={() => updateInterval({ quizMode: !quizMode })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${quizMode ? "#ffc83266" : "#1e1e2e"}`,
-          background: quizMode ? "rgba(255,200,50,0.18)" : "#0e0e16",
-          color: quizMode ? "#ffe080" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${quizMode ? "rgba(255,200,50,0.35)" : "var(--border-muted)"}`,
+          background: quizMode ? "var(--accent-gold-glow)" : "var(--surface-base)",
+          color: quizMode ? "var(--accent-gold-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: quizMode
+            ? "0 0 12px rgba(255,200,50,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {quizMode ? "Quiz On" : "Quiz Off"}
@@ -49,7 +55,7 @@ export default function IntervalControls({ intervalState, updateInterval, render
 
   const degreeFilters = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Filter:</span>
+      <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}>Filter:</span>
 
       {DEGREES.map((d) => {
         const active = intervalFilter.has(d);
@@ -67,9 +73,9 @@ export default function IntervalControls({ intervalState, updateInterval, render
               width: 26,
               height: 26,
               borderRadius: "50%",
-              border: `1px solid ${active ? "#50be5066" : "#1e1e2e"}`,
-              background: active ? "rgba(80,190,80,0.20)" : "#0e0e16",
-              color: active ? "#80e080" : "#666",
+              border: `1px solid ${active ? "rgba(80,190,80,0.35)" : "var(--border-muted)"}`,
+              background: active ? "var(--accent-green-glow)" : "var(--surface-base)",
+              color: active ? "var(--accent-green-text)" : "#666",
               fontFamily: "var(--font-mono)",
               fontSize: "0.65rem",
               fontWeight: 600,
@@ -78,7 +84,10 @@ export default function IntervalControls({ intervalState, updateInterval, render
               alignItems: "center",
               justifyContent: "center",
               padding: 0,
-              transition: "all 0.2s",
+              transition: `all var(--duration-normal) var(--ease-smooth)`,
+              boxShadow: active
+                ? "0 0 12px rgba(80,190,80,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+                : "inset 0 1px 0 rgba(255,255,255,0.02)",
             }}
           >
             {INTERVAL_LABELS[d]}
@@ -94,7 +103,7 @@ export default function IntervalControls({ intervalState, updateInterval, render
   return (
     <>
       {primaryControls}
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
       {degreeFilters}
     </>
   );

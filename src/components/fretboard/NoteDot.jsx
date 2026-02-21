@@ -25,7 +25,7 @@ export default function NoteDot({ visible, isRoot, colors, noteName, degree, sho
           : visible && colors.glow ? colors.glow
           : "none",
         animation: visible && isRoot ? "rootPulse 2s infinite ease-in-out"
-          : visible ? "fadeIn 0.2s ease" : "none",
+          : visible ? "positionTransition 300ms var(--ease-out-expo)" : "none",
         transition: "all 0.25s ease",
         fontSize: visible && isRoot ? "0.72rem" : "0.65rem",
         fontWeight: visible && isRoot ? 800 : 700,

@@ -6,7 +6,7 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
 
   const positionButtons = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Position:</span>
+      <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}>Position:</span>
 
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center" }}>
         {FORMS.map((form, i) => {
@@ -19,10 +19,10 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
               style={{
                 minWidth: 34,
                 height: 28,
-                borderRadius: 6,
-                border: `1px solid ${active ? "#e84e3c66" : "#1e1e2e"}`,
-                background: active ? "rgba(232,78,60,0.22)" : "#0e0e16",
-                color: active ? "#ffa09a" : "#777",
+                borderRadius: "var(--radius-sm)",
+                border: `1px solid ${active ? "rgba(232,78,60,0.35)" : "var(--border-muted)"}`,
+                background: active ? "var(--accent-red-glow)" : "var(--surface-base)",
+                color: active ? "var(--accent-red-text)" : "var(--text-muted)",
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.6rem",
                 fontWeight: 700,
@@ -31,7 +31,10 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "0 4px",
-                transition: "all 0.2s",
+                transition: `all var(--duration-normal) var(--ease-smooth)`,
+                boxShadow: active
+                  ? "0 0 12px rgba(232,78,60,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+                  : "inset 0 1px 0 rgba(255,255,255,0.02)",
               }}
             >
               {form.name}
@@ -40,7 +43,7 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         })}
       </span>
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <button
         onClick={() => {
@@ -50,14 +53,15 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         aria-label="Previous scale position"
         style={{
           padding: "5px 8px",
-          borderRadius: 6,
-          border: "1px solid #1e1e2e",
-          background: "#0e0e16",
-          color: "#888",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid var(--border-muted)",
+          background: "var(--surface-base)",
+          color: "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {"<"}
@@ -70,14 +74,15 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         aria-label="Next scale position"
         style={{
           padding: "5px 8px",
-          borderRadius: 6,
-          border: "1px solid #1e1e2e",
-          background: "#0e0e16",
-          color: "#888",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid var(--border-muted)",
+          background: "var(--surface-base)",
+          color: "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {">"}
@@ -91,15 +96,18 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         onClick={() => updateScalePosition({ showNoteNames: !showNoteNames, showFingering: false })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showNoteNames ? "#3ca0dc66" : "#1e1e2e"}`,
-          background: showNoteNames ? "rgba(60,160,220,0.18)" : "#0e0e16",
-          color: showNoteNames ? "#78c8f0" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${showNoteNames ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+          background: showNoteNames ? "var(--accent-blue-glow)" : "var(--surface-base)",
+          color: showNoteNames ? "var(--accent-blue-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: showNoteNames
+            ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         Notes
@@ -108,15 +116,18 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         onClick={() => updateScalePosition({ showFingering: !showFingering, showNoteNames: false })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showFingering ? "#3ca0dc66" : "#1e1e2e"}`,
-          background: showFingering ? "rgba(60,160,220,0.18)" : "#0e0e16",
-          color: showFingering ? "#78c8f0" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${showFingering ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+          background: showFingering ? "var(--accent-blue-glow)" : "var(--surface-base)",
+          color: showFingering ? "var(--accent-blue-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: showFingering
+            ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         Fingering
@@ -130,7 +141,7 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
   return (
     <>
       {positionButtons}
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
       {toggleButtons}
     </>
   );

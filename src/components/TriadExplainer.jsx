@@ -72,10 +72,13 @@ export default function TriadExplainer({ triadState }) {
           aria-label="Open triad theory guide"
           style={{
             display: "flex", alignItems: "center", gap: 6,
-            padding: "8px 14px", background: "rgba(232,78,60,0.06)",
-            border: "1px solid rgba(232,78,60,0.15)", borderRadius: 8,
+            padding: "8px 14px",
+            background: "linear-gradient(135deg, rgba(232,78,60,0.06), rgba(232,78,60,0.02))",
+            border: "1px solid rgba(232,78,60,0.15)", borderRadius: "var(--radius-md)",
             fontFamily: "var(--font-sans)", fontSize: "0.72rem", fontWeight: 500,
-            color: "#e8907a", cursor: "pointer", transition: "all 0.2s",
+            color: "#e8907a", cursor: "pointer",
+            transition: `all var(--duration-normal) var(--ease-smooth)`,
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
           }}
         >
           <span style={{ fontSize: "0.8rem" }}>📖</span>
@@ -89,9 +92,11 @@ export default function TriadExplainer({ triadState }) {
     <div style={{
       marginTop: 12,
       padding: "14px 18px",
-      background: "#0e0e16",
-      borderRadius: 10,
-      border: "1px solid #1a1a28",
+      background: "linear-gradient(180deg, #10101a, var(--surface-base))",
+      borderRadius: "var(--radius-lg)",
+      border: "1px solid var(--border-subtle)",
+      animation: "slideDown 300ms var(--ease-out-expo)",
+      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.2)",
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
         <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", fontWeight: 700, color: "#c8ccd4" }}>

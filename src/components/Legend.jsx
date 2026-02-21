@@ -13,9 +13,13 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
       display: "flex",
       flexWrap: "wrap",
       gap: "8px 16px",
-      background: "#0e0e16",
-      borderRadius: 10,
-      border: "1px solid #1a1a28",
+      background: "linear-gradient(135deg, rgba(14,14,22,0.85), rgba(10,10,16,0.9))",
+      backdropFilter: "blur(8px)",
+      WebkitBackdropFilter: "blur(8px)",
+      borderRadius: "var(--radius-lg)",
+      border: "1px solid var(--border-subtle)",
+      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.2)",
+      position: "relative",
     }}>
       {/* Default scale degree legend for Explore and Quiz modes */}
       {(mode === MODES.EXPLORE || mode === MODES.QUIZ_IDENTIFY || mode === MODES.QUIZ_FIND) && (

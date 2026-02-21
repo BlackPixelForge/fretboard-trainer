@@ -21,15 +21,18 @@ export default function ExploreToggles({
   const renderToggle = (toggle) => (
     <button key={toggle.label} onClick={() => toggle.set(p => !p)} style={{
       padding: "5px 10px",
-      borderRadius: 6,
-      border: `1px solid ${toggle.val ? "#3ca0dc66" : "#1e1e2e"}`,
-      background: toggle.val ? "rgba(60,160,220,0.18)" : "#0e0e16",
-      color: toggle.val ? "#78c8f0" : "#777",
+      borderRadius: "var(--radius-sm)",
+      border: `1px solid ${toggle.val ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+      background: toggle.val ? "var(--accent-blue-glow)" : "var(--surface-base)",
+      color: toggle.val ? "var(--accent-blue-text)" : "var(--text-muted)",
       fontFamily: "var(--font-sans)",
       fontSize: "0.68rem",
       fontWeight: 500,
       cursor: "pointer",
-      transition: "all 0.2s",
+      transition: `all var(--duration-normal) var(--ease-smooth)`,
+      boxShadow: toggle.val
+        ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+        : "inset 0 1px 0 rgba(255,255,255,0.02)",
     }}>{toggle.label}</button>
   );
 
@@ -41,11 +44,13 @@ export default function ExploreToggles({
     return (
       <>
         {secondaryToggles.map(renderToggle)}
-        <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+        <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
         <button onClick={onResetRevealed} style={{
-          padding: "5px 10px", borderRadius: 6, border: "1px solid #1e1e2e",
-          background: "#0e0e16", color: "#777",
+          padding: "5px 10px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-muted)",
+          background: "var(--surface-base)", color: "var(--text-muted)",
           fontFamily: "var(--font-sans)", fontSize: "0.68rem", fontWeight: 500, cursor: "pointer",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}>Reset Revealed</button>
       </>
     );
@@ -63,11 +68,13 @@ export default function ExploreToggles({
   return (
     <>
       {allToggles.map(renderToggle)}
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
       <button onClick={onResetRevealed} style={{
-        padding: "5px 10px", borderRadius: 6, border: "1px solid #1e1e2e",
-        background: "#0e0e16", color: "#777",
+        padding: "5px 10px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-muted)",
+        background: "var(--surface-base)", color: "var(--text-muted)",
         fontFamily: "var(--font-sans)", fontSize: "0.68rem", fontWeight: 500, cursor: "pointer",
+        transition: `all var(--duration-normal) var(--ease-smooth)`,
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
       }}>Reset Revealed</button>
     </>
   );

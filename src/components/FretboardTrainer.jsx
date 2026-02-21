@@ -105,6 +105,7 @@ export default function FretboardTrainer() {
   const quizTimeoutsRef = useRef([]);
   const controlsZoneRef = useRef(null);
   const maxZoneHeight = useRef(0);
+  const [modeTransitioning, setModeTransitioning] = useState(false);
 
   const [harmoniesState, setHarmoniesState] = useState({
     expanded: false,
@@ -675,6 +676,9 @@ export default function FretboardTrainer() {
     if (newMode !== MODES.TRIADS) {
       updateTriad({ autoPlay: false });
     }
+    // Trigger mode transition animation
+    setModeTransitioning(true);
+    setTimeout(() => setModeTransitioning(false), 300);
   };
 
   const handleKeyChange = (key) => {
@@ -706,22 +710,35 @@ export default function FretboardTrainer() {
 
   return (
     <div
-      className="p-3 sm:p-5"
+      className="p-3 sm:p-5 app-grain app-glow"
       style={{
         minHeight: "100vh",
         maxWidth: "100vw",
         overflowX: "hidden",
         background: "linear-gradient(170deg, #0a0a0f 0%, #12121c 40%, #0d1117 100%)",
-        color: "#c8ccd4",
+        color: "var(--text-primary)",
         fontFamily: "var(--font-mono)",
         boxSizing: "border-box",
       }}
     >
-      <div style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}>
+      <div className="stagger-children" style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto", position: "relative", zIndex: 1 }}>
         {/* Header — title + tabs, no interactive controls */}
         <div className="mb-3 sm:mb-4 header-bar">
           {/* Title row */}
-          <div className="text-center sm:text-left" style={{ marginBottom: 8 }}>
+          <div className="text-center sm:text-left" style={{ marginBottom: 8, position: "relative" }}>
+            {/* Decorative glow behind title */}
+            <div style={{
+              position: "absolute",
+              top: "50%",
+              left: "clamp(60px, 15%, 140px)",
+              width: 120,
+              height: 40,
+              background: "radial-gradient(ellipse, rgba(232,78,60,0.15) 0%, rgba(240,200,50,0.08) 50%, transparent 100%)",
+              filter: "blur(20px)",
+              transform: "translateY(-50%)",
+              pointerEvents: "none",
+              zIndex: 0,
+            }} />
             <h1 style={{
               fontFamily: "var(--font-sans)",
               fontSize: "clamp(1.4rem, 3vw, 2rem)",
@@ -732,18 +749,22 @@ export default function FretboardTrainer() {
               margin: "0 0 4px",
               letterSpacing: "-0.02em",
               whiteSpace: "nowrap",
+              position: "relative",
+              zIndex: 1,
             }}>
               Fretboard Navigator
             </h1>
             <p className="hidden sm:block" style={{
               fontFamily: "var(--font-sans)",
               fontSize: "0.8rem",
-              color: "#555a68",
+              color: "var(--text-dim)",
               fontWeight: 400,
               margin: 0,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
               whiteSpace: "nowrap",
+              position: "relative",
+              zIndex: 1,
             }}>
               Diatonic Note Memorization Trainer
             </p>
@@ -756,7 +777,7 @@ export default function FretboardTrainer() {
         </div>
 
         {/* Sub Controls + Quiz Prompts — stable height zone */}
-        <div ref={controlsZoneRef} className="controls-zone">
+        <div ref={controlsZoneRef} className={`controls-zone${modeTransitioning ? " mode-transitioning" : ""}`}>
         <ControlsDrawer
           alwaysVisible={<>
             {/* Key & Region selectors — shown for modes that use them */}

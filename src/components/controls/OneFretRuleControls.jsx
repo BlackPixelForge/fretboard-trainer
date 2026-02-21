@@ -13,7 +13,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
         padding: "7px 14px",
         background: "rgba(212,160,23,0.12)",
         border: "1px solid rgba(212,160,23,0.3)",
-        borderRadius: 8,
+        borderRadius: "var(--radius-md)",
         fontFamily: "var(--font-sans)",
         fontSize: "0.75rem",
         fontWeight: 600,
@@ -21,8 +21,8 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
       }}>
         {getNoteName(rootNote)} Major
       </span>
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Fret:</span>
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
+      <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}>Fret:</span>
 
       {/* Mobile: select dropdown */}
       <select
@@ -31,7 +31,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
         onChange={(e) => updateOneFretRule({ positionFret: Number(e.target.value) })}
         style={{
           padding: "6px 10px",
-          borderRadius: 8,
+          borderRadius: "var(--radius-md)",
           border: "1px solid #d4a01766",
           background: "rgba(212,160,23,0.12)",
           color: "#f0d060",
@@ -57,10 +57,10 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
               style={{
                 minWidth: 28,
                 height: 26,
-                borderRadius: 6,
-                border: `1px solid ${active ? "#d4a01766" : "#1e1e2e"}`,
-                background: active ? "rgba(212,160,23,0.22)" : "#0e0e16",
-                color: active ? "#f0d060" : "#777",
+                borderRadius: "var(--radius-sm)",
+                border: `1px solid ${active ? "rgba(212,160,23,0.35)" : "var(--border-muted)"}`,
+                background: active ? "rgba(212,160,23,0.22)" : "var(--surface-base)",
+                color: active ? "#f0d060" : "var(--text-muted)",
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.6rem",
                 fontWeight: 700,
@@ -69,7 +69,10 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "0 2px",
-                transition: "all 0.2s",
+                transition: `all var(--duration-normal) var(--ease-smooth)`,
+                boxShadow: active
+                  ? "0 0 12px rgba(212,160,23,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+                  : "inset 0 1px 0 rgba(255,255,255,0.02)",
               }}
             >
               {fret}
@@ -82,7 +85,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
 
   const formCards = (
     <>
-      <span style={{ fontSize: "0.6rem", color: "#777", fontFamily: "var(--font-sans)" }}>Form / Key:</span>
+      <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}>Form / Key:</span>
 
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center", flexWrap: "wrap" }}>
         {oneFretRuleInfo.map((info, i) => {
@@ -95,10 +98,10 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
               style={{
                 minWidth: 60,
                 height: 28,
-                borderRadius: 6,
-                border: `1px solid ${active ? "#e84e3c66" : "#1e1e2e"}`,
-                background: active ? "rgba(232,78,60,0.22)" : "#0e0e16",
-                color: active ? "#ffa09a" : "#777",
+                borderRadius: "var(--radius-sm)",
+                border: `1px solid ${active ? "rgba(232,78,60,0.35)" : "var(--border-muted)"}`,
+                background: active ? "var(--accent-red-glow)" : "var(--surface-base)",
+                color: active ? "var(--accent-red-text)" : "var(--text-muted)",
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.55rem",
                 fontWeight: 700,
@@ -108,7 +111,10 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
                 justifyContent: "center",
                 padding: "0 6px",
                 gap: 4,
-                transition: "all 0.2s",
+                transition: `all var(--duration-normal) var(--ease-smooth)`,
+                boxShadow: active
+                  ? "0 0 12px rgba(232,78,60,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+                  : "inset 0 1px 0 rgba(255,255,255,0.02)",
               }}
             >
               <span>{info.formName}</span>
@@ -118,7 +124,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
         })}
       </span>
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       {/* Prev/Next step buttons */}
       <button
@@ -129,14 +135,15 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
         title="Previous form (← arrow key)"
         style={{
           padding: "5px 8px",
-          borderRadius: 6,
-          border: "1px solid #1e1e2e",
-          background: "#0e0e16",
-          color: "#888",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid var(--border-muted)",
+          background: "var(--surface-base)",
+          color: "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {"<"}
@@ -149,14 +156,15 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
         title="Next form (→ arrow key)"
         style={{
           padding: "5px 8px",
-          borderRadius: 6,
-          border: "1px solid #1e1e2e",
-          background: "#0e0e16",
-          color: "#888",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid var(--border-muted)",
+          background: "var(--surface-base)",
+          color: "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         {">"}
@@ -165,31 +173,34 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
       {/* Root fret info */}
       <span style={{
         fontSize: "0.6rem",
-        color: "#999",
+        color: "var(--text-secondary)",
         fontFamily: "var(--font-sans)",
         padding: "4px 8px",
         background: "rgba(232,78,60,0.08)",
         border: "1px solid rgba(232,78,60,0.15)",
-        borderRadius: 6,
+        borderRadius: "var(--radius-sm)",
       }}>
         Root: str {currentInfo.rootGuitarString}, fret {currentInfo.rootFret}
       </span>
 
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <button
         onClick={() => updateOneFretRule({ showChordTones: !showChordTones })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showChordTones ? "#f0c83266" : "#1e1e2e"}`,
-          background: showChordTones ? "rgba(240,200,50,0.18)" : "#0e0e16",
-          color: showChordTones ? "#f0d060" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${showChordTones ? "rgba(240,200,50,0.35)" : "var(--border-muted)"}`,
+          background: showChordTones ? "var(--accent-gold-glow)" : "var(--surface-base)",
+          color: showChordTones ? "#f0d060" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: showChordTones
+            ? "0 0 12px rgba(240,200,50,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         Chord
@@ -198,15 +209,18 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
         onClick={() => updateOneFretRule({ showNoteNames: !showNoteNames, showFingering: false })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showNoteNames ? "#3ca0dc66" : "#1e1e2e"}`,
-          background: showNoteNames ? "rgba(60,160,220,0.18)" : "#0e0e16",
-          color: showNoteNames ? "#78c8f0" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${showNoteNames ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+          background: showNoteNames ? "var(--accent-blue-glow)" : "var(--surface-base)",
+          color: showNoteNames ? "var(--accent-blue-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: showNoteNames
+            ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         Notes
@@ -215,15 +229,18 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
         onClick={() => updateOneFretRule({ showFingering: !showFingering, showNoteNames: false })}
         style={{
           padding: "5px 10px",
-          borderRadius: 6,
-          border: `1px solid ${showFingering ? "#3ca0dc66" : "#1e1e2e"}`,
-          background: showFingering ? "rgba(60,160,220,0.18)" : "#0e0e16",
-          color: showFingering ? "#78c8f0" : "#777",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${showFingering ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+          background: showFingering ? "var(--accent-blue-glow)" : "var(--surface-base)",
+          color: showFingering ? "var(--accent-blue-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
           cursor: "pointer",
-          transition: "all 0.2s",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: showFingering
+            ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
         Fingering
@@ -237,7 +254,7 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
   return (
     <>
       {fretSelector}
-      <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
       {formCards}
     </>
   );

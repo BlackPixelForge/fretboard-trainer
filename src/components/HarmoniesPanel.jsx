@@ -90,17 +90,18 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
           style={{
             width: "100%",
             padding: "10px 16px",
-            background: "#0e0e16",
-            border: "1px solid #1a1a28",
-            borderRadius: 8,
-            color: "#c8ccd4",
+            background: "linear-gradient(135deg, #10101a, var(--surface-base))",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: "var(--radius-md)",
+            color: "var(--text-primary)",
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
             gap: 8,
             fontFamily: "var(--font-sans)",
             fontSize: "0.85rem",
-            transition: "border-color 0.2s",
+            transition: `border-color var(--duration-normal) var(--ease-smooth)`,
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
           }}
         >
           <span style={{ color: "#8a8fa6", fontSize: "0.75rem" }}>▶</span>
@@ -115,11 +116,12 @@ export default function HarmoniesPanel({ mode, triadState, harmoniesState, onTog
   return (
     <div style={{
       marginTop: 12,
-      background: "#0e0e16",
-      border: "1px solid #1a1a28",
-      borderRadius: 8,
+      background: "linear-gradient(180deg, #10101a, var(--surface-base))",
+      border: "1px solid var(--border-subtle)",
+      borderRadius: "var(--radius-md)",
       overflow: "hidden",
-      animation: "slideDown 0.2s ease",
+      animation: "slideDown 300ms var(--ease-out-expo)",
+      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.2)",
     }}>
       {/* Header */}
       <div style={{
