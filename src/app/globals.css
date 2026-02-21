@@ -163,6 +163,12 @@ select:focus {
   100% { transform: scale(1); }
 }
 
+@keyframes positionTransitionDiamond {
+  0% { opacity: 0; transform: scale(0.6) rotate(45deg); }
+  60% { opacity: 1; transform: scale(1.08) rotate(45deg); }
+  100% { transform: scale(1) rotate(45deg); }
+}
+
 @keyframes shapePulse {
   0%, 100% { opacity: 0.85; }
   50% { opacity: 1; }

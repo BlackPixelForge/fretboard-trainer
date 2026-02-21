@@ -20,7 +20,9 @@ export default function CAGEDDot({ letter, isChordTone, type, degree }) {
       boxShadow: isChordTone && type === "R"
         ? `0 0 10px ${colors.bg}`
         : isChordTone ? "none" : "inset 0 0 4px rgba(180,180,180,0.08)",
-      animation: isChordTone ? "positionTransition 300ms var(--ease-out-expo)" : "positionTransition 350ms var(--ease-out-expo)",
+      animation: type === "R"
+        ? "positionTransitionDiamond 300ms var(--ease-out-expo)"
+        : isChordTone ? "positionTransition 300ms var(--ease-out-expo)" : "positionTransition 350ms var(--ease-out-expo)",
       transform: type === "R" ? "rotate(45deg)" : "none",
     }}>
       <span style={{
