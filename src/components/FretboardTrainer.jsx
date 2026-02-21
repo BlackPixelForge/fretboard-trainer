@@ -470,6 +470,42 @@ export default function FretboardTrainer() {
     }
   }, [intervalState.quizMode, mode, generateIntervalQuizNote]); // eslint-disable-line react-hooks/exhaustive-deps -- resetScore/updateInterval are stable
 
+  // Arrow key navigation for Scale Positions
+  useEffect(() => {
+    if (mode !== MODES.SCALE_POSITIONS) return;
+    const total = FORMS.length;
+    const keyNames = Object.keys(DIATONIC_KEYS);
+    const handler = (e) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setScalePositionState(prev => ({
+          ...prev,
+          positionIndex: prev.positionIndex < total - 1 ? prev.positionIndex + 1 : 0,
+        }));
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setScalePositionState(prev => ({
+          ...prev,
+          positionIndex: prev.positionIndex > 0 ? prev.positionIndex - 1 : total - 1,
+        }));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setSelectedKey(prev => {
+          const idx = keyNames.indexOf(prev);
+          return keyNames[idx > 0 ? idx - 1 : keyNames.length - 1];
+        });
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setSelectedKey(prev => {
+          const idx = keyNames.indexOf(prev);
+          return keyNames[idx < keyNames.length - 1 ? idx + 1 : 0];
+        });
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [mode]);
+
   // Arrow key navigation for One Fret Rule form stepping
   useEffect(() => {
     if (mode !== MODES.ONE_FRET_RULE) return;
