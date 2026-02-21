@@ -1,10 +1,5 @@
-import ErrorBoundary from "../components/ErrorBoundary";
-import FretboardTrainer from "../components/FretboardTrainer";
+import LandingPage from "../components/landing/LandingPage";
 
 export default function Home() {
-  return (
-    <ErrorBoundary>
-      <FretboardTrainer />
-    </ErrorBoundary>
-  );
+  return <LandingPage />;
 }
