@@ -32,7 +32,7 @@ import Tips from "./Tips";
 import TriadExplainer from "./TriadExplainer";
 import HarmoniesPanel from "./HarmoniesPanel";
 
-export default function FretboardTrainer() {
+export default function FretboardTrainer({ embedded } = {}) {
   const [selectedKey, setSelectedKey] = useState("C Major / A Minor");
   const [mode, setMode] = useState(MODES.EXPLORE);
   const [showNaturals, setShowNaturals] = useState(true);
@@ -472,7 +472,7 @@ export default function FretboardTrainer() {
 
   // Arrow key navigation for Scale Positions
   useEffect(() => {
-    if (mode !== MODES.SCALE_POSITIONS) return;
+    if (embedded || mode !== MODES.SCALE_POSITIONS) return;
     const total = FORMS.length;
     const keyNames = Object.keys(DIATONIC_KEYS);
     const handler = (e) => {
@@ -508,7 +508,7 @@ export default function FretboardTrainer() {
 
   // Arrow key navigation for One Fret Rule form stepping
   useEffect(() => {
-    if (mode !== MODES.ONE_FRET_RULE) return;
+    if (embedded || mode !== MODES.ONE_FRET_RULE) return;
     const total = FORMS.length;
     const handler = (e) => {
       if (e.key === "ArrowRight") {
@@ -548,7 +548,7 @@ export default function FretboardTrainer() {
 
   // Arrow key navigation for Triads shape stepping
   useEffect(() => {
-    if (mode !== MODES.TRIADS) return;
+    if (embedded || mode !== MODES.TRIADS) return;
     const handler = (e) => {
       if (e.key === "ArrowRight") {
         e.preventDefault();
@@ -742,12 +742,12 @@ export default function FretboardTrainer() {
 
   return (
     <div
-      className="p-3 sm:p-5 app-grain app-glow"
+      className={embedded ? "p-3 sm:p-5" : "p-3 sm:p-5 app-grain app-glow"}
       style={{
-        minHeight: "100vh",
+        minHeight: embedded ? "auto" : "100vh",
         maxWidth: "100vw",
         overflowX: "hidden",
-        background: "linear-gradient(170deg, #0a0a0f 0%, #12121c 40%, #0d1117 100%)",
+        ...(!embedded && { background: "linear-gradient(170deg, #0a0a0f 0%, #12121c 40%, #0d1117 100%)" }),
         color: "var(--text-primary)",
         fontFamily: "var(--font-mono)",
         boxSizing: "border-box",
@@ -756,7 +756,8 @@ export default function FretboardTrainer() {
       <div className="stagger-children" style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto", position: "relative", zIndex: 1 }}>
         {/* Header — title + tabs, no interactive controls */}
         <div className="mb-3 sm:mb-4 header-bar">
-          {/* Title row */}
+          {/* Title row — hidden when embedded */}
+          {!embedded && (
           <div className="text-center sm:text-left" style={{ marginBottom: 8, position: "relative" }}>
             {/* Decorative glow behind title */}
             <div style={{
@@ -801,6 +802,7 @@ export default function FretboardTrainer() {
               Diatonic Note Memorization Trainer
             </p>
           </div>
+          )}
 
           {/* Mode tabs — full width, horizontally scrollable on mobile */}
           <div style={{ display: "flex", justifyContent: "center", maxWidth: "100%", overflow: "hidden" }}>
@@ -812,15 +814,15 @@ export default function FretboardTrainer() {
         <div ref={controlsZoneRef} className="controls-zone">
         <ControlsDrawer
           alwaysVisible={<>
-            {/* Key & Region selectors — shown for modes that use them */}
-            {!isOneFretRule && !isTriads && mode !== MODES.CAGED && (
+            {/* Key & Region selectors — shown for modes that use them, hidden when embedded */}
+            {!embedded && !isOneFretRule && !isTriads && mode !== MODES.CAGED && (
               <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
             )}
-            {(mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND || mode === MODES.QUIZ_IDENTIFY || mode === MODES.INTERVALS) && (
+            {!embedded && (mode === MODES.EXPLORE || mode === MODES.QUIZ_FIND || mode === MODES.QUIZ_IDENTIFY || mode === MODES.INTERVALS) && (
               <RegionSelector selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
             )}
             {/* Divider after selectors when both selectors and mode controls present */}
-            {(mode === MODES.EXPLORE || mode === MODES.INTERVALS || mode === MODES.SCALE_POSITIONS) && (
+            {!embedded && (mode === MODES.EXPLORE || mode === MODES.INTERVALS || mode === MODES.SCALE_POSITIONS) && (
               <span style={{ width: 1, height: 20, background: "#1e1e2e", margin: "0 4px" }} />
             )}
             {mode === MODES.EXPLORE && (

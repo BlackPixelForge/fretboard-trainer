@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Hero from "./Hero";
 import FeatureGrid from "./FeatureGrid";
-import ModeShowcase from "./ModeShowcase";
+import DemoSection from "./DemoSection";
 import Footer from "./Footer";
 
 export default function LandingPage() {
@@ -34,7 +34,7 @@ export default function LandingPage() {
       <div style={{ position: "relative", zIndex: 1 }}>
         <Hero />
         <FeatureGrid />
-        <ModeShowcase />
+        <DemoSection />
 
         {/* Closing CTA */}
         <section style={{
