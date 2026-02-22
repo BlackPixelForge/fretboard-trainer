@@ -17,7 +17,7 @@ const QUIZ_MODES = [
 const LEARN_GRADIENT = "linear-gradient(135deg, #e84e3c, #c83828)";
 const QUIZ_GRADIENT = "linear-gradient(135deg, #ffc832, #e6a03c)";
 
-export default function ModeSelector({ mode, onModeChange }) {
+export default function ModeSelector({ mode, onModeChange, embedded }) {
   const renderTab = (m, gradient) => {
     const active = mode === m.key;
     return (
@@ -61,16 +61,18 @@ export default function ModeSelector({ mode, onModeChange }) {
     >
       {LEARN_MODES.map(m => renderTab(m, LEARN_GRADIENT))}
 
-      {/* Divider between Learn and Quiz */}
-      <span style={{
-        width: 1,
-        height: 20,
-        background: "linear-gradient(180deg, transparent, var(--border-visible), transparent)",
-        margin: "0 6px",
-        flexShrink: 0,
-      }} />
+      {/* Divider between Learn and Quiz — hidden when embedded */}
+      {!embedded && (
+        <span style={{
+          width: 1,
+          height: 20,
+          background: "linear-gradient(180deg, transparent, var(--border-visible), transparent)",
+          margin: "0 6px",
+          flexShrink: 0,
+        }} />
+      )}
 
-      {QUIZ_MODES.map(m => renderTab(m, QUIZ_GRADIENT))}
+      {!embedded && QUIZ_MODES.map(m => renderTab(m, QUIZ_GRADIENT))}
     </div>
   );
 }

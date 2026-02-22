@@ -806,7 +806,7 @@ export default function FretboardTrainer({ embedded } = {}) {
 
           {/* Mode tabs — full width, horizontally scrollable on mobile */}
           <div style={{ display: "flex", justifyContent: "center", maxWidth: "100%", overflow: "hidden" }}>
-            <ModeSelector mode={mode} onModeChange={handleModeChange} />
+            <ModeSelector mode={mode} onModeChange={handleModeChange} embedded={embedded} />
           </div>
         </div>
 
@@ -994,6 +994,7 @@ export default function FretboardTrainer({ embedded } = {}) {
           intervalState={intervalState}
           identifyState={identifyState}
           scrollRef={fretboardScrollRef}
+          embedded={embedded}
         />
 
         {/* Legend */}

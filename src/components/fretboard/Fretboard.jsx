@@ -8,7 +8,7 @@ export default function Fretboard({
   keyNotes, rootNote, mode, selectedRegion, region,
   highlightRoot, showDegrees, quizNote, selectedAnswer, isNoteVisible, onToggleReveal, hideAll,
   getNoteDisplayData, scalePositionState, cagedState, intervalState, identifyState,
-  scrollRef,
+  scrollRef, embedded,
 }) {
   const [scrolledEnd, setScrolledEnd] = useState(false);
 
@@ -73,6 +73,27 @@ export default function Fretboard({
             <FretMarkers />
           </div>
         </div>
+
+        {/* Blur overlay for embedded demo — obscures frets beyond 5 */}
+        {embedded && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              right: 0,
+              left: 0,
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+              background: "linear-gradient(to right, transparent 26%, rgba(10,10,15,0.7) 36%)",
+              maskImage: "linear-gradient(to right, transparent 24%, black 34%)",
+              WebkitMaskImage: "linear-gradient(to right, transparent 24%, black 34%)",
+              pointerEvents: "none",
+              zIndex: 2,
+              borderRadius: "var(--radius-xl)",
+            }}
+          />
+        )}
       </div>
     </div>
   );

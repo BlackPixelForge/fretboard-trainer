@@ -75,7 +75,7 @@ export default function DemoSection() {
           color: "var(--text-secondary)",
           margin: 0,
         }}>
-          All 8 modes, live. Tap around — this is the real thing.
+          Preview the first 5 frets across 6 learning modes.
         </p>
       </div>
 
@@ -127,7 +127,7 @@ export default function DemoSection() {
           color: "var(--text-dim)",
           margin: "0 0 20px",
         }}>
-          C major only — full app has all keys, regions & more
+          Full app unlocks all 19 frets, quizzes, every key & more
         </p>
 
         <Link href="/app" style={{ textDecoration: "none" }}>
