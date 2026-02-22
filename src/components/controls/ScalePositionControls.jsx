@@ -1,6 +1,6 @@
 import { FORMS, getPositionLabel } from "../lib/scales";
 
-export default function ScalePositionControls({ scalePositionState, updateScalePosition, renderSection, embedded }) {
+export default function ScalePositionControls({ scalePositionState, updateScalePosition, embedded }) {
   const { positionIndex, showFingering, showNoteNames } = scalePositionState;
   const total = FORMS.length;
 
@@ -140,9 +140,6 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
       </button>
     </>
   );
-
-  if (renderSection === "primary") return positionButtons;
-  if (renderSection === "secondary") return toggleButtons;
 
   return (
     <>

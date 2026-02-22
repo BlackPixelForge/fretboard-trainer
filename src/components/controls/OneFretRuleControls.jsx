@@ -3,7 +3,7 @@ import { getNoteName } from "../lib/music";
 
 const EMBEDDED_FORMS_ALLOWED = new Set([0, 1]);
 
-export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo, rootNote, renderSection, embedded }) {
+export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo, rootNote, embedded }) {
   const { positionFret, selectedFormIndex, showFingering, showNoteNames, showChordTones } = oneFretRuleState;
   const total = FORMS.length;
   const currentInfo = oneFretRuleInfo[selectedFormIndex];
@@ -260,9 +260,6 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
       </button>
     </>
   );
-
-  if (renderSection === "primary") return fretSelector;
-  if (renderSection === "secondary") return formCards;
 
   return (
     <>

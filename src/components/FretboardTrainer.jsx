@@ -20,7 +20,6 @@ import ScalePositionControls from "./controls/ScalePositionControls";
 import CAGEDControls from "./controls/CAGEDControls";
 import OneFretRuleControls from "./controls/OneFretRuleControls";
 import TriadControls from "./controls/TriadControls";
-import ControlsDrawer from "./controls/ControlsDrawer";
 import QuizPrompt from "./quiz/QuizPrompt";
 import QuizFeedback from "./quiz/QuizFeedback";
 import AnswerBubbles from "./quiz/AnswerBubbles";
@@ -812,8 +811,7 @@ export default function FretboardTrainer({ embedded } = {}) {
 
         {/* Sub Controls + Quiz Prompts — stable height zone */}
         <div ref={controlsZoneRef} className="controls-zone">
-        <ControlsDrawer
-          alwaysVisible={<>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
             {/* Key & Region selectors — shown for modes that use them, hidden when embedded */}
             {!embedded && !isOneFretRule && !isTriads && mode !== MODES.CAGED && (
               <KeySelector selectedKey={selectedKey} onKeyChange={handleKeyChange} />
@@ -833,17 +831,16 @@ export default function FretboardTrainer({ embedded } = {}) {
                 highlightRoot={highlightRoot} setHighlightRoot={setHighlightRoot}
                 hideAll={hideAll} setHideAll={setHideAll}
                 onResetRevealed={() => setRevealedNotes(new Set())}
-                renderSection="primary"
               />
             )}
             {mode === MODES.INTERVALS && (
-              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} renderSection="primary" embedded={embedded} />
+              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} embedded={embedded} />
             )}
             {mode === MODES.SCALE_POSITIONS && (
-              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} renderSection="primary" embedded={embedded} />
+              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} embedded={embedded} />
             )}
             {mode === MODES.CAGED && (
-              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} renderSection="primary" embedded={embedded} />
+              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} embedded={embedded} />
             )}
             {mode === MODES.ONE_FRET_RULE && (
               <OneFretRuleControls
@@ -851,53 +848,16 @@ export default function FretboardTrainer({ embedded } = {}) {
                 updateOneFretRule={updateOneFretRule}
                 oneFretRuleInfo={oneFretRuleInfo}
                 rootNote={rootNote}
-                renderSection="primary"
                 embedded={embedded}
               />
             )}
             {mode === MODES.TRIADS && (
-              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="primary" embedded={embedded} />
-            )}
-          </>}
-          drawerContent={<>
-            {mode === MODES.EXPLORE && (
-              <ExploreToggles
-                showNaturals={showNaturals} setShowNaturals={setShowNaturals}
-                showSharps={showSharps} setShowSharps={setShowSharps}
-                showDegrees={showDegrees} setShowDegrees={setShowDegrees}
-                highlightRoot={highlightRoot} setHighlightRoot={setHighlightRoot}
-                hideAll={hideAll} setHideAll={setHideAll}
-                onResetRevealed={() => setRevealedNotes(new Set())}
-                renderSection="secondary"
-              />
-            )}
-            {mode === MODES.INTERVALS && (
-              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} renderSection="secondary" embedded={embedded} />
-            )}
-            {mode === MODES.SCALE_POSITIONS && (
-              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} renderSection="secondary" embedded={embedded} />
-            )}
-            {mode === MODES.CAGED && (
-              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} renderSection="secondary" embedded={embedded} />
-            )}
-            {mode === MODES.ONE_FRET_RULE && (
-              <OneFretRuleControls
-                oneFretRuleState={oneFretRuleState}
-                updateOneFretRule={updateOneFretRule}
-                oneFretRuleInfo={oneFretRuleInfo}
-                rootNote={rootNote}
-                renderSection="secondary"
-                embedded={embedded}
-              />
-            )}
-            {mode === MODES.TRIADS && (
-              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="secondary" embedded={embedded} />
+              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} embedded={embedded} />
             )}
             {mode === MODES.CAGED && (
               <KeyButtons rootNote={cagedState.rootNote} onRootChange={(r) => updateCAGED({ rootNote: r })} />
             )}
-          </>}
-        />
+        </div>
 
         {/* Quiz Prompt — Find Note batch mode */}
         {mode === MODES.QUIZ_IDENTIFY && (

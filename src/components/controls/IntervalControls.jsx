@@ -4,7 +4,7 @@ const DEGREES = [1, 2, 3, 4, 5, 6, 7];
 
 const EMBEDDED_INTERVALS_ALLOWED = new Set([1, 5]);
 
-export default function IntervalControls({ intervalState, updateInterval, renderSection, embedded }) {
+export default function IntervalControls({ intervalState, updateInterval, embedded }) {
   const { showIntervals, intervalFilter, quizMode } = intervalState;
 
   const primaryControls = (
@@ -105,9 +105,6 @@ export default function IntervalControls({ intervalState, updateInterval, render
       })}
     </>
   );
-
-  if (renderSection === "primary") return primaryControls;
-  if (renderSection === "secondary") return degreeFilters;
 
   return (
     <>

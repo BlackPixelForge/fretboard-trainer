@@ -1,7 +1,7 @@
 import { NOTES } from "../lib/music";
 import { INVERSIONS, INVERSION_LABELS, TRIAD_SHAPES, getTriadLabel } from "../lib/triads";
 
-export default function TriadControls({ triadState, updateTriad, onRootChange, renderSection, embedded }) {
+export default function TriadControls({ triadState, updateTriad, onRootChange, embedded }) {
   const { rootNote, inversionIndex, shapeIndex, showFingering, showNoteNames, autoPlay, autoPlaySpeed } = triadState;
   const inversionKey = INVERSIONS[inversionIndex];
   const total = TRIAD_SHAPES[inversionKey].length;
@@ -216,9 +216,6 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
       </span>
     </>
   );
-
-  if (renderSection === "primary") return primaryControls;
-  if (renderSection === "secondary") return secondaryControls;
 
   return (
     <>

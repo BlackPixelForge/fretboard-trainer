@@ -5,7 +5,7 @@ const CAGED_POSITIONS = { C: "5(4)", A: "5(1)", G: "6(4)", E: "6(1)", D: "4(1)" 
 
 const EMBEDDED_CAGED_ALLOWED = new Set(["C", "A"]);
 
-export default function CAGEDControls({ cagedState, updateCAGED, renderSection, embedded }) {
+export default function CAGEDControls({ cagedState, updateCAGED, embedded }) {
   const { selectedShape, showScaleTones } = cagedState;
 
   const shapeButtons = (
@@ -105,9 +105,6 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection, 
       Scale Tones
     </button>
   );
-
-  if (renderSection === "primary") return shapeButtons;
-  if (renderSection === "secondary") return scaleToneToggle;
 
   return (
     <>
