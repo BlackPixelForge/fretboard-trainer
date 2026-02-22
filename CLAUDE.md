@@ -27,7 +27,9 @@ Supports 8 diatonic keys, 6 fret regions, per-string filtering, streak tracking,
 
 ## Architecture
 
-One `"use client"` boundary at `FretboardTrainer.jsx` — the entire app is interactive. No server components below `page.js`.
+Two routes: `/` serves a marketing landing page (`LandingPage.jsx`), `/app` serves the full trainer (`FretboardTrainer.jsx`). One `"use client"` boundary at `FretboardTrainer.jsx` — the entire app is interactive. No server components below `page.js`.
+
+The landing page embeds a restricted live demo of the trainer via `<FretboardTrainer embedded />`. The `embedded` prop (defaults to `undefined`/falsy) gates all demo restrictions — the `/app` route passes no props, so all existing behavior is unchanged. See "Embedded Demo Mode" below.
 
 Dynamic styles (computed colors per scale degree, quiz state indicators) use inline `style` props. Global animations (fadeIn, pulseGlow, rootPulse, slideDown, positionTransition, shapePulse) are defined as `@keyframes` in `globals.css`.
 
@@ -40,13 +42,23 @@ src/
 ├── app/
 │   ├── globals.css              # Tailwind directives + Google Fonts + @keyframes
 │   ├── layout.js                # Root layout with metadata
-│   └── page.js                  # Imports <FretboardTrainer />
+│   ├── page.js                  # Landing page at / (imports LandingPage)
+│   └── app/
+│       └── page.js              # Full trainer at /app (imports FretboardTrainer)
 └── components/
     ├── FretboardTrainer.jsx     # State orchestrator ("use client"), all hooks & handlers
+    │                            # Accepts optional `embedded` prop for restricted demo mode
     ├── Legend.jsx               # Mode-specific color/shape legends
     ├── Tips.jsx                 # Mode-specific instructions
     ├── TriadExplainer.jsx       # Collapsible triad theory panel (quality, inversions, string sets)
     ├── HarmoniesPanel.jsx       # Collapsible scale harmonies panel (I-ii-iii-IV-V-vi-vii°)
+    ├── landing/
+    │   ├── LandingPage.jsx      # Marketing landing page at /
+    │   ├── Hero.jsx             # Hero section with animated fretboard visual
+    │   ├── FeatureGrid.jsx      # 8-card feature overview grid
+    │   ├── FretboardVisual.jsx  # Decorative SVG-like fretboard (used by Hero)
+    │   ├── DemoSection.jsx      # Live embedded demo — lazy-loads FretboardTrainer with embedded prop
+    │   └── Footer.jsx           # Site footer
     ├── controls/
     │   ├── ModeSelector.jsx     # Grouped two-row mode tabs (Learn + Quiz)
     │   ├── KeySelector.jsx      # Dropdown: 8 diatonic keys
@@ -121,6 +133,30 @@ npm run dev    # Start dev server (localhost:3000)
 npm run build  # Production build
 npm run start  # Serve production build
 ```
+
+## Embedded Demo Mode
+
+`FretboardTrainer` accepts an optional `embedded` prop. When truthy, the component runs in a restricted demo mode designed for the landing page. All restrictions are gated behind `if (embedded)` checks — the `/app` route renders `<FretboardTrainer />` with no props, so none of these conditions activate.
+
+**Layout changes (when `embedded`):**
+- Outer wrapper skips `app-grain` / `app-glow` classes and `minHeight: 100vh` (landing page provides its own)
+- Title row hidden (mode tabs remain)
+- Keyboard listeners disabled (Scale Positions, One Fret Rule, Triads arrow keys)
+- `KeySelector`, `RegionSelector`, and their divider hidden — key locked to C major
+
+**Per-mode control restrictions (when `embedded`):**
+| Mode | Allowed | Locked (35% opacity, `cursor: not-allowed`) |
+|------|---------|----------------------------------------------|
+| Scale Positions | 6(1) only | All other positions; prev/next arrows hidden |
+| CAGED | C and A shapes | "All" button hidden; G, E, D dimmed |
+| Intervals | R and 5 filters | All other degree filters; quiz toggle hidden |
+| 1-Fret Rule | 6(1) and 6(2) on fret 5 | All other forms; fret selector hidden; prev/next hidden |
+| Triads | Root position, root C | Root dropdown disabled; 1st/2nd inversions dimmed; shape stepping works |
+| Name Note / Find Note | — | Hidden from ModeSelector entirely |
+
+**Implementation pattern:** Each control component accepts an `embedded` prop. Locked buttons have their `onClick` gated (`!locked && handler()`), plus visual disabled styling. Initial state overrides (e.g. `cagedState.selectedShape: "C"`, `intervalFilter: {1, 5}`) are set in `useState` calls.
+
+`DemoSection.jsx` lazy-loads `FretboardTrainer` via `next/dynamic` with `ssr: false` to keep the landing page bundle small.
 
 ## Extension Points (no architectural changes needed)
 
