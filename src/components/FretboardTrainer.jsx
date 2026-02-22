@@ -59,14 +59,14 @@ export default function FretboardTrainer({ embedded } = {}) {
   });
 
   const [cagedState, setCagedState] = useState({
-    selectedShape: "all",
+    selectedShape: embedded ? "C" : "all",
     showScaleTones: true,
     rootNote: 0,
   });
 
   const [intervalState, setIntervalState] = useState({
     showIntervals: true,
-    intervalFilter: new Set([1, 2, 3, 4, 5, 6, 7]),
+    intervalFilter: embedded ? new Set([1, 5]) : new Set([1, 2, 3, 4, 5, 6, 7]),
     quizMode: false,
     quizNote: null,
     quizFeedback: null,
@@ -837,13 +837,13 @@ export default function FretboardTrainer({ embedded } = {}) {
               />
             )}
             {mode === MODES.INTERVALS && (
-              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} renderSection="primary" />
+              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} renderSection="primary" embedded={embedded} />
             )}
             {mode === MODES.SCALE_POSITIONS && (
-              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} renderSection="primary" />
+              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} renderSection="primary" embedded={embedded} />
             )}
             {mode === MODES.CAGED && (
-              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} renderSection="primary" />
+              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} renderSection="primary" embedded={embedded} />
             )}
             {mode === MODES.ONE_FRET_RULE && (
               <OneFretRuleControls
@@ -852,10 +852,11 @@ export default function FretboardTrainer({ embedded } = {}) {
                 oneFretRuleInfo={oneFretRuleInfo}
                 rootNote={rootNote}
                 renderSection="primary"
+                embedded={embedded}
               />
             )}
             {mode === MODES.TRIADS && (
-              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="primary" />
+              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="primary" embedded={embedded} />
             )}
           </>}
           drawerContent={<>
@@ -871,13 +872,13 @@ export default function FretboardTrainer({ embedded } = {}) {
               />
             )}
             {mode === MODES.INTERVALS && (
-              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} renderSection="secondary" />
+              <IntervalControls intervalState={intervalState} updateInterval={updateInterval} renderSection="secondary" embedded={embedded} />
             )}
             {mode === MODES.SCALE_POSITIONS && (
-              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} renderSection="secondary" />
+              <ScalePositionControls scalePositionState={scalePositionState} updateScalePosition={updateScalePosition} renderSection="secondary" embedded={embedded} />
             )}
             {mode === MODES.CAGED && (
-              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} renderSection="secondary" />
+              <CAGEDControls cagedState={cagedState} updateCAGED={updateCAGED} renderSection="secondary" embedded={embedded} />
             )}
             {mode === MODES.ONE_FRET_RULE && (
               <OneFretRuleControls
@@ -886,10 +887,11 @@ export default function FretboardTrainer({ embedded } = {}) {
                 oneFretRuleInfo={oneFretRuleInfo}
                 rootNote={rootNote}
                 renderSection="secondary"
+                embedded={embedded}
               />
             )}
             {mode === MODES.TRIADS && (
-              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="secondary" />
+              <TriadControls triadState={triadState} updateTriad={updateTriad} onRootChange={handleTriadRootChange} renderSection="secondary" embedded={embedded} />
             )}
             {mode === MODES.CAGED && (
               <KeyButtons rootNote={cagedState.rootNote} onRootChange={(r) => updateCAGED({ rootNote: r })} />
@@ -994,7 +996,6 @@ export default function FretboardTrainer({ embedded } = {}) {
           intervalState={intervalState}
           identifyState={identifyState}
           scrollRef={fretboardScrollRef}
-          embedded={embedded}
         />
 
         {/* Legend */}

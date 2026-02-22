@@ -1,7 +1,9 @@
 import { FORMS } from "../lib/scales";
 import { getNoteName } from "../lib/music";
 
-export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo, rootNote, renderSection }) {
+const EMBEDDED_FORMS_ALLOWED = new Set([0, 1]);
+
+export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRule, oneFretRuleInfo, rootNote, renderSection, embedded }) {
   const { positionFret, selectedFormIndex, showFingering, showNoteNames, showChordTones } = oneFretRuleState;
   const total = FORMS.length;
   const currentInfo = oneFretRuleInfo[selectedFormIndex];
@@ -21,6 +23,9 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
       }}>
         {getNoteName(rootNote)} Major
       </span>
+
+      {!embedded && (
+      <>
       <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
       <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}>Fret:</span>
 
@@ -80,6 +85,8 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
           );
         })}
       </span>
+      </>
+      )}
     </>
   );
 
@@ -90,10 +97,11 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center", flexWrap: "wrap" }}>
         {oneFretRuleInfo.map((info, i) => {
           const active = selectedFormIndex === i;
+          const locked = embedded && !EMBEDDED_FORMS_ALLOWED.has(i);
           return (
             <button
               key={i}
-              onClick={() => updateOneFretRule({ selectedFormIndex: i })}
+              onClick={() => !locked && updateOneFretRule({ selectedFormIndex: i })}
               title={`${info.formName} — ${info.rootNoteName} Major — root on string ${info.rootGuitarString}, fret ${info.rootFret}`}
               style={{
                 minWidth: 60,
@@ -105,13 +113,14 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.55rem",
                 fontWeight: 700,
-                cursor: "pointer",
+                cursor: locked ? "not-allowed" : "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "0 6px",
                 gap: 4,
                 transition: `all var(--duration-normal) var(--ease-smooth)`,
+                opacity: locked ? 0.35 : 1,
                 boxShadow: active
                   ? "0 0 12px rgba(232,78,60,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
                   : "inset 0 1px 0 rgba(255,255,255,0.02)",
@@ -124,6 +133,8 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
         })}
       </span>
 
+      {!embedded && (
+      <>
       <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       {/* Prev/Next step buttons */}
@@ -169,6 +180,8 @@ export default function OneFretRuleControls({ oneFretRuleState, updateOneFretRul
       >
         {">"}
       </button>
+      </>
+      )}
 
       {/* Root fret info */}
       <span style={{

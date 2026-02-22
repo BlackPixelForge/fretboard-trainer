@@ -2,7 +2,9 @@ import { INTERVAL_LABELS, INTERVAL_NAMES } from "../lib/intervals";
 
 const DEGREES = [1, 2, 3, 4, 5, 6, 7];
 
-export default function IntervalControls({ intervalState, updateInterval, renderSection }) {
+const EMBEDDED_INTERVALS_ALLOWED = new Set([1, 5]);
+
+export default function IntervalControls({ intervalState, updateInterval, renderSection, embedded }) {
   const { showIntervals, intervalFilter, quizMode } = intervalState;
 
   const primaryControls = (
@@ -28,6 +30,8 @@ export default function IntervalControls({ intervalState, updateInterval, render
         {showIntervals ? "Intervals" : "Note Names"}
       </button>
 
+      {!embedded && (
+      <>
       <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <button
@@ -50,6 +54,8 @@ export default function IntervalControls({ intervalState, updateInterval, render
       >
         {quizMode ? "Quiz On" : "Quiz Off"}
       </button>
+      </>
+      )}
     </>
   );
 
@@ -59,10 +65,12 @@ export default function IntervalControls({ intervalState, updateInterval, render
 
       {DEGREES.map((d) => {
         const active = intervalFilter.has(d);
+        const locked = embedded && !EMBEDDED_INTERVALS_ALLOWED.has(d);
         return (
           <button
             key={d}
             onClick={() => {
+              if (locked) return;
               const next = new Set(intervalFilter);
               if (next.has(d)) next.delete(d);
               else next.add(d);
@@ -79,12 +87,13 @@ export default function IntervalControls({ intervalState, updateInterval, render
               fontFamily: "var(--font-mono)",
               fontSize: "0.65rem",
               fontWeight: 600,
-              cursor: "pointer",
+              cursor: locked ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               padding: 0,
               transition: `all var(--duration-normal) var(--ease-smooth)`,
+              opacity: locked ? 0.35 : 1,
               boxShadow: active
                 ? "0 0 12px rgba(80,190,80,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
                 : "inset 0 1px 0 rgba(255,255,255,0.02)",

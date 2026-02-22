@@ -1,6 +1,6 @@
 import { FORMS, getPositionLabel } from "../lib/scales";
 
-export default function ScalePositionControls({ scalePositionState, updateScalePosition, renderSection }) {
+export default function ScalePositionControls({ scalePositionState, updateScalePosition, renderSection, embedded }) {
   const { positionIndex, showFingering, showNoteNames } = scalePositionState;
   const total = FORMS.length;
 
@@ -11,10 +11,11 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center" }}>
         {FORMS.map((form, i) => {
           const active = positionIndex === i;
+          const locked = embedded && i !== 0;
           return (
             <button
               key={i}
-              onClick={() => updateScalePosition({ positionIndex: i })}
+              onClick={() => !locked && updateScalePosition({ positionIndex: i })}
               title={`Position ${form.name}`}
               style={{
                 minWidth: 34,
@@ -26,12 +27,13 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.6rem",
                 fontWeight: 700,
-                cursor: "pointer",
+                cursor: locked ? "not-allowed" : "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "0 4px",
                 transition: `all var(--duration-normal) var(--ease-smooth)`,
+                opacity: locked ? 0.35 : 1,
                 boxShadow: active
                   ? "0 0 12px rgba(232,78,60,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
                   : "inset 0 1px 0 rgba(255,255,255,0.02)",
@@ -43,6 +45,8 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         })}
       </span>
 
+      {!embedded && (
+      <>
       <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <button
@@ -87,6 +91,8 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
       >
         {">"}
       </button>
+      </>
+      )}
     </>
   );
 

@@ -1,7 +1,7 @@
 import { NOTES } from "../lib/music";
 import { INVERSIONS, INVERSION_LABELS, TRIAD_SHAPES, getTriadLabel } from "../lib/triads";
 
-export default function TriadControls({ triadState, updateTriad, onRootChange, renderSection }) {
+export default function TriadControls({ triadState, updateTriad, onRootChange, renderSection, embedded }) {
   const { rootNote, inversionIndex, shapeIndex, showFingering, showNoteNames, autoPlay, autoPlaySpeed } = triadState;
   const inversionKey = INVERSIONS[inversionIndex];
   const total = TRIAD_SHAPES[inversionKey].length;
@@ -13,7 +13,8 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
 
       <select
         value={rootNote}
-        onChange={(e) => (onRootChange || ((v) => updateTriad({ rootNote: v })))(Number(e.target.value))}
+        onChange={(e) => !embedded && (onRootChange || ((v) => updateTriad({ rootNote: v })))(Number(e.target.value))}
+        disabled={embedded}
         style={{
           padding: "6px 10px",
           borderRadius: "var(--radius-md)",
@@ -22,7 +23,8 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
           color: "var(--text-primary)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
-          cursor: "pointer",
+          cursor: embedded ? "not-allowed" : "pointer",
+          opacity: embedded ? 0.5 : 1,
         }}
       >
         {NOTES.map((note, i) => (
@@ -35,10 +37,11 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center" }}>
         {INVERSIONS.map((inv, i) => {
           const active = inversionIndex === i;
+          const locked = embedded && i !== 0;
           return (
             <button
               key={inv}
-              onClick={() => updateTriad({ inversionIndex: i, shapeIndex: 0 })}
+              onClick={() => !locked && updateTriad({ inversionIndex: i, shapeIndex: 0 })}
               style={{
                 padding: "5px 10px",
                 borderRadius: "var(--radius-sm)",
@@ -48,9 +51,10 @@ export default function TriadControls({ triadState, updateTriad, onRootChange, r
                 fontFamily: "var(--font-sans)",
                 fontSize: "0.62rem",
                 fontWeight: active ? 600 : 400,
-                cursor: "pointer",
+                cursor: locked ? "not-allowed" : "pointer",
                 transition: `all var(--duration-normal) var(--ease-smooth)`,
                 whiteSpace: "nowrap",
+                opacity: locked ? 0.35 : 1,
                 boxShadow: active
                   ? "0 0 12px rgba(232,78,60,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
                   : "inset 0 1px 0 rgba(255,255,255,0.02)",

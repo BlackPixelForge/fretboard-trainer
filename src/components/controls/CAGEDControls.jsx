@@ -3,13 +3,16 @@ import { CAGED_SHAPE_COLORS } from "../lib/colors";
 
 const CAGED_POSITIONS = { C: "5(4)", A: "5(1)", G: "6(4)", E: "6(1)", D: "4(1)" };
 
-export default function CAGEDControls({ cagedState, updateCAGED, renderSection }) {
+const EMBEDDED_CAGED_ALLOWED = new Set(["C", "A"]);
+
+export default function CAGEDControls({ cagedState, updateCAGED, renderSection, embedded }) {
   const { selectedShape, showScaleTones } = cagedState;
 
   const shapeButtons = (
     <>
       <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)" }}>Shape:</span>
 
+      {!embedded && (
       <button
         onClick={() => updateCAGED({ selectedShape: "all" })}
         style={{
@@ -30,14 +33,16 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection }
       >
         All
       </button>
+      )}
 
       {CAGED_ORDER.map((letter) => {
         const active = selectedShape === letter;
         const color = CAGED_SHAPE_COLORS[letter];
+        const locked = embedded && !EMBEDDED_CAGED_ALLOWED.has(letter);
         return (
           <div key={letter} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
             <button
-              onClick={() => updateCAGED({ selectedShape: letter })}
+              onClick={() => !locked && updateCAGED({ selectedShape: letter })}
               style={{
                 width: 28,
                 height: 28,
@@ -48,12 +53,13 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection }
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.7rem",
                 fontWeight: 700,
-                cursor: "pointer",
+                cursor: locked ? "not-allowed" : "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 padding: 0,
                 transition: `all var(--duration-normal) var(--ease-smooth)`,
+                opacity: locked ? 0.35 : 1,
                 boxShadow: active
                   ? `0 0 12px ${color.bg}, inset 0 1px 0 rgba(255,255,255,0.04)`
                   : "inset 0 1px 0 rgba(255,255,255,0.02)",
@@ -67,6 +73,7 @@ export default function CAGEDControls({ cagedState, updateCAGED, renderSection }
               fontFamily: "var(--font-mono)",
               lineHeight: 1,
               transition: `all var(--duration-normal) var(--ease-smooth)`,
+              opacity: locked ? 0.35 : 1,
             }}>
               {CAGED_POSITIONS[letter]}
             </span>
