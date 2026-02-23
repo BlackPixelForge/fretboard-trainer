@@ -1,8 +1,9 @@
 import { FORMS, getPositionLabel } from "../lib/scales";
 
 export default function ScalePositionControls({ scalePositionState, updateScalePosition, embedded }) {
-  const { positionIndex, showFingering, showNoteNames } = scalePositionState;
+  const { positionIndex, showFingering, showNoteNames, diagonalPentatonic, diagonalSet } = scalePositionState;
   const total = FORMS.length;
+  const diagonalActive = diagonalPentatonic;
 
   const positionButtons = (
     <>
@@ -10,8 +11,8 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
 
       <span style={{ display: "inline-flex", gap: 3, alignItems: "center" }}>
         {FORMS.map((form, i) => {
-          const active = positionIndex === i;
-          const locked = embedded && i !== 0;
+          const active = !diagonalActive && positionIndex === i;
+          const locked = (embedded && i !== 0) || diagonalActive;
           return (
             <button
               key={i}
@@ -45,7 +46,7 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         })}
       </span>
 
-      {!embedded && (
+      {!embedded && !diagonalActive && (
       <>
       <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
@@ -141,11 +142,68 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
     </>
   );
 
+  const diagonalControls = !embedded && (
+    <>
+      <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
+      <button
+        onClick={() => updateScalePosition({ diagonalPentatonic: !diagonalPentatonic, diagonalSet: 0 })}
+        style={{
+          padding: "5px 10px",
+          borderRadius: "var(--radius-sm)",
+          border: `1px solid ${diagonalActive ? "rgba(160,100,240,0.4)" : "var(--border-muted)"}`,
+          background: diagonalActive ? "rgba(160,100,240,0.12)" : "var(--surface-base)",
+          color: diagonalActive ? "#C8A0F8" : "var(--text-muted)",
+          fontFamily: "var(--font-sans)",
+          fontSize: "0.68rem",
+          fontWeight: 500,
+          cursor: "pointer",
+          transition: `all var(--duration-normal) var(--ease-smooth)`,
+          boxShadow: diagonalActive
+            ? "0 0 12px rgba(160,100,240,0.1), inset 0 1px 0 rgba(255,255,255,0.04)"
+            : "inset 0 1px 0 rgba(255,255,255,0.02)",
+        }}
+      >
+        Diagonal
+      </button>
+      {diagonalActive && (
+        <span style={{ display: "inline-flex", gap: 3, alignItems: "center" }}>
+          {[0, 1].map((setIdx) => {
+            const active = diagonalSet === setIdx;
+            return (
+              <button
+                key={setIdx}
+                onClick={() => updateScalePosition({ diagonalSet: setIdx })}
+                style={{
+                  padding: "4px 8px",
+                  borderRadius: "var(--radius-sm)",
+                  border: `1px solid ${active ? "rgba(160,100,240,0.4)" : "var(--border-muted)"}`,
+                  background: active ? "rgba(160,100,240,0.12)" : "var(--surface-base)",
+                  color: active ? "#C8A0F8" : "var(--text-muted)",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.6rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: `all var(--duration-normal) var(--ease-smooth)`,
+                  boxShadow: active
+                    ? "0 0 8px rgba(160,100,240,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
+                    : "inset 0 1px 0 rgba(255,255,255,0.02)",
+                }}
+              >
+                Set {setIdx + 1}
+              </button>
+            );
+          })}
+        </span>
+      )}
+    </>
+  );
+
   return (
     <>
       {positionButtons}
       <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
       {toggleButtons}
+      {diagonalControls}
     </>
   );
 }

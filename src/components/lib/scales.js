@@ -1,4 +1,4 @@
-import { STRING_TUNING } from "./music";
+import { STRING_TUNING, getNoteAt } from "./music";
 import { FRET_COUNT } from "./fretboard";
 
 // Convert guitar string number (1=high E, 6=low E) to stringIndex (0=high E, 5=low E)
@@ -218,4 +218,92 @@ const MAJOR_SCALE_OFFSETS = [0, 2, 4, 5, 7, 9, 11];
 
 export function computeKeyNotes(rootNoteIndex) {
   return MAJOR_SCALE_OFFSETS.map(offset => (rootNoteIndex + offset) % 12);
+}
+
+// --- Diagonal Pentatonic ---
+
+export const PENTATONIC_DEGREES = new Set([1, 2, 3, 5, 6]);
+
+/**
+ * Compute diagonal pentatonic sets for a given key.
+ * Two fixed groups cover the fretboard using adjacent scale positions:
+ *   Group A: form indices 4 (5(2)), 2 (6(4)), optionally 1 (6(2))
+ *   Group B: form indices 0 (6(1)), 6 (4(1))
+ * Returns { sets: [set1, set2] } where set1 has lower position frets.
+ * Each set: { positions: [{ formIndex, positionGroupIndex }], extension: { ... } | null }
+ */
+export function getDiagonalPentatonicSets(rootNoteIndex, keyNotes) {
+  const posFrets = {};
+  for (const i of [0, 1, 2, 4, 6]) {
+    posFrets[i] = getPositionFret(rootNoteIndex, i);
+  }
+
+  // Check if 6(2) (index 1) fits between 6(4) and 6(1)
+  const sixTwoFits = posFrets[2] < posFrets[1] && posFrets[1] < posFrets[0];
+
+  const groupAIndices = sixTwoFits ? [4, 2, 1] : [4, 2];
+  const groupBIndices = [0, 6];
+
+  // Sort each group by ascending position fret
+  groupAIndices.sort((a, b) => posFrets[a] - posFrets[b]);
+  groupBIndices.sort((a, b) => posFrets[a] - posFrets[b]);
+
+  const buildPositions = (indices) =>
+    indices.map((formIndex, i) => ({ formIndex, positionGroupIndex: i }));
+
+  const computeExtension = (indices, targetStringIndex) => {
+    if (indices.length >= 3) return null;
+
+    const targetNoteIndex = keyNotes[2]; // degree 3
+    const minFret = Math.min(...indices.map(i => posFrets[i]));
+    const maxFret = Math.max(...indices.map(i => posFrets[i])) + 4;
+    const midFret = (minFret + maxFret) / 2;
+
+    let bestFret = null;
+    let bestDist = Infinity;
+    for (let fret = 0; fret <= FRET_COUNT; fret++) {
+      if (getNoteAt(targetStringIndex, fret) === targetNoteIndex) {
+        const dist = Math.abs(fret - midFret);
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestFret = fret;
+        }
+      }
+    }
+    if (bestFret === null) return null;
+
+    // Find nearest position for finger estimation
+    let nearestPosFret = posFrets[indices[0]];
+    let nearestDist = Infinity;
+    let nearestPGI = 0;
+    for (let i = 0; i < indices.length; i++) {
+      const d = Math.abs(bestFret - posFrets[indices[i]]);
+      if (d < nearestDist) {
+        nearestDist = d;
+        nearestPosFret = posFrets[indices[i]];
+        nearestPGI = i;
+      }
+    }
+    const finger = Math.max(1, Math.min(4, bestFret - nearestPosFret + 1));
+
+    return { stringIndex: targetStringIndex, fret: bestFret, degree: 3, positionGroupIndex: nearestPGI, finger };
+  };
+
+  const groupA = {
+    positions: buildPositions(groupAIndices),
+    extension: computeExtension(groupAIndices, 2), // G string (stringIndex 2)
+  };
+  const groupB = {
+    positions: buildPositions(groupBIndices),
+    extension: computeExtension(groupBIndices, 1), // B string (stringIndex 1)
+  };
+
+  // Set 1 = group with lower min position fret
+  const minA = Math.min(...groupAIndices.map(i => posFrets[i]));
+  const minB = Math.min(...groupBIndices.map(i => posFrets[i]));
+
+  const set1 = minA <= minB ? groupA : groupB;
+  const set2 = minA <= minB ? groupB : groupA;
+
+  return { sets: [set1, set2] };
 }

@@ -58,6 +58,7 @@ export default function FretCell({
             noteName={data.noteName}
             isRoot={data.isRoot}
             isChordTone={data.isChordTone}
+            colorOverride={data.colorOverride}
           />
         );
       })()}

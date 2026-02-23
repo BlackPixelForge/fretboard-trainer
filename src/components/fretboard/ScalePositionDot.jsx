@@ -1,7 +1,9 @@
-import { getScalePositionColor } from "../lib/colors";
+import { getScalePositionColor, getDiagonalPositionColor } from "../lib/colors";
 
-export default function ScalePositionDot({ degree, finger, showFingering, showNoteNames, noteName, isRoot, isChordTone }) {
-  const colors = getScalePositionColor(degree, isRoot);
+export default function ScalePositionDot({ degree, finger, showFingering, showNoteNames, noteName, isRoot, isChordTone, colorOverride }) {
+  const colors = colorOverride
+    ? getDiagonalPositionColor(colorOverride.positionGroupIndex, colorOverride.isPentatonic, isRoot)
+    : getScalePositionColor(degree, isRoot);
   const label = showFingering ? String(finger) : showNoteNames ? noteName : String(degree);
   // When isChordTone is defined (chord toggle active), non-chord-tones get faded/dashed treatment
   const faded = isChordTone === false;

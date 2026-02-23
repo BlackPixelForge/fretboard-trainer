@@ -1,6 +1,6 @@
 import { MODES } from "./lib/fretboard";
 import { SCALE_DEGREES, getNoteName } from "./lib/music";
-import { getNoteColor, CAGED_SHAPE_COLORS, getScalePositionColor, getTriadColor } from "./lib/colors";
+import { getNoteColor, CAGED_SHAPE_COLORS, getScalePositionColor, getTriadColor, DIAGONAL_POSITION_COLORS } from "./lib/colors";
 import { CAGED_ORDER } from "./lib/caged";
 import { getPositionLabel } from "./lib/scales";
 import { INTERVAL_LABELS, INTERVAL_NAMES } from "./lib/intervals";
@@ -46,8 +46,43 @@ export default function Legend({ keyNotes, rootNote, highlightRoot, mode, quizNo
         </>
       )}
 
-      {/* Scale Positions legend */}
-      {mode === MODES.SCALE_POSITIONS && scalePositionState && (
+      {/* Scale Positions legend — diagonal variant */}
+      {mode === MODES.SCALE_POSITIONS && scalePositionState?.diagonalPentatonic && (
+        <>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
+            Diagonal Pentatonic &mdash; Set {scalePositionState.diagonalSet + 1}
+          </span>
+          <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
+          {DIAGONAL_POSITION_COLORS.map((color, i) => (
+            <span key={i} style={{
+              display: "inline-flex", alignItems: "center", gap: 3,
+              fontSize: "0.62rem", fontFamily: "var(--font-mono)",
+            }}>
+              <span style={{
+                width: 16, height: 16, borderRadius: "50%",
+                background: color.bg, border: `1.5px solid ${color.border}`,
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                fontSize: "0.5rem", fontWeight: 700, color: color.text,
+              }}>{i + 1}</span>
+              <span style={{ color: "#999" }}>{["Pos A", "Pos B", "Pos C"][i]}</span>
+            </span>
+          ))}
+          <span style={{ width: 1, height: 16, background: "#1e1e2e", margin: "0 4px" }} />
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: 4,
+            fontSize: "0.6rem", color: "#888", fontFamily: "var(--font-sans)",
+          }}>
+            <span style={{
+              width: 10, height: 10, borderRadius: "50%",
+              background: "rgba(180,180,180,0.08)", border: "1px dashed #99999966",
+            }} />
+            Faded = non-pentatonic (4th, 7th)
+          </span>
+        </>
+      )}
+
+      {/* Scale Positions legend — normal */}
+      {mode === MODES.SCALE_POSITIONS && scalePositionState && !scalePositionState.diagonalPentatonic && (
         <>
           <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.68rem", color: "#777", marginRight: 4 }}>
             Position {getPositionLabel(scalePositionState.positionIndex)}
