@@ -6,7 +6,7 @@ A guitar fretboard note memorization trainer. Users learn diatonic scale note po
 
 **Learn modes:**
 - **Explore** — View all notes in a key, toggle naturals/sharps/scale degrees, click to reveal/hide individual notes, use "Hide All" to self-test
-- **Scale Positions** — Navigate 7 major scale position forms that tile seamlessly across the fretboard. Named by root string + fretting finger: 6(1), 6(2), 6(4), 5(1), 5(2), 5(4), 4(1) (e.g. 6(4) = root on string 6, finger 4). These 7 positions provide complete fretboard coverage — ascending in pitch they cycle: 6(1)→6(2)→6(4)→5(1)→5(2)→5(4)→4(1)→[repeat]. 5 of the 7 map directly to CAGED shapes; the remaining 2 — 6(2) and 5(2) — are connecting positions that fill the gaps between CAGED shapes. Forms are hardcoded note-for-note from standard guitar pedagogy. Dots show scale degrees by default; toggles switch to note names or fingering
+- **Scale Positions** — Navigate 7 major scale position forms that tile seamlessly across the fretboard. Named by root string + fretting finger: 6(1), 6(2), 6(4), 5(1), 5(2), 5(4), 4(1) (e.g. 6(4) = root on string 6, finger 4). These 7 positions provide complete fretboard coverage — ascending in pitch they cycle: 6(1)→6(2)→6(4)→5(1)→5(2)→5(4)→4(1)→[repeat]. 5 of the 7 map directly to CAGED shapes; the remaining 2 — 6(2) and 5(2) — are connecting positions that fill the gaps between CAGED shapes. Forms are hardcoded note-for-note from standard guitar pedagogy. Dots show scale degrees by default; toggles switch to note names or fingering. **Diagonal Pentatonic** sub-mode shows the major pentatonic (degrees 1,2,3,5,6) played diagonally across 2–3 adjacent positions. Two fixed sets cover the fretboard — toggle Set 1 / Set 2 or use arrow keys. Non-pentatonic degrees (4,7) shown faded/dashed. Each position gets a distinct color (purple/teal/amber). See "Diagonal Pentatonic" section below for algorithm details
 - **CAGED** — See how 5 open chord shapes (C, A, G, E, D) tile across the fretboard, with chord tone (R, 3, 5) vs scale tone distinction. Each shape is anchored to a root string with fret offsets relative to the root note, and maps to one of the 7 scale positions: E→6(1), G→6(4), A→5(1), C→5(4), D→4(1). The two positions without CAGED equivalents — 6(2) and 5(2) — bridge the gaps between shapes. Colors: C=purple, A=orange, G=blue, E=red, D=green
 - **Intervals** — View notes as interval labels (R, 2, 3...) with filtering, includes interval quiz sub-mode
 - **1-Fret Rule** — Inverts Scale Positions: pick a fret position and see which 7 keys the 7 forms produce at that position. At any fret, each form yields a different key; shift ±1 fret to cover all 12 chromatic keys. Key is computed (not selected from dropdown) via `getRootNoteForPosition()` + `computeKeyNotes()`, supporting all 12 keys. Arrow keys step through forms with ascending root fret offsets (0, +2, +4) per root-string group. Chord toggle filters to R/3/5 chord tones only. Reuses `ScalePositionDot` — no new dot component needed.
@@ -65,7 +65,7 @@ src/
     │   ├── RegionSelector.jsx   # Dropdown: fret region filter
     │   ├── ExploreToggles.jsx   # Naturals, Sharps, Degrees, Root Highlight, Hide All
     │   ├── StringToggles.jsx    # Per-string circular toggle buttons
-    │   ├── ScalePositionControls.jsx  # 7 form buttons (6(1)..4(1)), prev/next, notes/fingering toggles
+    │   ├── ScalePositionControls.jsx  # 7 form buttons (6(1)..4(1)), prev/next, notes/fingering, diagonal toggle + set buttons
     │   ├── CAGEDControls.jsx    # Shape picker (C/A/G/E/D + All) with position labels, scale tones toggle
     │   ├── IntervalControls.jsx # Interval/note toggle, degree filter, quiz toggle
     │   ├── OneFretRuleControls.jsx # Fret selector (1-12), form/key cards, notes/fingering toggles
@@ -93,11 +93,13 @@ src/
         ├── fretboard.js         # FRET_COUNT (19), FRET_MARKERS, DOUBLE_MARKERS,
         │                        # MODES (8 modes), FRET_REGIONS — zero React dependencies
         ├── colors.js            # getNoteColor(), CAGED_SHAPE_COLORS, getScalePositionColor(),
-        │                        # getCAGEDColor() — degree color map, quiz/root overrides
+        │                        # getCAGEDColor(), DIAGONAL_POSITION_COLORS,
+        │                        # getDiagonalPositionColor() — degree color map, quiz/root overrides
         ├── scales.js            # FORMS (7 hardcoded major scale form patterns), getPositionLabel(),
         │                        # getPositionFret(), getScalePositionNotes(),
         │                        # isInScalePosition(), getRootNoteForPosition(),
-        │                        # computeKeyNotes() — lookup-based, zero React dependencies
+        │                        # computeKeyNotes(), PENTATONIC_DEGREES,
+        │                        # getDiagonalPentatonicSets() — lookup-based, zero React dependencies
         ├── caged.js             # CAGED_ORDER, getCAGEDShapes(), getCAGEDInfo()
         │                        # Shapes use rootString anchoring + root-relative offsets
         │                        # Imports STRING_TUNING from music.js
@@ -147,7 +149,7 @@ npm run start  # Serve production build
 **Per-mode control restrictions (when `embedded`):**
 | Mode | Allowed | Locked (35% opacity, `cursor: not-allowed`) |
 |------|---------|----------------------------------------------|
-| Scale Positions | 6(1) only | All other positions; prev/next arrows hidden |
+| Scale Positions | 6(1) only | All other positions; prev/next arrows hidden; diagonal toggle hidden |
 | CAGED | C and A shapes | "All" button hidden; G, E, D dimmed |
 | Intervals | R and 5 filters | All other degree filters; quiz toggle hidden |
 | 1-Fret Rule | 6(1) and 6(2) on fret 5 | All other forms; fret selector hidden; prev/next hidden |
@@ -157,6 +159,31 @@ npm run start  # Serve production build
 **Implementation pattern:** Each control component accepts an `embedded` prop. Locked buttons have their `onClick` gated (`!locked && handler()`), plus visual disabled styling. Initial state overrides (e.g. `cagedState.selectedShape: "C"`, `intervalFilter: {1, 5}`) are set in `useState` calls.
 
 `DemoSection.jsx` lazy-loads `FretboardTrainer` via `next/dynamic` with `ssr: false` to keep the landing page bundle small.
+
+## Diagonal Pentatonic
+
+A sub-mode of Scale Positions activated by the "Diagonal" toggle. Shows the major pentatonic scale (degrees 1,2,3,5,6) played diagonally across 2–3 adjacent scale positions, creating a path up or down the neck.
+
+**Algorithm (`getDiagonalPentatonicSets()` in `lib/scales.js`):**
+
+Two fixed groups of form indices (same for all keys):
+- **Group A:** form indices 4 `5(2)`, 2 `6(4)`, and optionally 1 `6(2)`
+- **Group B:** form indices 0 `6(1)` and 6 `4(1)`
+
+**6(2) inclusion:** 6(2) joins Group A when `posFret(6(4)) < posFret(6(2)) < posFret(6(1))` — true for C, D, A, E, Bb, Eb; false for G, F where frets wrap past 12.
+
+**Set assignment:** Set 1 = group with lower min position fret, Set 2 = the other.
+
+**Extensions:** 2-position sets get one extra degree-3 note on a boundary string to fill the diagonal gap:
+- Group B → degree 3 on B string (stringIndex 1)
+- Group A (when only 2 positions) → degree 3 on G string (stringIndex 2)
+- Extension fret = nearest occurrence of that note within frets 0–19 closest to the set's fret range midpoint
+
+**State:** `scalePositionState.diagonalPentatonic` (bool) and `scalePositionState.diagonalSet` (0 or 1).
+
+**Rendering:** `getNoteDisplayData()` loops through `activeDiagonalSet.positions`, calling `isInScalePosition()` per position. Each match returns a `colorOverride: { positionGroupIndex, isPentatonic }` that `ScalePositionDot` passes to `getDiagonalPositionColor()`. Non-pentatonic notes get `isChordTone: false` for faded/dashed treatment. Position buttons are disabled when diagonal is active; arrow keys toggle between sets.
+
+**Colors:** `DIAGONAL_POSITION_COLORS` in `lib/colors.js` — Purple (pos 0), Teal (pos 1), Amber (pos 2). Root notes always red diamond. Non-pentatonic notes gray.
 
 ## Extension Points (no architectural changes needed)
 
