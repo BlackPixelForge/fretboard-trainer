@@ -263,10 +263,25 @@ export function getDiagonalPentatonicSets(rootNoteIndex, keyNotes) {
       const valid = candidates.filter(c => c.fret >= floorFret);
       const requiredCount = allowedDegrees.size;
       let selected = selectCluster(valid, requiredCount);
+      let isComplete = !!selected;
 
-      // Fallback: try all candidates if nothing above floorFret
+      // Near fretboard edge: accept partial cluster (>= 2 notes) from strict degrees
       if (!selected) {
-        selected = selectCluster(candidates, requiredCount);
+        selected = selectCluster(valid, 2);
+      }
+
+      // If strict degrees don't have enough, broaden to any pentatonic degree
+      if (!selected) {
+        const broadCandidates = [];
+        for (let fret = floorFret; fret <= FRET_COUNT; fret++) {
+          const noteIndex = getNoteAt(si, fret);
+          const degreeIdx = keyNotes.indexOf(noteIndex);
+          if (degreeIdx < 0) continue;
+          const degree = degreeIdx + 1;
+          if (!PENT.has(degree)) continue;
+          broadCandidates.push({ fret, degree });
+        }
+        selected = selectCluster(broadCandidates, 2);
       }
 
       if (!selected) continue;
@@ -281,7 +296,10 @@ export function getDiagonalPentatonicSets(rootNoteIndex, keyNotes) {
           positionGroupIndex,
         });
       }
-      floorFret = Math.min(...selected.map(c => c.fret));
+      // Only advance floorFret on complete matches — keeps flexibility near fretboard edge
+      if (isComplete) {
+        floorFret = Math.min(...selected.map(c => c.fret));
+      }
     }
 
     // Extension on high E (si=0): if only 2 notes, try adding next pentatonic degree
