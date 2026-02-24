@@ -162,28 +162,35 @@ npm run start  # Serve production build
 
 ## Diagonal Pentatonic
 
-A sub-mode of Scale Positions activated by the "Diagonal" toggle. Shows the major pentatonic scale (degrees 1,2,3,5,6) played diagonally across 2–3 adjacent scale positions, creating a path up or down the neck.
+A sub-mode of Scale Positions activated by the "Diagonal" toggle. Shows the major pentatonic scale (degrees 1,2,3,5,6) played diagonally across the fretboard as a staircase pattern, with non-pentatonic degrees (4, 7) shown faded.
 
 **Algorithm (`getDiagonalPentatonicSets()` in `lib/scales.js`):**
 
-Two fixed groups of form indices (same for all keys):
-- **Group A:** form indices 4 `5(2)`, 2 `6(4)`, and optionally 1 `6(2)`
-- **Group B:** form indices 0 `6(1)` and 6 `4(1)`
+Pre-computes exact `(string, fret)` coordinates for two diagonal paths (Pattern A and B). Returns `{ sets: [{ notes: [...] }] }` where each note has `{ stringIndex, fret, degree, finger, positionGroupIndex, isPentatonic }`.
 
-**6(2) inclusion:** 6(2) joins Group A when `posFret(6(4)) < posFret(6(2)) < posFret(6(1))` — true for C, D, A, E, Bb, Eb; false for G, F where frets wrap past 12.
+**Per-string degree assignment:** Each pattern alternates between two degree groups across strings:
+- **Pattern A:** strings 5,3,1 (low E, D, B) get degrees {5,6} (2 notes); strings 4,2,0 (A, G, high E) get degrees {1,2,3} (3 notes)
+- **Pattern B:** inverted — strings 5,3,1 get {1,2,3}; strings 4,2,0 get {5,6}
 
-**Set assignment:** Set 1 = group with lower min position fret, Set 2 = the other.
+**Note selection per string:** Process strings from low E (si=5) to high E (si=0), maintaining a `floorFret` that advances upward:
+1. Find all frets matching the assigned degrees at ≥ `floorFret`
+2. Group into contiguous clusters (gap ≤ 5 frets), select first complete cluster
+3. **Fretboard edge fallback:** If no complete cluster, accept partial (≥ 2 notes); if still insufficient, broaden to any pentatonic degree at ≥ `floorFret`
+4. Only advance `floorFret` on complete matches — keeps flexibility for subsequent strings near the fretboard edge
 
-**Extensions:** 2-position sets get one extra degree-3 note on a boundary string to fill the diagonal gap:
-- Group B → degree 3 on B string (stringIndex 1)
-- Group A (when only 2 positions) → degree 3 on G string (stringIndex 2)
-- Extension fret = nearest occurrence of that note within frets 0–19 closest to the set's fret range midpoint
+**Extension:** On high E (si=0), if only 2 pentatonic notes selected, try adding the next pentatonic degree within 3 frets above the last note.
+
+**Non-pentatonic notes:** After computing pentatonic notes, degrees 4 and 7 within ±2 frets of each string's pentatonic range are added with `isPentatonic: false`.
+
+**Fingers:** Computed per string pair (5+4, 3+2, 1+0) — `baseFret` = min fret across both strings, `finger = clamp(fret - baseFret + 1, 1, 4)`.
+
+**Set ordering:** Set 1 = whichever pattern has lower min fret, Set 2 = the other.
 
 **State:** `scalePositionState.diagonalPentatonic` (bool) and `scalePositionState.diagonalSet` (0 or 1).
 
-**Rendering:** `getNoteDisplayData()` loops through `activeDiagonalSet.positions`, calling `isInScalePosition()` per position. Each match returns a `colorOverride: { positionGroupIndex, isPentatonic }` that `ScalePositionDot` passes to `getDiagonalPositionColor()`. Non-pentatonic notes get `isChordTone: false` for faded/dashed treatment. Position buttons are disabled when diagonal is active; arrow keys toggle between sets.
+**Rendering:** `FretboardTrainer` builds a `diagonalNoteMap` (Map keyed by `"stringIndex-fret"`) for O(1) lookups. `getNoteDisplayData()` does a single Map lookup — each match returns `colorOverride: { positionGroupIndex, isPentatonic }` that `ScalePositionDot` passes to `getDiagonalPositionColor()`. Non-pentatonic notes (`isPentatonic: false`) get `isChordTone: false` for faded/dashed treatment. Position buttons are disabled when diagonal is active; arrow keys toggle between sets.
 
-**Colors:** `DIAGONAL_POSITION_COLORS` in `lib/colors.js` — Purple (pos 0), Teal (pos 1), Amber (pos 2). Root notes always red diamond. Non-pentatonic notes gray.
+**Colors:** `DIAGONAL_POSITION_COLORS` in `lib/colors.js` — Purple (pos 0, strings 5+4), Teal (pos 1, strings 3+2), Amber (pos 2, strings 1+0). Root notes always red diamond. Non-pentatonic notes gray.
 
 ## Extension Points (no architectural changes needed)
 
