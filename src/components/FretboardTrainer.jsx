@@ -183,6 +183,7 @@ export default function FretboardTrainer({ embedded } = {}) {
       if (diagonalNoteMap) {
         const match = diagonalNoteMap.get(`${s}-${f}`);
         if (!match) return null;
+        const isPent = match.isPentatonic !== false;
         return {
           type: "scalePosition",
           degree: match.degree,
@@ -191,7 +192,8 @@ export default function FretboardTrainer({ embedded } = {}) {
           showFingering: scalePositionState.showFingering,
           showNoteNames: scalePositionState.showNoteNames,
           noteName: getNoteName(noteIndex),
-          colorOverride: { positionGroupIndex: match.positionGroupIndex, isPentatonic: true },
+          colorOverride: { positionGroupIndex: match.positionGroupIndex, isPentatonic: isPent },
+          isChordTone: isPent ? undefined : false,
         };
       }
 

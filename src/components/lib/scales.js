@@ -319,6 +319,23 @@ export function getDiagonalPentatonicSets(rootNoteIndex, keyNotes) {
       }
     }
 
+    // Add faded non-pentatonic notes (degrees 4, 7) within each string's diagonal range
+    for (let si = 5; si >= 0; si--) {
+      const stringPentNotes = notes.filter(n => n.stringIndex === si);
+      if (stringPentNotes.length === 0) continue;
+      const minF = Math.min(...stringPentNotes.map(n => n.fret)) - 2;
+      const maxF = Math.max(...stringPentNotes.map(n => n.fret)) + 2;
+      const pgi = si >= 4 ? 0 : si >= 2 ? 1 : 2;
+      for (let fret = Math.max(0, minF); fret <= Math.min(FRET_COUNT, maxF); fret++) {
+        const noteIndex = getNoteAt(si, fret);
+        const degreeIdx = keyNotes.indexOf(noteIndex);
+        if (degreeIdx < 0) continue;
+        const degree = degreeIdx + 1;
+        if (PENT.has(degree)) continue;
+        notes.push({ stringIndex: si, fret, degree, finger: 0, positionGroupIndex: pgi, isPentatonic: false });
+      }
+    }
+
     // Compute fingers per string pair (5+4, 3+2, 1+0)
     for (const pair of [[5, 4], [3, 2], [1, 0]]) {
       const pairNotes = notes.filter(n => pair.includes(n.stringIndex));
