@@ -46,12 +46,13 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         })}
       </span>
 
-      {!embedded && !diagonalActive && (
+      {!embedded && (
       <>
       <span style={{ width: 1, height: 20, background: "var(--border-muted)", margin: "0 4px" }} />
 
       <button
         onClick={() => {
+          if (diagonalActive) return;
           const prev = positionIndex > 0 ? positionIndex - 1 : total - 1;
           updateScalePosition({ positionIndex: prev });
         }}
@@ -64,15 +65,17 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
           color: "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
-          cursor: "pointer",
+          cursor: diagonalActive ? "not-allowed" : "pointer",
           transition: `all var(--duration-normal) var(--ease-smooth)`,
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
+          opacity: diagonalActive ? 0.35 : 1,
         }}
       >
         {"<"}
       </button>
       <button
         onClick={() => {
+          if (diagonalActive) return;
           const next = positionIndex < total - 1 ? positionIndex + 1 : 0;
           updateScalePosition({ positionIndex: next });
         }}
@@ -85,9 +88,10 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
           color: "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.75rem",
-          cursor: "pointer",
+          cursor: diagonalActive ? "not-allowed" : "pointer",
           transition: `all var(--duration-normal) var(--ease-smooth)`,
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
+          opacity: diagonalActive ? 0.35 : 1,
         }}
       >
         {">"}
@@ -163,7 +167,7 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
             : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
       >
-        Diagonal
+        Diagonal Pentatonics
       </button>
       {diagonalActive && (
         <span style={{ display: "inline-flex", gap: 3, alignItems: "center" }}>
