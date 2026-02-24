@@ -226,84 +226,120 @@ export const PENTATONIC_DEGREES = new Set([1, 2, 3, 5, 6]);
 
 /**
  * Compute diagonal pentatonic sets for a given key.
- * Two fixed groups cover the fretboard using adjacent scale positions:
- *   Group A: form indices 4 (5(2)), 2 (6(4)), optionally 1 (6(2))
- *   Group B: form indices 0 (6(1)), 6 (4(1))
- * Returns { sets: [set1, set2] } where set1 has lower position frets.
- * Each set: { positions: [{ formIndex, positionGroupIndex }], extension: { ... } | null }
+ * Returns pre-computed note coordinates instead of position groups.
+ * Two alternating patterns create staircase diagonals across the fretboard:
+ *   Pattern A: strings 5,3,1 get degrees {5,6}; strings 4,2,0 get degrees {1,2,3}
+ *   Pattern B: inverted
+ * Returns { sets: [set1, set2] } where set1 has lower min fret.
+ * Each set: { notes: [{ stringIndex, fret, degree, finger, positionGroupIndex }, ...] }
  */
 export function getDiagonalPentatonicSets(rootNoteIndex, keyNotes) {
-  const posFrets = {};
-  for (const i of [0, 1, 2, 4, 6]) {
-    posFrets[i] = getPositionFret(rootNoteIndex, i);
-  }
+  const PENT = new Set([1, 2, 3, 5, 6]);
 
-  // Check if 6(2) (index 1) fits between 6(4) and 6(1)
-  const sixTwoFits = posFrets[2] < posFrets[1] && posFrets[1] < posFrets[0];
+  function buildDiagonalSet(isPatternA) {
+    const notes = [];
+    let floorFret = 0;
 
-  const groupAIndices = sixTwoFits ? [4, 2, 1] : [4, 2];
-  const groupBIndices = [0, 6];
+    // Process strings from low E (si=5) to high E (si=0)
+    for (let si = 5; si >= 0; si--) {
+      const isOddSi = si % 2 === 1; // si=5,3,1
+      const allowedDegrees = isPatternA
+        ? (isOddSi ? new Set([5, 6]) : new Set([1, 2, 3]))
+        : (isOddSi ? new Set([1, 2, 3]) : new Set([5, 6]));
 
-  // Sort each group by ascending position fret
-  groupAIndices.sort((a, b) => posFrets[a] - posFrets[b]);
-  groupBIndices.sort((a, b) => posFrets[a] - posFrets[b]);
+      // Find all matching frets on this string
+      const candidates = [];
+      for (let fret = 0; fret <= FRET_COUNT; fret++) {
+        const noteIndex = getNoteAt(si, fret);
+        const degreeIdx = keyNotes.indexOf(noteIndex);
+        if (degreeIdx < 0) continue;
+        const degree = degreeIdx + 1;
+        if (!allowedDegrees.has(degree)) continue;
+        candidates.push({ fret, degree });
+      }
+      candidates.sort((a, b) => a.fret - b.fret);
 
-  const buildPositions = (indices) =>
-    indices.map((formIndex, i) => ({ formIndex, positionGroupIndex: i }));
+      // Filter to >= floorFret and group into contiguous clusters (gap <= 5)
+      const valid = candidates.filter(c => c.fret >= floorFret);
+      const requiredCount = allowedDegrees.size;
+      let selected = selectCluster(valid, requiredCount);
 
-  const computeExtension = (indices, targetStringIndex) => {
-    if (indices.length >= 3) return null;
+      // Fallback: try all candidates if nothing above floorFret
+      if (!selected) {
+        selected = selectCluster(candidates, requiredCount);
+      }
 
-    const targetNoteIndex = keyNotes[2]; // degree 3
-    const minFret = Math.min(...indices.map(i => posFrets[i]));
-    const maxFret = Math.max(...indices.map(i => posFrets[i])) + 4;
-    const midFret = (minFret + maxFret) / 2;
+      if (!selected) continue;
 
-    let bestFret = null;
-    let bestDist = Infinity;
-    for (let fret = 0; fret <= FRET_COUNT; fret++) {
-      if (getNoteAt(targetStringIndex, fret) === targetNoteIndex) {
-        const dist = Math.abs(fret - midFret);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestFret = fret;
+      const positionGroupIndex = si >= 4 ? 0 : si >= 2 ? 1 : 2;
+      for (const c of selected) {
+        notes.push({
+          stringIndex: si,
+          fret: c.fret,
+          degree: c.degree,
+          finger: 0, // computed below
+          positionGroupIndex,
+        });
+      }
+      floorFret = Math.min(...selected.map(c => c.fret));
+    }
+
+    // Extension on high E (si=0): if only 2 notes, try adding next pentatonic degree
+    const highENotes = notes.filter(n => n.stringIndex === 0);
+    if (highENotes.length === 2) {
+      const maxFret = Math.max(...highENotes.map(n => n.fret));
+      const existingDegrees = new Set(highENotes.map(n => n.degree));
+      for (let fret = maxFret + 1; fret <= Math.min(maxFret + 3, FRET_COUNT); fret++) {
+        const noteIndex = getNoteAt(0, fret);
+        const degreeIdx = keyNotes.indexOf(noteIndex);
+        if (degreeIdx < 0) continue;
+        const degree = degreeIdx + 1;
+        if (PENT.has(degree) && !existingDegrees.has(degree)) {
+          notes.push({ stringIndex: 0, fret, degree, finger: 0, positionGroupIndex: 2 });
+          break;
         }
       }
     }
-    if (bestFret === null) return null;
 
-    // Find nearest position for finger estimation
-    let nearestPosFret = posFrets[indices[0]];
-    let nearestDist = Infinity;
-    let nearestPGI = 0;
-    for (let i = 0; i < indices.length; i++) {
-      const d = Math.abs(bestFret - posFrets[indices[i]]);
-      if (d < nearestDist) {
-        nearestDist = d;
-        nearestPosFret = posFrets[indices[i]];
-        nearestPGI = i;
+    // Compute fingers per string pair (5+4, 3+2, 1+0)
+    for (const pair of [[5, 4], [3, 2], [1, 0]]) {
+      const pairNotes = notes.filter(n => pair.includes(n.stringIndex));
+      if (pairNotes.length === 0) continue;
+      const baseFret = Math.min(...pairNotes.map(n => n.fret));
+      for (const n of pairNotes) {
+        n.finger = Math.max(1, Math.min(4, n.fret - baseFret + 1));
       }
     }
-    const finger = Math.max(1, Math.min(4, bestFret - nearestPosFret + 1));
 
-    return { stringIndex: targetStringIndex, fret: bestFret, degree: 3, positionGroupIndex: nearestPGI, finger };
-  };
+    return { notes };
+  }
 
-  const groupA = {
-    positions: buildPositions(groupAIndices),
-    extension: computeExtension(groupAIndices, 2), // G string (stringIndex 2)
-  };
-  const groupB = {
-    positions: buildPositions(groupBIndices),
-    extension: computeExtension(groupBIndices, 1), // B string (stringIndex 1)
-  };
+  // Group candidates into contiguous clusters and return first with enough notes
+  function selectCluster(candidates, requiredCount) {
+    const clusters = [];
+    let current = [];
+    for (const c of candidates) {
+      if (current.length > 0 && c.fret - current[current.length - 1].fret > 5) {
+        clusters.push(current);
+        current = [];
+      }
+      current.push(c);
+    }
+    if (current.length > 0) clusters.push(current);
 
-  // Set 1 = group with lower min position fret
-  const minA = Math.min(...groupAIndices.map(i => posFrets[i]));
-  const minB = Math.min(...groupBIndices.map(i => posFrets[i]));
+    for (const cluster of clusters) {
+      if (cluster.length >= requiredCount) {
+        return cluster.slice(0, requiredCount);
+      }
+    }
+    return null;
+  }
 
-  const set1 = minA <= minB ? groupA : groupB;
-  const set2 = minA <= minB ? groupB : groupA;
+  const setA = buildDiagonalSet(true);
+  const setB = buildDiagonalSet(false);
 
-  return { sets: [set1, set2] };
+  const minA = setA.notes.length > 0 ? Math.min(...setA.notes.map(n => n.fret)) : Infinity;
+  const minB = setB.notes.length > 0 ? Math.min(...setB.notes.map(n => n.fret)) : Infinity;
+
+  return { sets: minA <= minB ? [setA, setB] : [setB, setA] };
 }

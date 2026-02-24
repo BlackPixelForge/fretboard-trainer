@@ -7,7 +7,7 @@ import {
 } from "./lib/music";
 import { MODES, FRET_REGIONS, FRET_COUNT } from "./lib/fretboard";
 import { getIntervalLabel, getIntervalDegree, generateIntervalQuiz, INTERVAL_LABELS } from "./lib/intervals";
-import { isInScalePosition, FORMS, getRootNoteForPosition, computeKeyNotes, getPositionFret, getDiagonalPentatonicSets, PENTATONIC_DEGREES } from "./lib/scales";
+import { isInScalePosition, FORMS, getRootNoteForPosition, computeKeyNotes, getPositionFret, getDiagonalPentatonicSets } from "./lib/scales";
 import { getCAGEDInfo, getCAGEDShapes } from "./lib/caged";
 import { getTriadInfo, INVERSIONS, TRIAD_SHAPES } from "./lib/triads";
 import ModeSelector from "./controls/ModeSelector";
@@ -170,49 +170,29 @@ export default function FretboardTrainer({ embedded } = {}) {
   const diagonalSets = scalePositionState.diagonalPentatonic
     ? getDiagonalPentatonicSets(rootNote, keyNotes) : null;
   const activeDiagonalSet = diagonalSets?.sets[scalePositionState.diagonalSet] ?? null;
+  const diagonalNoteMap = activeDiagonalSet
+    ? new Map(activeDiagonalSet.notes.map(n => [`${n.stringIndex}-${n.fret}`, n]))
+    : null;
 
   // --- getNoteDisplayData: returns mode-specific rendering metadata ---
   const getNoteDisplayData = (s, f) => {
     const noteIndex = getNoteAt(s, f);
 
     if (mode === MODES.SCALE_POSITIONS) {
-      // Diagonal pentatonic: show multiple positions with position-based colors
-      if (activeDiagonalSet) {
-        // Check extension first (single specific note)
-        if (activeDiagonalSet.extension) {
-          const ext = activeDiagonalSet.extension;
-          if (s === ext.stringIndex && f === ext.fret) {
-            return {
-              type: "scalePosition",
-              degree: ext.degree,
-              finger: ext.finger,
-              isRoot: false,
-              showFingering: scalePositionState.showFingering,
-              showNoteNames: scalePositionState.showNoteNames,
-              noteName: getNoteName(getNoteAt(s, f)),
-              colorOverride: { positionGroupIndex: ext.positionGroupIndex, isPentatonic: true },
-            };
-          }
-        }
-        // Check each position in the set
-        for (const pos of activeDiagonalSet.positions) {
-          const match = isInScalePosition(s, f, rootNote, keyNotes, pos.formIndex);
-          if (match) {
-            const isPentatonic = PENTATONIC_DEGREES.has(match.degree);
-            return {
-              type: "scalePosition",
-              degree: match.degree,
-              finger: match.finger,
-              isRoot: match.degree === 1,
-              showFingering: scalePositionState.showFingering,
-              showNoteNames: scalePositionState.showNoteNames,
-              noteName: getNoteName(noteIndex),
-              colorOverride: { positionGroupIndex: pos.positionGroupIndex, isPentatonic },
-              isChordTone: isPentatonic ? undefined : false,
-            };
-          }
-        }
-        return null;
+      // Diagonal pentatonic: pre-computed note coordinates
+      if (diagonalNoteMap) {
+        const match = diagonalNoteMap.get(`${s}-${f}`);
+        if (!match) return null;
+        return {
+          type: "scalePosition",
+          degree: match.degree,
+          finger: match.finger,
+          isRoot: match.degree === 1,
+          showFingering: scalePositionState.showFingering,
+          showNoteNames: scalePositionState.showNoteNames,
+          noteName: getNoteName(noteIndex),
+          colorOverride: { positionGroupIndex: match.positionGroupIndex, isPentatonic: true },
+        };
       }
 
       // Single position mode (default)
@@ -643,9 +623,9 @@ export default function FretboardTrainer({ embedded } = {}) {
     } else if (mode === MODES.SCALE_POSITIONS) {
       if (scalePositionState.diagonalPentatonic && diagonalSets) {
         const set = diagonalSets.sets[scalePositionState.diagonalSet];
-        const frets = set.positions.map(p => getPositionFret(rootNote, p.formIndex));
+        const frets = set.notes.map(n => n.fret);
         const minFret = Math.min(...frets);
-        const maxFret = Math.max(...frets) + 4;
+        const maxFret = Math.max(...frets);
         centerFret = (minFret + maxFret) / 2;
       } else {
         const posFret = getPositionFret(rootNote, scalePositionState.positionIndex);
@@ -690,16 +670,9 @@ export default function FretboardTrainer({ embedded } = {}) {
   const isNoteVisible = (s, f) => {
     // New modes define their own note sets
     if (mode === MODES.SCALE_POSITIONS) {
-      // Diagonal pentatonic: visible if in any position of the active set, or the extension
-      if (activeDiagonalSet) {
-        for (const pos of activeDiagonalSet.positions) {
-          if (isInScalePosition(s, f, rootNote, keyNotes, pos.formIndex)) return true;
-        }
-        if (activeDiagonalSet.extension) {
-          const ext = activeDiagonalSet.extension;
-          if (s === ext.stringIndex && f === ext.fret) return true;
-        }
-        return false;
+      // Diagonal pentatonic: visible if in pre-computed note map
+      if (diagonalNoteMap) {
+        return diagonalNoteMap.has(`${s}-${f}`);
       }
       // Single position mode
       const match = isInScalePosition(s, f, rootNote, keyNotes, scalePositionState.positionIndex);
