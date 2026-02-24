@@ -124,19 +124,20 @@ export default function ScalePositionControls({ scalePositionState, updateScaleP
         Notes
       </button>
       <button
-        onClick={() => updateScalePosition({ showFingering: !showFingering, showNoteNames: false })}
+        onClick={() => !diagonalActive && updateScalePosition({ showFingering: !showFingering, showNoteNames: false })}
         style={{
           padding: "5px 10px",
           borderRadius: "var(--radius-sm)",
-          border: `1px solid ${showFingering ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
-          background: showFingering ? "var(--accent-blue-glow)" : "var(--surface-base)",
-          color: showFingering ? "var(--accent-blue-text)" : "var(--text-muted)",
+          border: `1px solid ${!diagonalActive && showFingering ? "rgba(60,160,220,0.35)" : "var(--border-muted)"}`,
+          background: !diagonalActive && showFingering ? "var(--accent-blue-glow)" : "var(--surface-base)",
+          color: !diagonalActive && showFingering ? "var(--accent-blue-text)" : "var(--text-muted)",
           fontFamily: "var(--font-sans)",
           fontSize: "0.68rem",
           fontWeight: 500,
-          cursor: "pointer",
+          cursor: diagonalActive ? "not-allowed" : "pointer",
           transition: `all var(--duration-normal) var(--ease-smooth)`,
-          boxShadow: showFingering
+          opacity: diagonalActive ? 0.35 : 1,
+          boxShadow: !diagonalActive && showFingering
             ? "0 0 12px rgba(60,160,220,0.08), inset 0 1px 0 rgba(255,255,255,0.04)"
             : "inset 0 1px 0 rgba(255,255,255,0.02)",
         }}
