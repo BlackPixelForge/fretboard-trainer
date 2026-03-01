@@ -3,7 +3,7 @@ import "./globals.css";
 export const metadata = {
   title: "Fretboard Navigator — Master the Guitar Fretboard",
   description:
-    "Interactive guitar fretboard trainer with 8 learning modes: scale positions, CAGED shapes, triads, intervals, and quizzes. Free, no account needed.",
+    "Interactive guitar fretboard trainer with 8 learning modes: scale positions, CAGED shapes, triads, intervals, and quizzes.",
   openGraph: {
     title: "Fretboard Navigator",
     description:

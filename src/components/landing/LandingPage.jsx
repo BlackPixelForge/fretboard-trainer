@@ -83,7 +83,7 @@ export default function LandingPage() {
               color: "var(--text-muted)",
               margin: "0 0 28px",
             }}>
-              Free. No account needed.
+              Try the demo above, then subscribe for full access.
             </p>
 
             <Link href="/app" style={{ textDecoration: "none" }}>

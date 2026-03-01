@@ -127,7 +127,7 @@ export default function DemoSection() {
           color: "var(--text-dim)",
           margin: "0 0 20px",
         }}>
-          Full app unlocks all 19 frets, quizzes, every key & more
+          Subscribe to unlock all 19 frets, quizzes, every key & more
         </p>
 
         <Link href="/app" style={{ textDecoration: "none" }}>
@@ -145,7 +145,7 @@ export default function DemoSection() {
               letterSpacing: "0.01em",
             }}
           >
-            Open Full App →
+            Get Started →
           </button>
         </Link>
       </div>
