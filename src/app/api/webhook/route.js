@@ -127,7 +127,8 @@ export async function POST(request) {
 
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        const subscription = event.data.object;
+        const sub = event.data.object;
+        const subscription = await stripe.subscriptions.retrieve(sub.id);
         await db
           .update(subscriptions)
           .set({
