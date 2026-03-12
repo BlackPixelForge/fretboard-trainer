@@ -30,6 +30,7 @@ import Legend from "./Legend";
 import Tips from "./Tips";
 import TriadExplainer from "./TriadExplainer";
 import HarmoniesPanel from "./HarmoniesPanel";
+import Link from "next/link";
 
 export default function FretboardTrainer({ embedded } = {}) {
   const [selectedKey, setSelectedKey] = useState("C Major / A Minor");
@@ -98,7 +99,7 @@ export default function FretboardTrainer({ embedded } = {}) {
     autoPlay: false,
     autoPlaySpeed: 2000,   // ms between steps (500–5000)
   });
-  const updateTriad = (updates) => setTriadState(prev => ({ ...prev, ...updates }));
+  const updateTriad = useCallback((updates) => setTriadState(prev => ({ ...prev, ...updates })), []);
 
   const fretboardScrollRef = useRef(null);
   const findAnswerLockRef = useRef(false);
@@ -150,21 +151,21 @@ export default function FretboardTrainer({ embedded } = {}) {
   const getNoteId = (s, f) => `${s}-${f}`;
 
   // Updater helpers for new modes
-  const updateScalePosition = (updates) => {
+  const updateScalePosition = useCallback((updates) => {
     setScalePositionState(prev => ({ ...prev, ...updates }));
-  };
+  }, []);
 
-  const updateCAGED = (updates) => {
+  const updateCAGED = useCallback((updates) => {
     setCagedState(prev => ({ ...prev, ...updates }));
-  };
+  }, []);
 
-  const updateInterval = (updates) => {
+  const updateInterval = useCallback((updates) => {
     setIntervalState(prev => ({ ...prev, ...updates }));
-  };
+  }, []);
 
-  const updateOneFretRule = (updates) => {
+  const updateOneFretRule = useCallback((updates) => {
     setOneFretRuleState(prev => ({ ...prev, ...updates }));
-  };
+  }, []);
 
   // Diagonal pentatonic sets (computed when toggle is active)
   const diagonalSets = scalePositionState.diagonalPentatonic
@@ -804,49 +805,68 @@ export default function FretboardTrainer({ embedded } = {}) {
         <div className="mb-3 sm:mb-4 header-bar">
           {/* Title row — hidden when embedded */}
           {!embedded && (
-          <div className="text-center sm:text-left" style={{ marginBottom: 8, position: "relative" }}>
-            {/* Decorative glow behind title */}
-            <div style={{
-              position: "absolute",
-              top: "50%",
-              left: "clamp(60px, 15%, 140px)",
-              width: 120,
-              height: 40,
-              background: "radial-gradient(ellipse, rgba(232,78,60,0.15) 0%, rgba(240,200,50,0.08) 50%, transparent 100%)",
-              filter: "blur(20px)",
-              transform: "translateY(-50%)",
-              pointerEvents: "none",
-              zIndex: 0,
-            }} />
-            <h1 style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "clamp(1.4rem, 3vw, 2rem)",
-              fontWeight: 800,
-              background: "linear-gradient(135deg, #e84e3c 0%, #f0c832 50%, #3ca0dc 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              margin: "0 0 4px",
-              letterSpacing: "-0.02em",
-              whiteSpace: "nowrap",
-              position: "relative",
-              zIndex: 1,
-            }}>
-              Fretboard Navigator
-            </h1>
-            <p className="hidden sm:block" style={{
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, position: "relative" }}>
+            <div className="text-center sm:text-left">
+              {/* Decorative glow behind title */}
+              <div style={{
+                position: "absolute",
+                top: "50%",
+                left: "clamp(60px, 15%, 140px)",
+                width: 120,
+                height: 40,
+                background: "radial-gradient(ellipse, rgba(232,78,60,0.15) 0%, rgba(240,200,50,0.08) 50%, transparent 100%)",
+                filter: "blur(20px)",
+                transform: "translateY(-50%)",
+                pointerEvents: "none",
+                zIndex: 0,
+              }} />
+              <h1 style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                fontWeight: 800,
+                background: "linear-gradient(135deg, #e84e3c 0%, #f0c832 50%, #3ca0dc 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                margin: "0 0 4px",
+                letterSpacing: "-0.02em",
+                whiteSpace: "nowrap",
+                position: "relative",
+                zIndex: 1,
+              }}>
+                Fretboard Navigator
+              </h1>
+              <p className="hidden sm:block" style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.8rem",
+                color: "var(--text-dim)",
+                fontWeight: 400,
+                margin: 0,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                whiteSpace: "nowrap",
+                position: "relative",
+                zIndex: 1,
+              }}>
+                Diatonic Note Memorization Trainer
+              </p>
+            </div>
+            <Link href="/app/account" style={{
               fontFamily: "var(--font-sans)",
               fontSize: "0.8rem",
               color: "var(--text-dim)",
-              fontWeight: 400,
-              margin: 0,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
+              fontWeight: 500,
+              letterSpacing: "0.04em",
+              textDecoration: "none",
               position: "relative",
               zIndex: 1,
-            }}>
-              Diatonic Note Memorization Trainer
-            </p>
+              whiteSpace: "nowrap",
+              transition: "color 0.2s",
+            }}
+              onMouseEnter={e => e.currentTarget.style.color = "var(--text-primary)"}
+              onMouseLeave={e => e.currentTarget.style.color = "var(--text-dim)"}
+            >
+              Account
+            </Link>
           </div>
           )}
 
