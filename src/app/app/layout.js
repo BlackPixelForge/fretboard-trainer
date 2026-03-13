@@ -1,4 +1,4 @@
-import { SessionProvider } from "next-auth/react";
+import NavBar from "../../components/landing/NavBar";
 
 export const metadata = {
   title: "Fretboard Navigator",
@@ -6,5 +6,10 @@ export const metadata = {
 };
 
 export default function AppLayout({ children }) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <>
+      <NavBar />
+      {children}
+    </>
+  );
 }

@@ -8,7 +8,7 @@ export default function Footer() {
       color: "var(--text-dim)",
       letterSpacing: "0.01em",
     }}>
-      Fretboard Navigator · Built by Black Pixel Forge · 2025
+      Fretboard Navigator · Built by Black Pixel Forge · 2026
     </footer>
   );
 }
